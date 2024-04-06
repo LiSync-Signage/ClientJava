@@ -1,42 +1,51 @@
 package org.LiSync;
 
+import org.LiSync.dao.UsuarioDAO;
+import org.LiSync.models.Usuario;
+import org.LiSync.services.Autenticacao;
+
 import java.util.Scanner;
 
 public class Main {
   public static void main(String[] args) {
-    Scanner selectOption = new Scanner(System.in);
-    Integer option;
+    Scanner input = new Scanner(System.in);
+    Autenticacao autenticacao = new Autenticacao();
+    UsuarioDAO usuarioDAO = new UsuarioDAO();
+
+    String prosseguir;
+    Boolean cadastroValido = false;
+    Usuario usuarioAutenticado = null;
+
 
     do {
-      System.out.println("\nBem-vindo ao menu da LiSync!");
-      System.out.println("----------------------------");
       System.out.println("""
-          Digite o número para acessar
-          1 - Cadastrar
-          2 - Entrar
-          3 - Sair
-          """);
+      \n|----------- LOGIN -----------|
+      Insira suas informações
+      Digite 0 para voltar ao MENU
+      """);
 
-      System.out.print("Insira aqui: ");
-      option = selectOption.nextInt();
+      System.out.println("Digite seu e-mail: ");
+      String email = input.next();
+      if(email.equals("0")) break;
 
-      switch (option) {
-        case 1 -> {
-          System.out.println("Redirecionando para Cadastro ...");
-          MetodosCadastro cadastro = new MetodosCadastro();
-          cadastro.menuCadastro();
-        }
-        case 2 -> {
-          System.out.println("Redirecionando para Login ...");
-          MetodosLogin login = new MetodosLogin();
-          login.menuLogin();
-        }
-        case 3 -> {
-          System.out.println("Até logo! Encerrando o sistema ...");
+      System.out.println("Digite sua senha: ");
+      String senha = input.next();
+      if(senha.equals("0")) break;
+
+      cadastroValido = autenticacao.validacaoLogin(email, senha);
+      if(cadastroValido) {
+        usuarioAutenticado = usuarioDAO.buscarCreedenciasUsuario(email, senha);
+        System.out.println("Bem vindo %s!".formatted(usuarioAutenticado.getNome()));
+          System.out.println("\nDados cliente: \n" + usuarioAutenticado.toString());
+      } else {
+        System.out.println("Email ou senha incorretos!");
+        System.out.println("Realizar nova tentativa? (Digite 'N' Para cancelar) ");
+        prosseguir = input.next();
+        if(prosseguir.equalsIgnoreCase("N")) {
+          System.out.println("Login encerrado");
           System.exit(0);
         }
-        default -> System.out.println("Opção Inválida! Tente novamente.");
       }
-    } while (option != 3);
+    } while (!cadastroValido);
   }
 }

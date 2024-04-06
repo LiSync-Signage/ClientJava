@@ -1,5 +1,4 @@
 package org.LiSync;
-
 import java.util.Scanner;
 
 public class Main {
@@ -12,9 +11,8 @@ public class Main {
       System.out.println("----------------------------");
       System.out.println("""
           Digite o número para acessar
-          1 - Cadastrar
-          2 - Entrar
-          3 - Sair
+          1 - Entrar
+          0 - Sair
           """);
 
       System.out.print("Insira aqui: ");
@@ -22,21 +20,16 @@ public class Main {
 
       switch (option) {
         case 1 -> {
-          System.out.println("Redirecionando para Cadastro ...");
-          MetodosCadastro cadastro = new MetodosCadastro();
-          cadastro.menuCadastro();
-        }
-        case 2 -> {
           System.out.println("Redirecionando para Login ...");
           MetodosLogin login = new MetodosLogin();
           login.menuLogin();
         }
-        case 3 -> {
+        case 0 -> {
           System.out.println("Até logo! Encerrando o sistema ...");
           System.exit(0);
         }
         default -> System.out.println("Opção Inválida! Tente novamente.");
       }
-    } while (option != 3);
+    } while (option != 0);
   }
 }

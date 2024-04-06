@@ -1,5 +1,4 @@
 package org.LiSync;
-
 import java.util.Scanner;
 
 public class MetodosLogin {
@@ -17,28 +16,19 @@ public class MetodosLogin {
 
       System.out.print("Usuário: ");
       usuario = input.nextLine();
-
       if (usuario.equals("0")) break;
 
       String senha;
-      String confirmarSenha;
-
       System.out.print("Senha: ");
       senha = inputNext.nextLine();
 
-      System.out.print("Confirmar senha: ");
-      confirmarSenha = inputNext.nextLine();
-
-      resultadoAutenticacao(
-          verificarConfirmarSenha(senha, confirmarSenha),
-          verificarCamposVazio(usuario, senha, confirmarSenha),
-          validarTamanhoSenha(senha), usuario);
+      resultadoAutenticacao(verificarCamposVazio(usuario, senha), validarTamanhoSenha(senha), usuario);
 
     } while (true);
   }
 
-  Boolean verificarCamposVazio(String usuario, String senha, String confirmarSenha) {
-    return usuario.isEmpty() || senha.isEmpty() || confirmarSenha.isEmpty();
+  Boolean verificarCamposVazio(String usuario, String senha) {
+    return usuario.isEmpty() || senha.isEmpty();
   }
 
   Boolean validarTamanhoSenha(String senha) {
@@ -49,11 +39,7 @@ public class MetodosLogin {
     return senhaValida;
   }
 
-  Boolean verificarConfirmarSenha(String senha, String confirmarSenha) {
-    return confirmarSenha.equals(senha);
-  }
-
-  void resultadoAutenticacao(Boolean validacaoConfirmarSenha, Boolean validacaoCampoVazio, Boolean validacaoSenha, String nomeUsuario) {
+  void resultadoAutenticacao(Boolean validacaoCampoVazio, Boolean validacaoSenha, String nomeUsuario) {
     switch (1) {
       case 1:
         if (validacaoCampoVazio) {
@@ -63,11 +49,6 @@ public class MetodosLogin {
       case 2:
         if (validacaoSenha) {
           System.out.println("Senha deve possuir mais do que 6 caracteres");
-          break;
-        }
-      case 3:
-        if (!validacaoConfirmarSenha) {
-          System.out.println("Senhas não se conferem");
           break;
         }
       default:

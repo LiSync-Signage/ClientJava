@@ -58,4 +58,27 @@ public class UsuarioDAO {
             }
         }
     }
+
+    public void atualizarUsuarioLocal (Usuario usuario) {
+        ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
+        JdbcTemplate con = conexaoMySQL.getConexaoDoBanco();
+
+        String sql = "INSERT INTO Usuario (idUsuario, nome, fkEmpresa) " +
+                "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE nome = ?, fkEmpresa = ?";
+
+        try {
+            con.update(sql, usuario.getIdUsuario(), usuario.getNome(), usuario.getFkEmpresa(),
+                    usuario.getNome(), usuario.getFkEmpresa());
+        } catch (Exception e)  {
+            e.printStackTrace();
+        } finally {
+            if (con != null) {
+                try {
+                    con.getDataSource().getConnection().close();
+                } catch (SQLException e) {
+                    e.printStackTrace(); // Trate a exceção de fechamento da conexão local
+                }
+            }
+        }
+    }
 }

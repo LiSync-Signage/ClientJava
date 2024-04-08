@@ -20,12 +20,53 @@ CREATE TABLE Usuario(
 
 INSERT INTO Empresa (nomeFantasia, plano) VALUES ("SP Tech", 'Corporativo'), ("Elera.", 'Basico');
 
-SELECT * FROM Empresa;
-
 INSERT INTO Usuario (nome, email, senha, fkEmpresa) VALUES 
 	("Matheus Shoji", "matheus.shoji@sptech.school", "matheus_shoji123", 1),
 	("Gabriel Shoji", "gabriel.shoji@sptech.school", "gabriel123", 2),
 	("Raquel Shoji", "raquel.shoji@sptech.school", "raquel_shoji123", null);
 
-SELECT * FROM Usuario;
-SELECT * FROM Usuario WHERE email = "matheus.shoji@sptech.school" AND senha = "matheus_shoji123";
+CREATE TABLE Televisao(
+	idTelevisao INT PRIMARY KEY auto_increment,
+    andar CHAR(3),
+    setor VARCHAR(225),
+    taxaAtualizacao INT,
+    ipTv VARCHAR(45),
+    sistemaOperacional VARCHAR(45),
+    fkEmpresa INT,
+    constraint fkEmpresaTv foreign key (fkEmpresa) references Empresa(idEmpresa)
+);
+
+-- Dado mocado para teste apenas
+INSERT INTO Televisao (andar, setor, taxaAtualizacao, ipTv, sistemaOperacional, fkEmpresa) VALUES 
+	("5", "Marketing", 30000, "192.168.15.10", "Windows", 1);
+    
+CREATE TABLE TipoComponente (
+	idTipoComponente INT PRIMARY KEY auto_increment,
+    nome VARCHAR(45)
+);
+
+INSERT INTO TipoComponente (nome) VALUES 
+	('CPU'),
+	('GPU'),
+	('Memória RAM'),
+	('Disco');
+
+CREATE TABLE Componente (
+	idComponente INT PRIMARY KEY auto_increment,
+    modelo VARCHAR(225),
+    fkTelevisao INT,
+    fkTipoComponente INT,
+    constraint fkTv foreign key (fkTelevisao) references Televisao(idTelevisao),
+    constraint fkTipo foreign key (fkTipoComponente) references TipoComponente(idTipoComponente)
+);
+
+-- Teste apenas
+INSERT INTO Componente (modelo, fkTelevisao, fkTipoComponente) VALUES 
+	('I3-6100', 1, 1);
+    
+SELECT * FROM TipoComponente; 
+SELECT * FROM Componente WHERE modelo = 'Sandisk Mve' AND fkTelevisao = 1;
+SELECT * FROM Componente JOIN TipoComponente ON fkTipoComponente = idTipoComponente WHERE nome = 'Disco' AND fkTelevisao = 1;
+SELECT COUNT(*) FROM Televisao WHERE idTelevisao = 1;
+
+

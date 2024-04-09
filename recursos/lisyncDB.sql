@@ -36,9 +36,6 @@ CREATE TABLE Televisao(
     constraint fkEmpresaTv foreign key (fkEmpresa) references Empresa(idEmpresa)
 );
 
--- Dado mocado para teste apenas
-INSERT INTO Televisao (andar, setor, taxaAtualizacao, ipTv, sistemaOperacional, fkEmpresa) VALUES 
-	("5", "Marketing", 30000, "192.168.15.10", "Windows", 1);
     
 CREATE TABLE TipoComponente (
 	idTipoComponente INT PRIMARY KEY auto_increment,
@@ -47,9 +44,9 @@ CREATE TABLE TipoComponente (
 
 INSERT INTO TipoComponente (nome) VALUES 
 	('CPU'),
-	('GPU'),
+	('Disco'),
 	('Memória RAM'),
-	('Disco');
+	('GPU');
 
 CREATE TABLE Componente (
 	idComponente INT PRIMARY KEY auto_increment,
@@ -69,4 +66,6 @@ SELECT * FROM Componente WHERE modelo = 'Sandisk Mve' AND fkTelevisao = 1;
 SELECT * FROM Componente JOIN TipoComponente ON fkTipoComponente = idTipoComponente WHERE nome = 'Disco' AND fkTelevisao = 1;
 SELECT COUNT(*) FROM Televisao WHERE idTelevisao = 1;
 
+SELECT * FROM Televisao;
 
+SELECT * FROM Componente;

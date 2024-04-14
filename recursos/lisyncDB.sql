@@ -1,4 +1,3 @@
-DROP DATABASE lisyncDB;
 CREATE DATABASE lisyncDB;
 USE lisyncDB;
 
@@ -15,57 +14,70 @@ CREATE TABLE Usuario(
     email VARCHAR(225),
     senha VARCHAR(45),
     fkEmpresa int,
-    constraint fkEmpresa foreign key (fkEmpresa) references Empresa(idEmpresa)
+    fkGestor int,
+    constraint fkEmpresa foreign key (fkEmpresa) references Empresa(idEmpresa),
+    constraint fkGestor foreign key (fkGestor) references Usuario(idUsuario)
 );
 
 INSERT INTO Empresa (nomeFantasia, plano) VALUES ("SP Tech", 'Corporativo'), ("Elera.", 'Basico');
 
-INSERT INTO Usuario (nome, email, senha, fkEmpresa) VALUES 
-	("Matheus Shoji", "matheus.shoji@sptech.school", "matheus_shoji123", 1),
-	("Gabriel Shoji", "gabriel.shoji@sptech.school", "gabriel123", 2),
-	("Raquel Shoji", "raquel.shoji@sptech.school", "raquel_shoji123", null);
+INSERT INTO Usuario (nome, email, senha, fkEmpresa, fkGestor) VALUES 
+	("Felipe Almeida", "felipe.almeida@sptech.school", "felipe123", 1, null),
+	("Carlos Manoel", "carlos.manoel@sptech.school", "carlos123", 1, 1),
+    ("Marcela Lopez", "marcela.lopez@elera.io", "marcela123", 2, null),
+	("José Felipe", "jose.felipe@elera.io", "jose123", 2, 1);
 
 CREATE TABLE Televisao(
 	idTelevisao INT PRIMARY KEY auto_increment,
     andar CHAR(3),
     setor VARCHAR(225),
+    nome VARCHAR(45), 
     taxaAtualizacao INT,
-    ipTv VARCHAR(45),
-    sistemaOperacional VARCHAR(45),
+    enderecoMac VARCHAR(45),
     fkEmpresa INT,
     constraint fkEmpresaTv foreign key (fkEmpresa) references Empresa(idEmpresa)
 );
 
-    
-CREATE TABLE TipoComponente (
-	idTipoComponente INT PRIMARY KEY auto_increment,
-    nome VARCHAR(45)
-);
-
-INSERT INTO TipoComponente (nome) VALUES 
-	('CPU'),
-	('Disco'),
-	('Memória RAM'),
-	('GPU');
-
 CREATE TABLE Componente (
 	idComponente INT PRIMARY KEY auto_increment,
     modelo VARCHAR(225),
+    identificador VARCHAR(225),
+	tipoComponente VARCHAR(45),
     fkTelevisao INT,
-    fkTipoComponente INT,
-    constraint fkTv foreign key (fkTelevisao) references Televisao(idTelevisao),
-    constraint fkTipo foreign key (fkTipoComponente) references TipoComponente(idTipoComponente)
+    constraint fkTv foreign key (fkTelevisao) references Televisao(idTelevisao)
 );
 
--- Teste apenas
-INSERT INTO Componente (modelo, fkTelevisao, fkTipoComponente) VALUES 
-	('I3-6100', 1, 1);
-    
-SELECT * FROM TipoComponente; 
-SELECT * FROM Componente WHERE modelo = 'Sandisk Mve' AND fkTelevisao = 1;
-SELECT * FROM Componente JOIN TipoComponente ON fkTipoComponente = idTipoComponente WHERE nome = 'Disco' AND fkTelevisao = 1;
-SELECT COUNT(*) FROM Televisao WHERE idTelevisao = 1;
+CREATE TABLE Janela (
+	idJanela INT PRIMARY KEY auto_increment,
+    pidJanela VARCHAR(45),
+    comando VARCHAR(225),
+    titulo VARCHAR(225),
+    localizacao VARCHAR(225),
+    visivel VARCHAR(45),
+    dataHora VARCHAR(45),
+    fkTelevisao int,
+    constraint fkTelevisao foreign key (fkTelevisao) references Televisao(idTelevisao)
+);
 
-SELECT * FROM Televisao;
+CREATE TABLE Processo (
+	idProcesso INT PRIMARY KEY auto_increment,
+    pid VARCHAR(45),
+    nome VARCHAR(45),
+    dataHora VARCHAR(45),
+    fkTelevisao int,
+    foreign key (fkTelevisao) references Televisao(idTelevisao)
+);
 
-SELECT * FROM Componente;
+CREATE TABLE Log (
+	idLog INT PRIMARY KEY auto_increment,
+    dataHora VARCHAR(45),
+    valor DOUBLE
+);
+
+CREATE TABLE LogComponente (
+	idLogComponente INT PRIMARY KEY auto_increment,
+	dataHora VARCHAR(45),
+    valor DOUBLE,
+    fkComponente int,
+    foreign key (fkComponente) references Componente(idComponente)
+);

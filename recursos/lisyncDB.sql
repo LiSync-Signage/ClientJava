@@ -33,7 +33,7 @@ CREATE TABLE Televisao(
     setor VARCHAR(225),
     nome VARCHAR(45), 
     taxaAtualizacao INT,
-    enderecoMac VARCHAR(45),
+    hostName VARCHAR(80),
     fkEmpresa INT,
     constraint fkEmpresaTv foreign key (fkEmpresa) references Empresa(idEmpresa)
 );
@@ -81,3 +81,6 @@ CREATE TABLE LogComponente (
     fkComponente int,
     foreign key (fkComponente) references Componente(idComponente)
 );
+
+
+-- DROP DATABASE lisyncDB;

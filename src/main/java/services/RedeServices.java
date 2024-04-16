@@ -1,14 +1,12 @@
 package services;
 
-import models.Televisao;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 
-public class Rede {
+public class RedeServices {
 
     public String ipTelevisao() {
         try {

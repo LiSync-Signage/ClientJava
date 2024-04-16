@@ -24,8 +24,8 @@ public class ServicosLisync {
     JanelaDAO janelaDAO = new JanelaDAO();
 
 
-    public Boolean televisaoNova(String endereco, Integer idEmpresa) {
-        Integer televisaoExiste = televisaoDAO.contarPorEndereco(endereco, idEmpresa);
+    public Boolean televisaoNova(String hostname, Integer idEmpresa) {
+        Integer televisaoExiste = televisaoDAO.contarPorEndereco(hostname, idEmpresa);
         return televisaoExiste == 0;
     }
 
@@ -45,20 +45,12 @@ public class ServicosLisync {
                 setor,
                 nome,
                 taxaAtualizacao,
-                gerarSerial(looca.getRede().getGrupoDeInterfaces().getInterfaces()),
+                looca.getRede().getParametros().getHostName(),
                 idEmpresa
         );
 
         televisaoDAO.registrar(televisao);
         System.out.println("Nova televisão adicionada! \n");
-    }
-
-    public String gerarSerial(List<RedeInterface> redeInterfaces) {
-        String serial = "";
-        for (RedeInterface redeInterface : redeInterfaces) {
-            serial = String.format("%s%s", serial, redeInterface.getEnderecoMac());
-        }
-        return serial;
     }
 
     public void cadastrarComponentes(Televisao televisao) {

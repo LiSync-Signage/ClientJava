@@ -10,19 +10,19 @@ public class Televisao {
     private String setor;
     private String nome;
     private Integer taxaAtualizacao;
-    private String enderecoMac;
+    private String hostName;
     private Integer fkEmpresa;
     private List<Componente> componentes;
 
     public Televisao() {}
 
     public Televisao(String andar, String setor, String nome, Integer taxaAtualizacao,
-                     String enderecoMac, Integer fkEmpresa) {
+                     String hostName, Integer fkEmpresa) {
         this.andar = andar;
         this.setor = setor;
         this.nome = nome;
         this.taxaAtualizacao = taxaAtualizacao;
-        this.enderecoMac = enderecoMac;
+        this.hostName = hostName;
         this.fkEmpresa = fkEmpresa;
         this.componentes = new ArrayList<>();
     }
@@ -71,12 +71,12 @@ public class Televisao {
         this.taxaAtualizacao = taxaAtualizacao;
     }
 
-    public String getEnderecoMac() {
-        return enderecoMac;
+    public String getHostName() {
+        return hostName;
     }
 
-    public void setEnderecoMac(String enderecoMac) {
-        this.enderecoMac = enderecoMac;
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
     }
 
 
@@ -104,7 +104,7 @@ public class Televisao {
                 ", setor='" + setor + '\'' +
                 ", nome='" + nome + '\'' +
                 ", taxaAtualizacao=" + taxaAtualizacao +
-                ", enderecoMac='" + enderecoMac + '\'' +
+                ", hostName='" + hostName + '\'' +
                 ", fkEmpresa=" + fkEmpresa +
                 ", componentes=" + componentes +
                 '}';

@@ -8,7 +8,6 @@ import models.Componente;
 import models.Televisao;
 import models.Usuario;
 import services.Autenticacao;
-import services.Rede;
 import services.ServicosLisync;
 
 import java.io.IOException;
@@ -20,7 +19,6 @@ public class Main {
     Scanner inputNext = new Scanner(System.in);
     ServicosLisync servicosLisync = new ServicosLisync();
     Looca looca = new Looca();
-    Rede rede = new Rede();
     Autenticacao autenticacao = new Autenticacao();
     UsuarioDAO usuarioDAO = new UsuarioDAO();
     TelevisaoDAO televisaoDAO = new TelevisaoDAO();
@@ -65,9 +63,9 @@ public class Main {
     servicosLisync.atualizarEmpresaDoUsuario(usuarioAutenticado.getFkEmpresa());
     servicosLisync.atualizarUsuario(usuarioAutenticado);
 
-    String endereco = looca.getRede().getGrupoDeInterfaces().getInterfaces().get(0).getEnderecoMac();
+    String hostName = looca.getRede().getParametros().getHostName();
 
-    if(servicosLisync.televisaoNova(endereco, usuarioAutenticado.getFkEmpresa())) {
+    if(servicosLisync.televisaoNova(hostName, usuarioAutenticado.getFkEmpresa())) {
       System.out.println("Não foi possível encontrar este Tv em nossa base de dados! ");
       System.out.println("|----------- Cadastro TV -----------|");
       System.out.println("Inserir dados de localização (andar)");
@@ -80,13 +78,13 @@ public class Main {
       Integer taxaAtualizacao = input.nextInt();
 
       servicosLisync.cadastrarNovaTelevisao(andar, setor, nome, taxaAtualizacao, usuarioAutenticado.getFkEmpresa());
-      Televisao televisao = televisaoDAO.buscarTvPeloEndereco(endereco);
+      Televisao televisao = televisaoDAO.buscarTvPeloEndereco(hostName);
       servicosLisync.cadastrarComponentes(televisao);
 
       System.out.println("Televisão cadastrada com sucesso!");
     }
 
-    Televisao televisao = televisaoDAO.buscarTvPeloEndereco(endereco);
+    Televisao televisao = televisaoDAO.buscarTvPeloEndereco(hostName);
     List<Componente> componentes = componenteDAO.buscarComponentesPorIdTv(televisao.getIdTelevisao());
 
     String logRegistroComponentes = "";

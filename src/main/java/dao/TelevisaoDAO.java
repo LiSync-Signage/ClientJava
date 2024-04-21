@@ -33,7 +33,7 @@ public class TelevisaoDAO {
         }
     }
 
-    public List<Televisao> buscarTelevisoesPorIdEmpresa(Integer idEmpresa) {
+    public  List<Televisao> buscarTelevisoesPorIdEmpresa(Integer idEmpresa) {
         ConexaoMySQL conexao = new ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 

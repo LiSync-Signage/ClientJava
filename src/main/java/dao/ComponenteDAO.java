@@ -1,5 +1,6 @@
 package dao;
 
+import models.Televisao;
 import org.LiSync.conexao.ConexaoMySQL;
 import models.Componente;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -13,7 +14,7 @@ public class ComponenteDAO {
         ConexaoMySQL conexao = new ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
-        String sql = "INSERT INTO Componente (modelo, identificador, tipoComponente,fkTelevisao) " +
+        String sql = "INSERT INTO Componente (modelo, identificador, tipoComponente, fkTelevisao) " +
                 "VALUES (?, ?, ?, ?)";
 
         try {
@@ -31,6 +32,9 @@ public class ComponenteDAO {
             }
         }
     }
+
+
+
 
     public List<Componente> buscarComponentesPorIdTv (Integer idTelevisao) {
         ConexaoMySQL conexao = new ConexaoMySQL();

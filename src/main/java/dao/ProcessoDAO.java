@@ -34,11 +34,11 @@ public class ProcessoDAO {
         ConexaoMySQL conexao = new ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
-        String sql = "INSERT INTO Processo (pid, nome, dataHora, fkTelevisao) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Log (pid, nomeProcesso, dataHora, fkComponente, valor) VALUES (?, ?, ?, ?, ?)";
 
         try {
             for (Processo processo : processos) {
-                con.update(sql, processo.getPid(), processo.getNome(), processo.getDataHora(), processo.getFkTelevisao());
+                con.update(sql, processo.getPid(), processo.getNome(), processo.getDataHora(), processo.getIdComponente(), processo.getValor());
             }
 
         } catch (Exception e) {
@@ -54,6 +54,9 @@ public class ProcessoDAO {
             }
         }
     }
+
+
+
 
     public Integer numeroDeProcessos() {
         ConexaoMySQL conexao = new ConexaoMySQL();

@@ -2,7 +2,6 @@ package services;
 
 import com.github.britooo.looca.api.core.Looca;
 import com.github.britooo.looca.api.group.discos.Disco;
-import com.github.britooo.looca.api.group.rede.RedeInterface;
 import com.github.britooo.looca.api.group.processos.Processo;
 import com.github.britooo.looca.api.group.janelas.Janela;
 import com.github.britooo.looca.api.util.Conversor;
@@ -23,9 +22,11 @@ public class ServicosLisync {
     ProcessoDAO processoDAO = new ProcessoDAO();
     JanelaDAO janelaDAO = new JanelaDAO();
 
+    LogComponenteDAO logComponenteDAO = new LogComponenteDAO();
 
-    public Boolean televisaoNova(String hostname, Integer idEmpresa) {
-        Integer televisaoExiste = televisaoDAO.contarPorEndereco(hostname, idEmpresa);
+
+    public Boolean televisaoNova(String hostname) {
+        Integer televisaoExiste = televisaoDAO.contarPorEndereco(hostname);
         return televisaoExiste == 0;
     }
 
@@ -38,17 +39,17 @@ public class ServicosLisync {
         usuarioDAO.atualizarUsuarioLocal(usuarioLogado);
     }
 
-    public void cadastrarNovaTelevisao(String andar, String setor, String nome, Integer taxaAtualizacao,
-                                       Integer idEmpresa) {
+    public void cadastrarNovaTelevisao( String nome, Integer fkAmbiente, Integer taxaAtualizacao
+                            ) {
+
         Televisao televisao = new Televisao(
-                andar,
-                setor,
                 nome,
+                fkAmbiente,
                 taxaAtualizacao,
-                looca.getRede().getParametros().getHostName(),
-                idEmpresa
+                looca.getRede().getParametros().getHostName()
         );
 
+        System.out.println(televisao.getFkAmbiente());
         televisaoDAO.registrar(televisao);
         System.out.println("Nova televisão adicionada! \n");
     }
@@ -73,6 +74,7 @@ public class ServicosLisync {
         componenteDAO.registarComponente(memoriaRam);
 
     }
+
 
     public String monitoramentoComponentes(Componente componente, Televisao televisao) throws IOException {
         Double valor = 0.0;
@@ -134,13 +136,26 @@ public class ServicosLisync {
         return "Não foi possível encontar componentes";
     }
 
+
     public void registrarProcessos(List<models.Processo> listaProcessos) {
         processoDAO.salvarVariosProcessos(listaProcessos);
     }
+    public void registrarLogComponente(List<models.LogComponente> listaLogComponente) {
 
-    public models.Processo monitoramentoProcesso(Processo processoMonitorado, Integer idTelevisao) {
+        logComponenteDAO.salvarLogComponente(listaLogComponente);
+    }
+
+
+
+
+    public models.LogComponente monitoramentoLogComponente(Integer fkComponente, Double valor  ) {
+        models.LogComponente logComponente = new models.LogComponente(fkComponente, valor);
+        return logComponente;
+    }
+
+    public models.Processo monitoramentoProcesso(Processo processoMonitorado, Integer idComponente, Double valor) {
         models.Processo processo = new models.Processo(processoMonitorado.getPid(),
-                processoMonitorado.getNome(), idTelevisao);
+                processoMonitorado.getNome(), idComponente, valor);
         return processo;
     }
 
@@ -149,12 +164,26 @@ public class ServicosLisync {
         String tamanhoJanela = "Altura: %dpx | Largura: %dpx".formatted(janelaMonitorada.getLocalizacaoETamanho().height,
                 janelaMonitorada.getLocalizacaoETamanho().width);
         models.Janela janela = new models.Janela(janelaMonitorada.getPid().intValue(), janelaMonitorada.getComando(),
-                janelaMonitorada.getTitulo(), tamanhoJanela, visivel,
+                janelaMonitorada.getTitulo(), visivel,
                 idTelevisao);
         return  janela;
     }
 
     public void salvarJanelas(List<models.Janela> janelas) {
         janelaDAO.salvarVariasJanelas(janelas);
+    }
+
+    public void cadastrarAmbiente(String setor, String andar, Integer fkEmpresa) {
+        models.Ambiente ambiente= new models.Ambiente(setor, andar, fkEmpresa);
+        registrarAmbiente(ambiente);
+    }
+
+    public void cadastrarComando(String comando, Integer fkTelevisao) {
+        models.Comando comandoObj= new models.Comando(comando, fkTelevisao);
+        ComandoDAO.insertComando(comandoObj);
+    }
+
+    public void registrarAmbiente (Ambiente ambiente) {
+        AmbienteDAO.insertAmbiente(ambiente);
     }
 }

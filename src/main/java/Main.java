@@ -18,7 +18,9 @@ import dao.TelevisaoDAO;
 import models.Usuario;
 
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.util.List;
 import java.util.Timer;
@@ -97,15 +99,14 @@ public class Main {
 
 
                     ///Verificação de existência de televisões na empresa
-                    if(!servicosLisync.televisaoNova(hostName, usuarioAutenticado.getFkEmpresa())){
-                        JFrame panelTvs = new JFrame("Janela Secundária");
-                        placeComponentsPanelTvs(panelTvs);
-                        panelTvs.setSize(400, 700);
-                        panelTvs.setVisible(true);
-                        centerFrameOnScreen(panelTvs);
-                        panelTvs.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    if(!servicosLisync.televisaoNova(hostName)){
 
-
+                        JFrame homePanel = new JFrame("Tela Inicial");
+                        placeComponentsHome(homePanel);
+                        homePanel.setSize(300, 400);
+                        homePanel.setVisible(true);
+                        centerFrameOnScreen(homePanel);
+                        homePanel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
                     }else {
                         JFrame panelCadastroTvs = new JFrame("CadastroTvs");
@@ -136,8 +137,131 @@ public class Main {
     }
 
 
+    private static void placeComponentsHome(JFrame homePanel) {
+        frame.setLayout(new BorderLayout());
 
-    ///Janela de Tvs
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+
+        JButton buttonReiniciar = new JButton("Reiniciar");
+        JButton buttonDesligar = new JButton("Desligar");
+        JButton buttonMonitoramento = new JButton("Monitorar");
+
+        Dimension tamanhoBotão = new Dimension(100, 50);
+
+        buttonReiniciar.setPreferredSize(tamanhoBotão);
+        buttonReiniciar.setMaximumSize(tamanhoBotão);
+        buttonReiniciar.setMinimumSize(tamanhoBotão);
+
+        buttonDesligar.setPreferredSize(tamanhoBotão);
+        buttonDesligar.setMaximumSize(tamanhoBotão);
+        buttonDesligar.setMinimumSize(tamanhoBotão);
+
+        buttonMonitoramento.setPreferredSize(tamanhoBotão);
+        buttonMonitoramento.setMaximumSize(tamanhoBotão);
+        buttonMonitoramento.setMinimumSize(tamanhoBotão);
+
+        buttonPanel.add(Box.createVerticalGlue()); // espaço  antes dos botões
+        buttonPanel.add(buttonReiniciar);
+        buttonPanel.add(Box.createRigidArea(new Dimension(90,5))); // Gap botões
+        buttonPanel.add(buttonDesligar);
+        buttonPanel.add(Box.createRigidArea(new Dimension(90,5))); // Gap botões
+        buttonPanel.add(buttonMonitoramento);
+        buttonPanel.add(Box.createVerticalGlue()); //  espaço depois dos botões
+
+        homePanel.add(buttonPanel, BorderLayout.CENTER);
+        buttonReiniciar.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                try {
+                    // Escreve ai oq tu quer executar
+                    String comando = "shutdown -r";
+                    ServicosLisync servicosLisync = new ServicosLisync();
+                    ComandoDAO comandoDAO = new ComandoDAO();
+                    TelevisaoDAO televisaoDAO = new TelevisaoDAO();
+                    Looca looca = new Looca();
+
+                    String hostName = looca.getRede().getParametros().getHostName();
+                    servicosLisync.cadastrarComando(comando, televisaoDAO.buscarTvPeloEndereco(hostName).getIdTelevisao());
+
+
+                    Process processo = Runtime.getRuntime().exec(comando);
+
+
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(processo.getInputStream()));
+                    String linha;
+                    while ((linha = reader.readLine()) != null) {
+                        System.out.println(linha);
+                    }
+
+                    // Esperando o processo terminar
+                    processo.waitFor();
+                } catch (IOException | InterruptedException c) {
+                    c.printStackTrace();
+                }
+            }
+        });
+
+        buttonDesligar.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                try {
+
+                    ServicosLisync servicosLisync = new ServicosLisync();
+                    // Comando que você deseja executarf
+                    String comando = "shutdown";
+                    ComandoDAO comandoDAO = new ComandoDAO();
+                    TelevisaoDAO televisaoDAO = new TelevisaoDAO();
+                    Looca looca = new Looca();
+
+                    String hostName = looca.getRede().getParametros().getHostName();
+
+
+
+                    servicosLisync.cadastrarComando(comando, televisaoDAO.buscarTvPeloEndereco(hostName).getIdTelevisao());
+
+
+
+
+
+                    // Executando o comando
+                    Process processo = Runtime.getRuntime().exec(comando);
+
+                    // Lendo a saída do processo
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(processo.getInputStream()));
+                    String linha;
+                    while ((linha = reader.readLine()) != null) {
+                        System.out.println(linha);
+                    }
+
+                    // Esperando o processo terminar
+                    processo.waitFor();
+                } catch (IOException | InterruptedException c) {
+                    c.printStackTrace();
+                }
+            }
+        });
+
+        buttonMonitoramento.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                        JFrame panelTvs = new JFrame("Janela Secundária");
+                        placeComponentsPanelTvs(panelTvs);
+                        panelTvs.setSize(800, 1000);
+                        panelTvs.setVisible(true);
+                        centerFrameOnScreen(panelTvs);
+                        panelTvs.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            }
+        });
+    }
+
+
+
+    ///Janela de Tvsty
     private static void placeComponentsPanelTvs(JFrame panelTvs) {
         panelTvs.setLayout(new BorderLayout());
         Looca looca = new Looca();
@@ -147,6 +271,7 @@ public class Main {
         panelTvs.add(new JScrollPane(textArea), BorderLayout.CENTER);
         ServicosLisync servicosLisync = new ServicosLisync();
 
+
         TelevisaoDAO televisaoDAO = new TelevisaoDAO();
         Televisao televisao = televisaoDAO.buscarTvPeloEndereco(hostName);
 
@@ -154,9 +279,25 @@ public class Main {
         ComponenteDAO componenteDAO = new ComponenteDAO();
 
         List<Componente> componentes = componenteDAO.buscarComponentesPorIdTv(televisao.getIdTelevisao());
-
+        String logRegistroComponentes = "";
         Timer timer = new Timer();
         int intervalo = televisao.getTaxaAtualizacao();
+
+
+        for (Componente componenteAtual : componentes) {
+            logRegistroComponentes = """
+                    |----------- Componente %d da TV -----------|
+                    Tipo do componente: %s;
+                    Modelo: %s;
+                    Identificador: %s;
+                    Id da Televisão: %d;
+                    """.formatted(componenteAtual.getIdComponente(), componenteAtual.getTipoComponente(), componenteAtual.getModelo(),
+                    componenteAtual.getIdentificador(), componenteAtual.getFkTelevisao());
+            System.out.println(logRegistroComponentes);
+        }
+
+
+
 
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -164,8 +305,8 @@ public class Main {
                 textArea.setText(""); // Limpar o JTextArea a cada atualização
                 textArea.append("\n |----------- Monitoramento -----------|\n");
 
-                // Monitoramento de processos
 
+                // Monitoramento de processos MEMORIA
 
                 List<Processo> processos = looca.getGrupoDeProcessos().getProcessos();
                 processos.sort(Comparator.comparing(Processo::getUsoMemoria));
@@ -178,7 +319,18 @@ public class Main {
                             i, processoAtual.getNome(), processoAtual.getPid(),
                             processoAtual.getUsoCpu(), processoAtual.getUsoMemoria());
                     textArea.append(logProcesso);
-                    processoModels.add(servicosLisync.monitoramentoProcesso(processoAtual, televisao.getIdTelevisao()));
+                    processoModels.add(servicosLisync.monitoramentoProcesso(processoAtual, televisao.getIdTelevisao(), processoAtual.getUsoMemoria()));
+                }
+                processos.sort(Comparator.comparing(Processo::getUsoCpu));
+                for (int i = processos.size() - 1; i > processos.size() - 6; i--) {
+                    Processo processoAtual = processos.get(i);
+                    String logProcesso = String.format(
+                            "|----------- Processo %d -----------|\n" +
+                                    "Nome: %s\nPid: %d\nCPU: %.2f\nMemória: %.2f\n",
+                            i, processoAtual.getNome(), processoAtual.getPid(),
+                            processoAtual.getUsoCpu(), processoAtual.getUsoMemoria());
+                    textArea.append(logProcesso);
+                    processoModels.add(servicosLisync.monitoramentoProcesso(processoAtual, televisao.getIdTelevisao(), processoAtual.getUsoCpu()));
                 }
                 servicosLisync.registrarProcessos(processoModels);
 
@@ -243,6 +395,12 @@ public class Main {
         JButton cadTvButton = new JButton("Cadastrar Televisão");
         cadTvButton.setBounds(70, 160, 180, 25); // Centralizado horizontalmente
         panelCadastroTvs.add(cadTvButton);
+
+        TelevisaoDAO televisaoDAO = new TelevisaoDAO();
+        ServicosLisync servicosLisync = new ServicosLisync();
+        Ambiente ambiente = new Ambiente();
+        Looca looca = new Looca();
+        AmbienteDAO ambienteDAO = new AmbienteDAO();
         cadTvButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String andar = andarText.getText();
@@ -250,27 +408,25 @@ public class Main {
                 String nome = nomeText.getText();
                 Integer taxaAtualizacao = Integer.parseInt(txAtualiText.getText());
 
-                TelevisaoDAO televisaoDAO = new TelevisaoDAO();
-                ServicosLisync servicosLisync = new ServicosLisync();
-                Looca looca = new Looca();
+
 
                 String hostName = looca.getRede().getParametros().getHostName();
 
 
-
-                servicosLisync.cadastrarNovaTelevisao(andar, setor, nome, taxaAtualizacao, usuarioAutenticado.getFkEmpresa());
+                servicosLisync.cadastrarAmbiente(setor, andar, usuarioAutenticado.getFkEmpresa());
+                servicosLisync.cadastrarNovaTelevisao( nome, ambienteDAO.getIdpAndarSetor(andar,setor), taxaAtualizacao);
+                System.out.println(andar);
                 Televisao televisao = televisaoDAO.buscarTvPeloEndereco(hostName);
                 servicosLisync.cadastrarComponentes(televisao);
 
 
                 JFrame panelTvs = new JFrame("Janela Secundária");
                 placeComponentsPanelTvs(panelTvs);
-                panelTvs.setSize(300, 200);
-                panelTvs.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-
+                panelTvs.setSize(800, 1000);
                 panelTvs.setVisible(true);
-                frame.dispose();
+                centerFrameOnScreen(panelTvs);
+                panelTvs.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                panelCadastroTvs.dispose();
 
 
             }

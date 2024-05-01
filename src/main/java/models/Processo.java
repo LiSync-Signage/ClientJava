@@ -8,14 +8,33 @@ public class Processo {
     private String nome;
     private Integer fkTelevisao;
     private LocalDateTime dataHora;
+    private Integer idComponente;
+    private Double valor;
 
     public Processo() {}
 
-    public Processo(Integer pid, String nome, Integer fkComputador) {
+    public Processo(Integer pid, String nome, Integer idComponente, Double valor) {
         this.pid = pid;
         this.nome = nome;
-        this.fkTelevisao = fkComputador;
+        this.idComponente = idComponente;
         this.dataHora = LocalDateTime.now();
+        this.valor = valor;
+    }
+
+    public Integer getIdComponente() {
+        return idComponente;
+    }
+
+    public void setIdComponente(Integer idComponente) {
+        this.idComponente = idComponente;
+    }
+
+    public Double getValor() {
+        return valor;
+    }
+
+    public void setValor(Double valor) {
+        this.valor = valor;
     }
 
     public Integer getIdProcesso() {
@@ -66,6 +85,8 @@ public class Processo {
                 ", nome='" + nome + '\'' +
                 ", fkTelevisao=" + fkTelevisao +
                 ", dataHora=" + dataHora +
+                ", idComponente=" + idComponente +
+                ", valor=" + valor +
                 '}';
     }
 }

@@ -2,29 +2,43 @@ package models;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
-import java.net.*;
+
 public class Televisao {
     private Integer idTelevisao;
-    private String andar;
-    private String setor;
     private String nome;
     private Integer taxaAtualizacao;
     private String hostName;
-    private Integer fkEmpresa;
     private List<Componente> componentes;
 
-    public Televisao() {}
+    private Integer fkAmbiente;
 
-    public Televisao(String andar, String setor, String nome, Integer taxaAtualizacao,
-                     String hostName, Integer fkEmpresa) {
-        this.andar = andar;
-        this.setor = setor;
+    public Televisao(Integer idTelevisao, String nome, Integer taxaAtualizacao, String hostName, Integer fkAmbiente) {
+        this.idTelevisao = idTelevisao;
         this.nome = nome;
         this.taxaAtualizacao = taxaAtualizacao;
         this.hostName = hostName;
-        this.fkEmpresa = fkEmpresa;
         this.componentes = new ArrayList<>();
+        this.fkAmbiente = fkAmbiente;
+    }
+
+    public Televisao(String nome, Integer fkAmbiente, Integer taxaAtualizacao, String hostName) {
+        this.nome = nome;
+        this.fkAmbiente = fkAmbiente;
+        this.taxaAtualizacao = taxaAtualizacao;
+        this.hostName = hostName;
+        this.componentes = new ArrayList<>();
+    }
+
+    public Televisao() {
+
+    }
+
+    public Integer getFkAmbiente() {
+        return fkAmbiente;
+    }
+
+    public void setFkAmbiente(Integer fkAmbiente) {
+        this.fkAmbiente = fkAmbiente;
     }
 
     public void registarComponenteTv(Componente componente) {
@@ -37,22 +51,6 @@ public class Televisao {
 
     public void setIdTelevisao(Integer idTelevisao) {
         this.idTelevisao = idTelevisao;
-    }
-
-    public String getAndar() {
-        return andar;
-    }
-
-    public void setAndar(String andar) {
-        this.andar = andar;
-    }
-
-    public String getSetor() {
-        return setor;
-    }
-
-    public void setSetor(String setor) {
-        this.setor = setor;
     }
 
     public String getNome() {
@@ -79,15 +77,6 @@ public class Televisao {
         this.hostName = hostName;
     }
 
-
-    public Integer getFkEmpresa() {
-        return fkEmpresa;
-    }
-
-    public void setFkEmpresa(Integer fkEmpresa) {
-        this.fkEmpresa = fkEmpresa;
-    }
-
     public List<Componente> getComponentes() {
         return componentes;
     }
@@ -100,13 +89,11 @@ public class Televisao {
     public String toString() {
         return "Televisao{" +
                 "idTelevisao=" + idTelevisao +
-                ", andar='" + andar + '\'' +
-                ", setor='" + setor + '\'' +
                 ", nome='" + nome + '\'' +
                 ", taxaAtualizacao=" + taxaAtualizacao +
                 ", hostName='" + hostName + '\'' +
-                ", fkEmpresa=" + fkEmpresa +
                 ", componentes=" + componentes +
+                ", fkAmbiente=" + fkAmbiente +
                 '}';
     }
 }

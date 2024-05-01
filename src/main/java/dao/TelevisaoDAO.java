@@ -13,13 +13,14 @@ public class TelevisaoDAO {
         ConexaoMySQL conexao = new ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
-        String sql = "INSERT INTO Televisao (andar, setor, nome, taxaAtualizacao, hostName, fkEmpresa) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Televisao (nome, taxaAtualizacao, hostName ,fkAmbiente) " +
+                "VALUES (?, ?, ?, ? )";
 
         try {
-            con.update(sql, novaTelevisao.getAndar(), novaTelevisao.getSetor(),
+            System.out.println(novaTelevisao.getFkAmbiente());
+            con.update(sql,
                     novaTelevisao.getNome(), novaTelevisao.getTaxaAtualizacao(),
-                    novaTelevisao.getHostName(), novaTelevisao.getFkEmpresa());
+                    novaTelevisao.getHostName(), novaTelevisao.getFkAmbiente());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -33,14 +34,14 @@ public class TelevisaoDAO {
         }
     }
 
-    public  List<Televisao> buscarTelevisoesPorIdEmpresa(Integer idEmpresa) {
+    public  List<Televisao> buscarTelevisoesPorIdEmpresa(Integer idEmpresa, Integer idAmbiente) {
         ConexaoMySQL conexao = new ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
-        String sql = "SELECT * FROM Televisao WHERE fkEmpresa = ?";
+        String sql = "SELECT * FROM Televisao join ambiente join Empresa where idAmbiente=?  and FkEmpresa = ?;";
 
         try {
-            List<Televisao> televisoesLocal = con.query(sql, new BeanPropertyRowMapper<>(Televisao.class), idEmpresa);
+            List<Televisao> televisoesLocal = con.query(sql, new BeanPropertyRowMapper<>(Televisao.class),idAmbiente, idEmpresa);
             return televisoesLocal;
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,7 +61,7 @@ public class TelevisaoDAO {
         ConexaoMySQL conexao = new ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
-        String sql = "SELECT * FROM Televisao WHERE hostName LIKE ? LIMIT 1";
+            String sql = "SELECT * FROM Televisao WHERE hostName = ? LIMIT 1";
 
         try {
             Televisao televioesLocal = con.queryForObject(sql, new BeanPropertyRowMapper<>(Televisao.class), endereco);
@@ -82,15 +83,14 @@ public class TelevisaoDAO {
     }
 
     // Futaramente deverá ser alterado
-    public Integer contarPorEndereco(String endereco, Integer idEmpresa) {
+    public Integer contarPorEndereco(String endereco) {
         ConexaoMySQL conexao = new ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
-        String sql = "SELECT COUNT(*) FROM Televisao JOIN Empresa ON " +
-                "fkEmpresa = idEmpresa WHERE hostName = ? AND fkEmpresa = ?";
+        String sql = "select count(*) from Televisao where hostName = ?;";
 
         try {
-            Integer contagemTv = con.queryForObject(sql, Integer.class, endereco, idEmpresa);
+            Integer contagemTv = con.queryForObject(sql, Integer.class, endereco);
             return contagemTv;
 
         } catch (Exception e) {

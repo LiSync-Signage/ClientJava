@@ -12,13 +12,13 @@ public class JanelaDAO {
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
 
-        String sql = "INSERT INTO Janela (pidJanela, comando, titulo, localizacao, visivel, " +
-                "fkTelevisao, dataHora) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Janela (pidJanela, titulo, localizacao, visivel, " +
+                "fkTelevisao) VALUES (?, ?, ?, ?, ?)";
 
         try {
             for (Janela janela : janelas) {
-                con.update(sql, janela.getPidJanela(), janela.getComando(), janela.getTitulo(),
-                        janela.getLocalizacao(), janela.getVisivel(), janela.getFkTelevisao(), janela.getDataHora());
+                con.update(sql, janela.getPidJanela(), janela.getTitulo(),
+                        janela.getLocalizacao(), janela.getVisivel(), janela.getFkTelevisao());
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -210,7 +210,7 @@ public class Main {
                 try {
 
                     ServicosLisync servicosLisync = new ServicosLisync();
-                    // Comando que você deseja executarf
+                    // Comando que você deseja executar
                     String comando = "shutdown";
                     ComandoDAO comandoDAO = new ComandoDAO();
                     TelevisaoDAO televisaoDAO = new TelevisaoDAO();
@@ -311,6 +311,7 @@ public class Main {
                 List<Processo> processos = looca.getGrupoDeProcessos().getProcessos();
                 processos.sort(Comparator.comparing(Processo::getUsoMemoria));
                 List<models.Processo> processoModels = new ArrayList<>();
+
                 for (int i = processos.size() - 1; i > processos.size() - 6; i--) {
                     Processo processoAtual = processos.get(i);
                     String logProcesso = String.format(
@@ -319,7 +320,7 @@ public class Main {
                             i, processoAtual.getNome(), processoAtual.getPid(),
                             processoAtual.getUsoCpu(), processoAtual.getUsoMemoria());
                     textArea.append(logProcesso);
-                    processoModels.add(servicosLisync.monitoramentoProcesso(processoAtual, televisao.getIdTelevisao(), processoAtual.getUsoMemoria()));
+                    processoModels.add(servicosLisync.monitoramentoProcesso(processoAtual, componenteDAO.buscarTipoComponentePorIdTv("RAM",televisao.getIdTelevisao()).get(0).getIdComponente(), processoAtual.getUsoMemoria()));
                 }
                 processos.sort(Comparator.comparing(Processo::getUsoCpu));
                 for (int i = processos.size() - 1; i > processos.size() - 6; i--) {
@@ -330,7 +331,7 @@ public class Main {
                             i, processoAtual.getNome(), processoAtual.getPid(),
                             processoAtual.getUsoCpu(), processoAtual.getUsoMemoria());
                     textArea.append(logProcesso);
-                    processoModels.add(servicosLisync.monitoramentoProcesso(processoAtual, televisao.getIdTelevisao(), processoAtual.getUsoCpu()));
+                    processoModels.add(servicosLisync.monitoramentoProcesso(processoAtual, componenteDAO.buscarTipoComponentePorIdTv("CPU",televisao.getIdTelevisao()).get(0).getIdComponente(), processoAtual.getUsoCpu()));
                 }
                 servicosLisync.registrarProcessos(processoModels);
 
@@ -338,7 +339,7 @@ public class Main {
                 List<Janela> janelas = looca.getGrupoDeJanelas().getJanelasVisiveis();
                 List<models.Janela> janelasModelo = new ArrayList<>();
                 for (Janela janela : janelas) {
-                    janelasModelo.add(servicosLisync.monitoramentoJanela(janela, televisao.getIdTelevisao()));
+                    janelasModelo.add(servicosLisync.monitoramentoJanela(janela, componenteDAO.buscarTipoComponentePorIdTv("Disco",televisao.getIdTelevisao()).get(0).getIdComponente()));
                 }
                 servicosLisync.salvarJanelas(janelasModelo);
 

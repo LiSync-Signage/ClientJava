@@ -339,7 +339,7 @@ public class Main {
                 List<Janela> janelas = looca.getGrupoDeJanelas().getJanelasVisiveis();
                 List<models.Janela> janelasModelo = new ArrayList<>();
                 for (Janela janela : janelas) {
-                    janelasModelo.add(servicosLisync.monitoramentoJanela(janela, componenteDAO.buscarTipoComponentePorIdTv("Disco",televisao.getIdTelevisao()).get(0).getIdComponente()));
+                    janelasModelo.add(servicosLisync.monitoramentoJanela(janela, televisao.getIdTelevisao()));
                 }
                 servicosLisync.salvarJanelas(janelasModelo);
 

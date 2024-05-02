@@ -8,7 +8,7 @@ public class TESTE {
         ComponenteDAO componenteDAO = new ComponenteDAO();
         TelevisaoDAO televisaoDAO = new TelevisaoDAO();
 
-        System.out.println(componenteDAO.buscarTipoComponentePorIdTv("CPU",1).get(0).getIdComponente());
+        System.out.println(componenteDAO.buscarTipoComponentePorIdTv("CPU",1).get(0));
 
     }
 }

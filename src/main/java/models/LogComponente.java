@@ -7,7 +7,9 @@ public class LogComponente {
     private Double valor;
     private LocalDateTime dataHora;
 
+    public LogComponente() {
 
+    }
     public LogComponente(Integer fkComponente, Double valor) {
         this.fkComponente = fkComponente;
         this.valor = valor;

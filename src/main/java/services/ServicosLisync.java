@@ -78,10 +78,19 @@ public class ServicosLisync {
 
     public String monitoramentoComponentes(Componente componente, Televisao televisao) throws IOException {
         Double valor = 0.0;
+
+
         switch (componente.getTipoComponente()) {
             case "CPU":
 
+
                 valor = looca.getProcessador().getUso();
+                LogComponente logComponente = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("CPU",televisao.getIdTelevisao()).get(0).getIdComponente(),valor);
+
+                logComponenteDAO.salvarLogComponenteIndividual(logComponente);
+
+
+
 
                 if (valor > 80) {
                     return String.format("ESTADO CRÍTICO - Uso da CPU elevado na televisão "
@@ -105,6 +114,10 @@ public class ServicosLisync {
                 valor = (discoPrincipal.getBytesDeEscritas().doubleValue()
                         / discoPrincipal.getTamanho().doubleValue()) * 100.;
 
+                LogComponente logComponente2 = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("Disco",televisao.getIdTelevisao()).get(0).getIdComponente(),valor);
+
+                logComponenteDAO.salvarLogComponenteIndividual(logComponente2);
+
                 if (valor > 60) {
                     return String.format("ESTADO CRÍTICO - Uso da Disco elevado na televisão "
                             + televisao.getNome() + " Uso de Disco: " + valor);
@@ -118,6 +131,10 @@ public class ServicosLisync {
 
             case "RAM":
                 valor = (looca.getMemoria().getEmUso().doubleValue() / (looca.getMemoria().getTotal().doubleValue())) * 100.;
+
+                LogComponente logComponente1 = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("RAM",televisao.getIdTelevisao()).get(0).getIdComponente(),valor);
+
+                logComponenteDAO.salvarLogComponenteIndividual(logComponente1);
 
                 if (valor > 90) {
                     return String.format("ESTADO CRÍTICO - Uso da RAM elevado na televisão "

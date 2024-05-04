@@ -185,10 +185,13 @@ public class MainTeste {
         servicosLisync.registrarProcessos(processoModels);
 
 
+
         // Janelas
 
         List<Janela> janelas = looca.getGrupoDeJanelas().getJanelasVisiveis();
         List<models.Janela> janelasModelo = new ArrayList<>();
+
+
         for (Janela janela : janelas) {
             janelasModelo.add(servicosLisync.monitoramentoJanela(janela, televisao.getIdTelevisao()));
         }

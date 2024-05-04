@@ -311,7 +311,14 @@ public class Main {
                 List<Janela> janelas = looca.getGrupoDeJanelas().getJanelasVisiveis();
                 List<models.Janela> janelasModelo = new ArrayList<>();
                 for (Janela janela : janelas) {
+
+                    String logJanela = String.format(
+                            "|----------- Janelas -----------|\n" +
+                                    "Título: %s\nPid: %d\nID: %d \nLocalizacao e Tamanho: %s\n",
+                             janela.getTitulo(), janela.getPid(), janela.getJanelaId(), janela.getLocalizacaoETamanho());
+                    textArea.append(logJanela);
                     janelasModelo.add(servicosLisync.monitoramentoJanela(janela, televisao.getIdTelevisao()));
+
                 }
                 servicosLisync.salvarJanelas(janelasModelo);
 
@@ -364,6 +371,7 @@ public class Main {
 
         JTextField txAtualiText = new JTextField(20);
         txAtualiText.setBounds(150, 120, 120, 25);
+        panelCadastroTvs.add(txAtualiText);
 
         JButton cadTvButton = new JButton("Cadastrar Televisão");
         cadTvButton.setBounds(70, 160, 180, 25);

@@ -47,7 +47,6 @@ public class Main {
     }
 
 
-    //Janela Login
     private static void placeComponents(JPanel panelLogin) {
 
 
@@ -92,13 +91,13 @@ public class Main {
                     JOptionPane.showMessageDialog(null, "Bem-vindo, " + usuarioAutenticado.getNome() + "!");
                     servicosLisync.atualizarEmpresaDoUsuario(usuarioAutenticado.getFkEmpresa());
                     servicosLisync.atualizarUsuario(usuarioAutenticado);
-                    frame.dispose(); // Fechar a janela JFrame
+
+
+                    frame.dispose();
+
                     Looca looca = new Looca();
                     String hostName = looca.getRede().getParametros().getHostName();
-                    usuarioAutenticado = usuarioDAO.buscarCreedenciasUsuario(email, senha);
 
-
-                    ///Verificação de existência de televisões na empresa
                     if(!servicosLisync.televisaoNova(hostName)){
 
                         JFrame homePanel = new JFrame("Tela Inicial");
@@ -111,7 +110,7 @@ public class Main {
                     }else {
                         JFrame panelCadastroTvs = new JFrame("CadastroTvs");
                         placeComponentsCadastro(panelCadastroTvs);
-                        panelCadastroTvs.setSize(300, 200);
+                        panelCadastroTvs.setSize(300, 400);
                         panelCadastroTvs.setVisible(true);
                         centerFrameOnScreen(panelCadastroTvs);
                         panelCadastroTvs.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -161,13 +160,13 @@ public class Main {
         buttonMonitoramento.setMaximumSize(tamanhoBotão);
         buttonMonitoramento.setMinimumSize(tamanhoBotão);
 
-        buttonPanel.add(Box.createVerticalGlue()); // espaço  antes dos botões
+        buttonPanel.add(Box.createVerticalGlue());
         buttonPanel.add(buttonReiniciar);
-        buttonPanel.add(Box.createRigidArea(new Dimension(90,5))); // Gap botões
+        buttonPanel.add(Box.createRigidArea(new Dimension(90,5)));
         buttonPanel.add(buttonDesligar);
-        buttonPanel.add(Box.createRigidArea(new Dimension(90,5))); // Gap botões
+        buttonPanel.add(Box.createRigidArea(new Dimension(90,5)));
         buttonPanel.add(buttonMonitoramento);
-        buttonPanel.add(Box.createVerticalGlue()); //  espaço depois dos botões
+        buttonPanel.add(Box.createVerticalGlue());
 
         homePanel.add(buttonPanel, BorderLayout.CENTER);
         buttonReiniciar.addActionListener(new ActionListener() {
@@ -175,7 +174,6 @@ public class Main {
             public void actionPerformed(ActionEvent e) {
 
                 try {
-                    // Escreve ai oq tu quer executar
                     String comando = "shutdown -r";
                     ServicosLisync servicosLisync = new ServicosLisync();
                     ComandoDAO comandoDAO = new ComandoDAO();
@@ -210,33 +208,26 @@ public class Main {
                 try {
 
                     ServicosLisync servicosLisync = new ServicosLisync();
-                    // Comando que você deseja executar
+
                     String comando = "shutdown";
-                    ComandoDAO comandoDAO = new ComandoDAO();
+
                     TelevisaoDAO televisaoDAO = new TelevisaoDAO();
                     Looca looca = new Looca();
 
                     String hostName = looca.getRede().getParametros().getHostName();
 
 
-
                     servicosLisync.cadastrarComando(comando, televisaoDAO.buscarTvPeloEndereco(hostName).getIdTelevisao());
 
 
-
-
-
-                    // Executando o comando
                     Process processo = Runtime.getRuntime().exec(comando);
 
-                    // Lendo a saída do processo
+
                     BufferedReader reader = new BufferedReader(new InputStreamReader(processo.getInputStream()));
                     String linha;
                     while ((linha = reader.readLine()) != null) {
                         System.out.println(linha);
                     }
-
-                    // Esperando o processo terminar
                     processo.waitFor();
                 } catch (IOException | InterruptedException c) {
                     c.printStackTrace();
@@ -248,7 +239,7 @@ public class Main {
 
             public void actionPerformed(ActionEvent e) {
 
-                        JFrame panelTvs = new JFrame("Janela Secundária");
+                        JFrame panelTvs = new JFrame("Monitoramento");
                         placeComponentsPanelTvs(panelTvs);
                         panelTvs.setSize(800, 1000);
                         panelTvs.setVisible(true);
@@ -259,9 +250,6 @@ public class Main {
         });
     }
 
-
-
-    ///Janela de Tvsty
     private static void placeComponentsPanelTvs(JFrame panelTvs) {
         panelTvs.setLayout(new BorderLayout());
         Looca looca = new Looca();
@@ -279,22 +267,8 @@ public class Main {
         ComponenteDAO componenteDAO = new ComponenteDAO();
 
         List<Componente> componentes = componenteDAO.buscarComponentesPorIdTv(televisao.getIdTelevisao());
-        String logRegistroComponentes = "";
         Timer timer = new Timer();
         int intervalo = televisao.getTaxaAtualizacao();
-
-
-        for (Componente componenteAtual : componentes) {
-            logRegistroComponentes = """
-                    |----------- Componente %d da TV -----------|
-                    Tipo do componente: %s;
-                    Modelo: %s;
-                    Identificador: %s;
-                    Id da Televisão: %d;
-                    """.formatted(componenteAtual.getIdComponente(), componenteAtual.getTipoComponente(), componenteAtual.getModelo(),
-                    componenteAtual.getIdentificador(), componenteAtual.getFkTelevisao());
-            System.out.println(logRegistroComponentes);
-        }
 
 
 
@@ -302,11 +276,9 @@ public class Main {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                textArea.setText(""); // Limpar o JTextArea a cada atualização
+                textArea.setText("");
                 textArea.append("\n |----------- Monitoramento -----------|\n");
 
-
-                // Monitoramento de processos MEMORIA
 
                 List<Processo> processos = looca.getGrupoDeProcessos().getProcessos();
                 processos.sort(Comparator.comparing(Processo::getUsoMemoria));
@@ -352,6 +324,7 @@ public class Main {
                         throw new RuntimeException(e);
                     }
                 }
+
             }
         }, 0, intervalo);
     }
@@ -366,7 +339,7 @@ public class Main {
         panelCadastroTvs.add(andarLabel);
 
         JTextField andarText = new JTextField(20);
-        andarText.setBounds(80, 30, 190, 25); // Centralizado horizontalmente
+        andarText.setBounds(80, 30, 190, 25);
         panelCadastroTvs.add(andarText);
 
         JLabel setorLabel = new JLabel("Setor:");
@@ -374,27 +347,26 @@ public class Main {
         panelCadastroTvs.add(setorLabel);
 
         JTextField setorText = new JTextField(20);
-        setorText.setBounds(80, 60, 190, 25); // Centralizado horizontalmente
+        setorText.setBounds(80, 60, 190, 25);
         panelCadastroTvs.add(setorText);
 
         JLabel nomeLabel = new JLabel("Nome personalizado:");
-        nomeLabel.setBounds(10, 90, 140, 25); // Alinhado à esquerda
+        nomeLabel.setBounds(10, 90, 140, 25);
         panelCadastroTvs.add(nomeLabel);
 
         JTextField nomeText = new JTextField(20);
-        nomeText.setBounds(150, 90, 120, 25); // Centralizado horizontalmente
+        nomeText.setBounds(150, 90, 120, 25);
         panelCadastroTvs.add(nomeText);
 
         JLabel txAtualiLabel = new JLabel("Taxa de atualização:");
-        txAtualiLabel.setBounds(10, 120, 140, 25); // Alinhado à esquerda
+        txAtualiLabel.setBounds(10, 120, 140, 25);
         panelCadastroTvs.add(txAtualiLabel);
 
         JTextField txAtualiText = new JTextField(20);
-        txAtualiText.setBounds(150, 120, 120, 25); // Centralizado horizontalmente
-        panelCadastroTvs.add(txAtualiText);
+        txAtualiText.setBounds(150, 120, 120, 25);
 
         JButton cadTvButton = new JButton("Cadastrar Televisão");
-        cadTvButton.setBounds(70, 160, 180, 25); // Centralizado horizontalmente
+        cadTvButton.setBounds(70, 160, 180, 25);
         panelCadastroTvs.add(cadTvButton);
 
         TelevisaoDAO televisaoDAO = new TelevisaoDAO();

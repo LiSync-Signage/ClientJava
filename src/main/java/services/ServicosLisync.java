@@ -90,8 +90,6 @@ public class ServicosLisync {
                 logComponenteDAO.salvarLogComponenteIndividual(logComponente);
 
 
-
-
                 if (valor > 80) {
                     return String.format("ESTADO CRÍTICO - Uso da CPU elevado na televisão "
                             + televisao.getNome() + " Uso de CPU: " + valor);
@@ -158,7 +156,6 @@ public class ServicosLisync {
         processoDAO.salvarVariosProcessos(listaProcessos);
     }
     public void registrarLogComponente(List<models.LogComponente> listaLogComponente) {
-
         logComponenteDAO.salvarLogComponente(listaLogComponente);
     }
 

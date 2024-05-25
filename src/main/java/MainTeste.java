@@ -95,7 +95,9 @@ public class MainTeste {
             System.out.println("Televisão cadastrada com sucesso!");
         }
 
+
         Televisao televisao = televisaoDAO.buscarTvPeloEndereco(hostName);
+
 
 
 
@@ -183,6 +185,7 @@ public class MainTeste {
         servicosLisync.registrarLogComponente(logComponentesList);
 
         servicosLisync.registrarProcessos(processoModels);
+
 
 
 

@@ -13,8 +13,6 @@ public class EmpresaDAO {
         ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
         JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
 
-
-
         String sql = "SELECT * FROM Empresa WHERE idEmpresa = ?";
 
         try {

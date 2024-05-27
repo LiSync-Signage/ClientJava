@@ -86,7 +86,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>Main</mainClass>
+                            <mainClass>MainTeste</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

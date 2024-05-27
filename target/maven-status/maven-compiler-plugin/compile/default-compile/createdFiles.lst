@@ -6,7 +6,6 @@ dao\ComandoDAO.class
 Main$6.class
 Main$1.class
 models\Componente.class
-conexao\ConexaoSQLServer.class
 Main.class
 models\Janela.class
 dao\JanelaDAO.class
@@ -25,7 +24,6 @@ services\Autenticacao.class
 Main$5.class
 dao\TelevisaoDAO.class
 models\Monitoramento.class
-TESTE.class
 models\Usuario.class
 services\ServicosLisync.class
 MainTeste$1.class

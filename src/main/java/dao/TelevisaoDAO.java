@@ -13,7 +13,13 @@ public class TelevisaoDAO {
         ConexaoMySQL conexao = new ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
+        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+
         String sql = "INSERT INTO Televisao (nome, taxaAtualizacao, hostName ,fkAmbiente) " +
+                "VALUES (?, ?, ?, ? )";
+
+        String sqlServer = "INSERT INTO Televisao (nome, taxaAtualizacao, hostName ,fkAmbiente) " +
                 "VALUES (?, ?, ?, ? )";
 
         try {
@@ -21,10 +27,22 @@ public class TelevisaoDAO {
             con.update(sql,
                     novaTelevisao.getNome(), novaTelevisao.getTaxaAtualizacao(),
                     novaTelevisao.getHostName(), novaTelevisao.getFkAmbiente());
+
+            conSQLServer.update(sqlServer,
+                    novaTelevisao.getNome(), novaTelevisao.getTaxaAtualizacao(),
+                    novaTelevisao.getHostName(), novaTelevisao.getFkAmbiente());
+
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (con != null) {
+        }finally {
+            if (conSQLServer != null) {
+                try {
+                    conSQLServer.getDataSource().getConnection().close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (con != null){
                 try {
                     con.getDataSource().getConnection().close();
                 } catch (SQLException e) {

@@ -12,14 +12,27 @@ public class ProcessoDAO {
         ConexaoMySQL conexao = new ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
+        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+
         String sql = "INSERT INTO Processo (pid, nome, dataHora, fkTelevisao) VALUES (?, ?, ?, ?)";
+        String sqlServer = "INSERT INTO LogProcesso (pid, nome, dataHora, fkTelevisao) VALUES (?, ?, ?, ?)";
 
         try {
             con.update(sql, processo.getPid(), processo.getNome(), processo.getDataHora(), processo.getFkTelevisao());
+            conSQLServer.update(sqlServer, processo.getPid(), processo.getNome(), processo.getDataHora(), processo.getFkTelevisao());
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (con != null) {
+            if (conSQLServer != null) {
+                try {
+                    conSQLServer.getDataSource().getConnection().close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (con != null){
                 try {
                     con.getDataSource().getConnection().close();
                 } catch (SQLException e) {
@@ -34,18 +47,30 @@ public class ProcessoDAO {
         ConexaoMySQL conexao = new ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
+        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+
         String sql = "INSERT INTO Log (pid, nomeProcesso, dataHora, fkComponente, valor) VALUES (?, ?, ?, ?, ?)";
+        String sqlServer = "INSERT INTO LogProcesso (pid, nomeProcesso, dataHora, fkComponente, valor) VALUES (?, ?, ?, ?, ?)";
 
         try {
             for (Processo processo : processos) {
                 con.update(sql, processo.getPid(), processo.getNome(), processo.getDataHora(), processo.getIdComponente(), processo.getValor());
+                conSQLServer.update(sqlServer, processo.getPid(), processo.getNome(), processo.getDataHora(), processo.getIdComponente(), processo.getValor());
             }
 
         } catch (Exception e) {
             e.printStackTrace();
 
         } finally {
-            if (con != null) {
+            if (conSQLServer != null) {
+                try {
+                    conSQLServer.getDataSource().getConnection().close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (con != null){
                 try {
                     con.getDataSource().getConnection().close();
                 } catch (SQLException e) {
@@ -70,7 +95,7 @@ public class ProcessoDAO {
             e.printStackTrace();
 
         } finally {
-            if (con != null) {
+            if (con != null){
                 try {
                     con.getDataSource().getConnection().close();
                 } catch (SQLException e) {

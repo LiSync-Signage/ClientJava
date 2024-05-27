@@ -12,18 +12,26 @@ public class AmbienteDAO {
         org.LiSync.conexao.ConexaoMySQL conexaoMySQL = new org.LiSync.conexao.ConexaoMySQL();
         JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
 
+        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+
         String sql = "INSERT INTO ambiente(setor,andar,fkEmpresa)VALUES (?,?,?);";
+        String sqlServer = "INSERT INTO Ambiente(setor,andar,fkEmpresa)VALUES (?,?,?);";
 
         try {
             con.update(sql, ambiente.getSetor(), ambiente.getAndar(), ambiente.getFkEmpresa());
+            conSQLServer.update(sqlServer, ambiente.getSetor(), ambiente.getAndar(), ambiente.getFkEmpresa());
+
         } catch (Exception e)  {
             e.printStackTrace();
         } finally {
-            if (con != null) {
+
+            if (conSQLServer != null|| con != null) {
                 try {
+                    conSQLServer.getDataSource().getConnection().close();
                     con.getDataSource().getConnection().close();
                 } catch (SQLException e) {
-                    e.printStackTrace(); // Trate a exceção de fechamento da conexão local
+                    e.printStackTrace();
                 }
             }
         }
@@ -53,13 +61,4 @@ public class AmbienteDAO {
             }
         }
     }
-
-
-
-
-
-
-
-
-
 }

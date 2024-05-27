@@ -16,18 +16,30 @@ public class LogComponenteDAO {
         org.LiSync.conexao.ConexaoMySQL conexao = new org.LiSync.conexao.ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
+        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+
         String sql = "INSERT INTO LogComponente ( dataHora, fkComponente, valor) VALUES ( ?, ?, ? );";
 
         try {
             for (LogComponente logComponente : logComponenteList) {
                 con.update(sql, logComponente.getDataHora(), logComponente.getFkComponente(), logComponente.getValor());
+
+                conSQLServer.update(sql, logComponente.getDataHora(), logComponente.getFkComponente(), logComponente.getValor());
             }
 
 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (con != null) {
+            if (conSQLServer != null) {
+                try {
+                    conSQLServer.getDataSource().getConnection().close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (con != null){
                 try {
                     con.getDataSource().getConnection().close();
                 } catch (SQLException e) {
@@ -42,25 +54,33 @@ public class LogComponenteDAO {
         org.LiSync.conexao.ConexaoMySQL conexao = new org.LiSync.conexao.ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
+        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+
         String sql = "INSERT INTO LogComponente ( dataHora, fkComponente, valor) VALUES ( ?, ?, ? );";
 
+        String sqlServer = "INSERT INTO LogComponente ( dataHora, fkComponente, valor) VALUES ( ?, ?, ? );";
+
         try {
-
-                con.update(sql, logComponente.getDataHora(), logComponente.getFkComponente(), logComponente.getValor());
-
-
-
+            con.update(sql, logComponente.getDataHora(), logComponente.getFkComponente(), logComponente.getValor());
+            conSQLServer.update(sqlServer, logComponente.getDataHora(), logComponente.getFkComponente(), logComponente.getValor());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (con != null) {
+            if (conSQLServer != null) {
+                try {
+                    conSQLServer.getDataSource().getConnection().close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (con != null){
                 try {
                     con.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
-
         }
     }
 }

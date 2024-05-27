@@ -58,15 +58,37 @@ public class UsuarioDAO {
         ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
         JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
 
+        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+
         String sql = "INSERT INTO Usuario (idUsuario, nome, fkEmpresa) " +
                 "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE nome = ?, fkEmpresa = ?";
+
+        String sqlServer = "MERGE INTO Usuario AS target\n" +
+                "USING (VALUES (?, ?, ?, ?, ?)) AS source (idUsuario, nome, fkEmpresa, novoNome, novaFkEmpresa)\n" +
+                "    ON target.idUsuario = source.idUsuario\n" +
+                "WHEN MATCHED THEN\n" +
+                "    UPDATE SET target.nome = source.novoNome,\n" +
+                "               target.fkEmpresa = source.novaFkEmpresa\n" +
+                "WHEN NOT MATCHED THEN\n" +
+                "    INSERT (idUsuario, nome, fkEmpresa)\n" +
+                "    VALUES (source.idUsuario, source.nome, source.fkEmpresa);";
 
         try {
             con.update(sql, usuario.getIdUsuario(), usuario.getNome(), usuario.getFkEmpresa(),
                     usuario.getNome(), usuario.getFkEmpresa());
+            conSQLServer.update(sqlServer, usuario.getIdUsuario(), usuario.getNome(), usuario.getFkEmpresa(),
+                    usuario.getNome(), usuario.getFkEmpresa());
         } catch (Exception e)  {
             e.printStackTrace();
         } finally {
+            if (conSQLServer != null) {
+                try {
+                    conSQLServer.getDataSource().getConnection().close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
             if (con != null) {
                 try {
                     con.getDataSource().getConnection().close();

@@ -13,6 +13,8 @@ public class EmpresaDAO {
         ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
         JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
 
+
+
         String sql = "SELECT * FROM Empresa WHERE idEmpresa = ?";
 
         try {
@@ -28,6 +30,7 @@ public class EmpresaDAO {
                     e.printStackTrace();
                 }
             }
+
         }
     }
 
@@ -35,20 +38,38 @@ public class EmpresaDAO {
         ConexaoMySQL conexao = new ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
+        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+
         String sql = "INSERT INTO Empresa (idEmpresa, nomeFantasia, plano) " +
                 "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE nomeFantasia = ?, plano = ?";
+
+        String sqlServer = "MERGE INTO Empresa AS target\n" +
+                "USING (VALUES (?, ?, ?, ?, ?)) AS source (idEmpresa, nomeFantasia, plano, novoNomeFantasia, novoPlano)\n" +
+                "    ON target.idEmpresa = source.idEmpresa\n" +
+                "WHEN MATCHED THEN\n" +
+                "    UPDATE SET target.nomeFantasia = source.novoNomeFantasia,\n" +
+                "               target.plano = source.novoPlano\n" +
+                "WHEN NOT MATCHED THEN\n" +
+                "    INSERT (idEmpresa, nomeFantasia, plano)\n" +
+                "    VALUES (source.idEmpresa, source.nomeFantasia, source.plano);";
 
         try {
             con.update(sql, empresa.getIdEmpresa(), empresa.getNomeFantasia(), empresa.getPlano(),
                     empresa.getNomeFantasia(), empresa.getPlano());
+
+            conSQLServer.update(sqlServer, empresa.getIdEmpresa(), empresa.getNomeFantasia(), empresa.getPlano(),
+                    empresa.getNomeFantasia(), empresa.getPlano());
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (con != null) {
+            if (conSQLServer != null|| con != null) {
                 try {
+                    conSQLServer.getDataSource().getConnection().close();
                     con.getDataSource().getConnection().close();
                 } catch (SQLException e) {
-                    e.printStackTrace(); // Trate a exceção de fechamento da conexão local
+                    e.printStackTrace();
                 }
             }
         }

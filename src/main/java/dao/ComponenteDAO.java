@@ -14,17 +14,27 @@ public class ComponenteDAO {
         ConexaoMySQL conexao = new ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
+        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+
         String sql = "INSERT INTO Componente (modelo, identificador, tipoComponente, fkTelevisao) " +
+                "VALUES (?, ?, ?, ?)";
+
+        String sqlServer = "INSERT INTO Componente (modelo, identificador, tipoComponente, fkTelevisao) " +
                 "VALUES (?, ?, ?, ?)";
 
         try {
             con.update(sql, novoComponente.getModelo(), novoComponente.getIdentificador(),
                     novoComponente.getTipoComponente(), novoComponente.getFkTelevisao());
+
+            conSQLServer.update(sqlServer, novoComponente.getModelo(), novoComponente.getIdentificador(),
+                    novoComponente.getTipoComponente(), novoComponente.getFkTelevisao());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (con != null) {
+            if (conSQLServer != null|| con != null) {
                 try {
+                    conSQLServer.getDataSource().getConnection().close();
                     con.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace();

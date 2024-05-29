@@ -1,7 +1,7 @@
 package dao;
 
 import models.Televisao;
-import org.LiSync.conexao.ConexaoMySQL;
+import conexao.ConexaoMySQL;
 import models.Componente;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

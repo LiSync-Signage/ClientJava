@@ -1,6 +1,6 @@
 package dao;
 
-import org.LiSync.conexao.ConexaoMySQL;
+import conexao.ConexaoMySQL;
 import models.Usuario;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

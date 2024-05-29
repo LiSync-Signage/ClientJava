@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class ComandoDAO {
 
     public static void insertComando(Comando comando) {
-        org.LiSync.conexao.ConexaoMySQL conexaoMySQL = new org.LiSync.conexao.ConexaoMySQL();
+        conexao.ConexaoMySQL conexaoMySQL = new conexao.ConexaoMySQL();
         JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
 
         String sql = "INSERT INTO comando(nome,fkTelevisao)VALUES (?,?);";

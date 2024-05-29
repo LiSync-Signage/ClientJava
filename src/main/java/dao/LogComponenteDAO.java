@@ -13,7 +13,7 @@ public class LogComponenteDAO {
     }
 
     public void salvarLogComponente(List<LogComponente> logComponenteList) {
-        org.LiSync.conexao.ConexaoMySQL conexao = new org.LiSync.conexao.ConexaoMySQL();
+        conexao.ConexaoMySQL conexao = new conexao.ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
         String sql = "INSERT INTO LogComponente ( dataHora, fkComponente, valor) VALUES ( ?, ?, ? );";
@@ -39,16 +39,13 @@ public class LogComponenteDAO {
     }
 
     public void salvarLogComponenteIndividual(LogComponente logComponente) {
-        org.LiSync.conexao.ConexaoMySQL conexao = new org.LiSync.conexao.ConexaoMySQL();
+        conexao.ConexaoMySQL conexao = new conexao.ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
         String sql = "INSERT INTO LogComponente ( dataHora, fkComponente, valor) VALUES ( ?, ?, ? );";
 
         try {
-
                 con.update(sql, logComponente.getDataHora(), logComponente.getFkComponente(), logComponente.getValor());
-
-
 
         } catch (Exception e) {
             e.printStackTrace();

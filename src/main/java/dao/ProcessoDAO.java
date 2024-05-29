@@ -1,6 +1,6 @@
 package dao;
 
-import org.LiSync.conexao.ConexaoMySQL;
+import conexao.ConexaoMySQL;
 import models.Processo;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -12,10 +12,10 @@ public class ProcessoDAO {
         ConexaoMySQL conexao = new ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
-        String sql = "INSERT INTO Processo (pid, nome, dataHora, fkTelevisao) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Processo (pid, nome, dataHora) VALUES (?, ?, ?, ?)";
 
         try {
-            con.update(sql, processo.getPid(), processo.getNome(), processo.getDataHora(), processo.getFkTelevisao());
+            con.update(sql, processo.getPid(), processo.getNomeProcesso(), processo.getDataHora());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -38,7 +38,7 @@ public class ProcessoDAO {
 
         try {
             for (Processo processo : processos) {
-                con.update(sql, processo.getPid(), processo.getNome(), processo.getDataHora(), processo.getIdComponente(), processo.getValor());
+                con.update(sql, processo.getPid(), processo.getNomeProcesso(), processo.getDataHora(), processo.getIdComponente(), processo.getValor());
             }
 
         } catch (Exception e) {

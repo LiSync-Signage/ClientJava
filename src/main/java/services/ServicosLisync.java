@@ -155,12 +155,10 @@ public class ServicosLisync {
     public void registrarProcessos(List<models.Processo> listaProcessos) {
         processoDAO.salvarVariosProcessos(listaProcessos);
     }
+    
     public void registrarLogComponente(List<models.LogComponente> listaLogComponente) {
         logComponenteDAO.salvarLogComponente(listaLogComponente);
     }
-
-
-
 
     public models.LogComponente monitoramentoLogComponente(Integer fkComponente, Double valor  ) {
         models.LogComponente logComponente = new models.LogComponente(fkComponente, valor);

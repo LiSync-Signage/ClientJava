@@ -1,4 +1,4 @@
-package org.LiSync.conexao;
+package conexao;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,7 +18,7 @@ public class ConexaoMySQL {
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3306/lisyncDB");
         dataSource.setUsername("root");
-        dataSource.setPassword("1304");
+        dataSource.setPassword("caio");
 
         conexaoMySqlLocal = new JdbcTemplate(dataSource);
     }

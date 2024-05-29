@@ -1,15 +1,13 @@
 package dao;
 
 import models.Ambiente;
-
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.SQLException;
 
 public class AmbienteDAO {
     public static void insertAmbiente(Ambiente ambiente) {
-        org.LiSync.conexao.ConexaoMySQL conexaoMySQL = new org.LiSync.conexao.ConexaoMySQL();
+        conexao.ConexaoMySQL conexaoMySQL = new conexao.ConexaoMySQL();
         JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
 
         String sql = "INSERT INTO ambiente(setor,andar,fkEmpresa)VALUES (?,?,?);";
@@ -30,7 +28,7 @@ public class AmbienteDAO {
     }
 
     public Integer getIdpAndarSetor(String andar, String setor) {
-        org.LiSync.conexao.ConexaoMySQL conexao = new org.LiSync.conexao.ConexaoMySQL();
+        conexao.ConexaoMySQL conexao = new conexao.ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
         String sql = "SELECT idAmbiente FROM ambiente WHERE andar = ? AND setor = ?;";
@@ -53,13 +51,4 @@ public class AmbienteDAO {
             }
         }
     }
-
-
-
-
-
-
-
-
-
 }

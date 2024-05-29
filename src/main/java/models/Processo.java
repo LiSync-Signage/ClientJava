@@ -3,19 +3,18 @@ package models;
 import java.time.LocalDateTime;
 
 public class Processo {
-    private Integer idProcesso;
-    private Integer pid;
-    private String nome;
-    private Integer fkTelevisao;
-    private LocalDateTime dataHora;
-    private Integer idComponente;
-    private Double valor;
+    protected Integer idLog;
+    protected Integer pid;
+    protected LocalDateTime dataHora;
+    protected String nomeProcesso;
+    protected Double valor;
+    protected Integer idComponente;
 
     public Processo() {}
 
-    public Processo(Integer pid, String nome, Integer idComponente, Double valor) {
+    public Processo(Integer pid, String nomeProcesso, Integer idComponente, Double valor) {
         this.pid = pid;
-        this.nome = nome;
+        this.nomeProcesso = nomeProcesso;
         this.idComponente = idComponente;
         this.dataHora = LocalDateTime.now();
         this.valor = valor;
@@ -37,12 +36,12 @@ public class Processo {
         this.valor = valor;
     }
 
-    public Integer getIdProcesso() {
-        return idProcesso;
+    public Integer getIdLog() {
+        return idLog;
     }
 
-    public void setIdProcesso(Integer idProcesso) {
-        this.idProcesso = idProcesso;
+    public void setIdLog(Integer idProcesso) {
+        this.idLog = idLog;
     }
 
     public Integer getPid() {
@@ -53,22 +52,14 @@ public class Processo {
         this.pid = pid;
     }
 
-    public String getNome() {
-        return nome;
+    public String getNomeProcesso() {
+        return nomeProcesso;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNomeProcesso(String nome) {
+        this.nomeProcesso = nomeProcesso;
     }
-
-    public Integer getFkTelevisao() {
-        return fkTelevisao;
-    }
-
-    public void setFkTelevisao(Integer fkTelevisao) {
-        this.fkTelevisao = fkTelevisao;
-    }
-
+    
     public LocalDateTime getDataHora() {
         return dataHora;
     }
@@ -80,10 +71,9 @@ public class Processo {
     @Override
     public String toString() {
         return "Processo{" +
-                "idProcesso=" + idProcesso +
+                "idProcesso=" + idLog +
                 ", pid=" + pid +
-                ", nome='" + nome + '\'' +
-                ", fkTelevisao=" + fkTelevisao +
+                ", nome='" + nomeProcesso + '\'' +
                 ", dataHora=" + dataHora +
                 ", idComponente=" + idComponente +
                 ", valor=" + valor +

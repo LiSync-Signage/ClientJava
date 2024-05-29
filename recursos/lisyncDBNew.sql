@@ -74,6 +74,8 @@
 		CONSTRAINT fkComponenteLog FOREIGN KEY (fkComponente) REFERENCES Componente(idComponente)
 	);
 
+    INSERT INTO Log (pid, dataHora, nomeProcesso, valor, fkComponente) VALUES (1, '2021-09-01 10:00:00', 'Processo 1', 10.0, 1), (2, '2021-09-01 10:00:00', 'Processo 2', 20.0, 2), (3, '2021-09-01 10:00:00', 'Processo 3', 30.0, 3), (4, '2021-09-01 10:00:00', 'Processo 4', 40.0, 4);
+
 	CREATE TABLE LogComponente (
 		idLogComponente INT PRIMARY KEY AUTO_INCREMENT,
 		dataHora VARCHAR(45),

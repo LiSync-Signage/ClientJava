@@ -1,6 +1,6 @@
 package dao;
 
-import org.LiSync.conexao.ConexaoMySQL;
+import conexao.ConexaoMySQL;
 import models.Janela;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -31,7 +31,6 @@ public class JanelaDAO {
                     e.printStackTrace();
                 }
             }
-
         }
     }
 }

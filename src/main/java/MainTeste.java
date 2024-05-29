@@ -198,7 +198,7 @@ public class MainTeste {
         for (Janela janela : janelas) {
             janelasModelo.add(servicosLisync.monitoramentoJanela(janela, televisao.getIdTelevisao()));
         }
-        servicosLisync.salvarJanelas(janelasModelo);
+        servicosLiseync.salvarJanelas(janelasModelo);
 
         Timer timer = new Timer();
         int inicio = 0;

@@ -4,6 +4,7 @@ public class Empresa {
     private Integer idEmpresa;
     private String nomeFantasia;
     private String plano;
+    private Integer qtdMaquinas = 0;
 
     public Empresa() {}
 
@@ -34,6 +35,12 @@ public class Empresa {
 
     public void setPlano(String plano) {
         this.plano = plano;
+    }
+
+    public Integer getQtdMaquinasCadastradas() { return qtdMaquinas; }
+
+    public void setQtdMaquinasCadastradas(Integer qtdMaquinas) {
+        this.qtdMaquinas = qtdMaquinas;
     }
 
     @Override

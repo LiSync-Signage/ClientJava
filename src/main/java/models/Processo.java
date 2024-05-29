@@ -8,24 +8,24 @@ public class Processo {
     protected LocalDateTime dataHora;
     protected String nomeProcesso;
     protected Double valor;
-    protected Integer idComponente;
+    protected Integer fkComponente;
 
     public Processo() {}
 
-    public Processo(Integer pid, String nomeProcesso, Integer idComponente, Double valor) {
+    public Processo(Integer pid, String nomeProcesso, Integer fkComponente, Double valor) {
         this.pid = pid;
         this.nomeProcesso = nomeProcesso;
-        this.idComponente = idComponente;
+        this.fkComponente = fkComponente;
         this.dataHora = LocalDateTime.now();
         this.valor = valor;
     }
 
-    public Integer getIdComponente() {
-        return idComponente;
+    public Integer getFkComponente() {
+        return fkComponente;
     }
 
-    public void setIdComponente(Integer idComponente) {
-        this.idComponente = idComponente;
+    public void setFkComponente(Integer fkComponente) {
+        this.fkComponente = fkComponente;
     }
 
     public Double getValor() {
@@ -40,7 +40,7 @@ public class Processo {
         return idLog;
     }
 
-    public void setIdLog(Integer idProcesso) {
+    public void setIdLog(Integer idLog) {
         this.idLog = idLog;
     }
 
@@ -71,11 +71,11 @@ public class Processo {
     @Override
     public String toString() {
         return "Processo{" +
-                "idProcesso=" + idLog +
+                "idLog=" + idLog +
                 ", pid=" + pid +
-                ", nome='" + nomeProcesso + '\'' +
+                ", nomeProcesso='" + nomeProcesso + '\'' +
                 ", dataHora=" + dataHora +
-                ", idComponente=" + idComponente +
+                ", fkComponente=" + fkComponente +
                 ", valor=" + valor +
                 '}';
     }

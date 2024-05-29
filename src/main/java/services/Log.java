@@ -4,8 +4,9 @@ import models.Processo;
 
 import conexao.ConexaoMySQL;
 
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.dao.DataAccessException;
 
 import java.sql.SQLException;
 import java.io.BufferedWriter;
@@ -102,8 +103,12 @@ public static List<Processo> buscarProcessosIniciadosNaUltimaHora() {
 		adicionarTextoNoArquivo(processos);
 		return processos;
 		
+	} catch (DataAccessException e) {
+		System.out.println("Erro de acesso aos dados ao buscar processos: " + e.getMessage());
+		return null;
+		
 	} catch (Exception e) {
-		System.out.println("Erro ao buscar processos: " + e.getMessage());
+		System.out.println("Erro desconhecido ao buscar processos: " + e.getMessage());
 		return null;
 		
 	} finally {
@@ -111,7 +116,7 @@ public static List<Processo> buscarProcessosIniciadosNaUltimaHora() {
 			try {
 				con.getDataSource().getConnection().close();
 			} catch (SQLException e) {
-				System.out.println("Erro ao fechar conexão: " + e.getMessage());
+				System.out.println("Erro SQL ao fechar conexão: " + e.getMessage());
 			}
 		}
 	}

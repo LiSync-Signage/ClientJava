@@ -38,7 +38,7 @@ public class ProcessoDAO {
 
         try {
             for (Processo processo : processos) {
-                con.update(sql, processo.getPid(), processo.getNomeProcesso(), processo.getDataHora(), processo.getIdComponente(), processo.getValor());
+                con.update(sql, processo.getPid(), processo.getNomeProcesso(), processo.getDataHora(), processo.getFkComponente(), processo.getValor());
             }
 
         } catch (Exception e) {

@@ -1,14 +1,16 @@
 package models;
 
+import plano.Plano;
+
 public class Empresa {
     private Integer idEmpresa;
     private String nomeFantasia;
-    private String plano;
+    private Plano plano;
     private Integer qtdMaquinas = 0;
 
     public Empresa() {}
 
-    public Empresa(String nomeFantasia, String plano) {
+    public Empresa(String nomeFantasia, Plano plano) {
         this.nomeFantasia = nomeFantasia;
         this.plano = plano;
     }
@@ -29,11 +31,11 @@ public class Empresa {
         this.nomeFantasia = nomeFantasia;
     }
 
-    public String getPlano() {
+    public Plano getPlano() {
         return plano;
     }
 
-    public void setPlano(String plano) {
+    public void setPlano(Plano plano) {
         this.plano = plano;
     }
 

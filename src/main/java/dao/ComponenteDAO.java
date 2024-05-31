@@ -10,31 +10,76 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class ComponenteDAO {
-    public void registarComponente(Componente novoComponente) {
-        ConexaoMySQL conexao = new ConexaoMySQL();
-        JdbcTemplate con = conexao.getconexaoMySqlLocal();
+    public void registarComponenteSQLServer(Componente novoComponente) {
+//        ConexaoMySQL conexao = new ConexaoMySQL();
+//        JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
-        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
+        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
         JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
 
-        String sql = "INSERT INTO Componente (modelo, identificador, tipoComponente, fkTelevisao) " +
-                "VALUES (?, ?, ?, ?)";
+//        String sql = "INSERT INTO Componente (modelo, identificador, tipoComponente, fkTelevisao) " +
+//                "VALUES (?, ?, ?, ?)";
 
         String sqlServer = "INSERT INTO Componente (modelo, identificador, tipoComponente, fkTelevisao) " +
                 "VALUES (?, ?, ?, ?)";
 
         try {
-            con.update(sql, novoComponente.getModelo(), novoComponente.getIdentificador(),
-                    novoComponente.getTipoComponente(), novoComponente.getFkTelevisao());
+//            con.update(sql, novoComponente.getModelo(), novoComponente.getIdentificador(),
+//                    novoComponente.getTipoComponente(), novoComponente.getFkTelevisao());
 
             conSQLServer.update(sqlServer, novoComponente.getModelo(), novoComponente.getIdentificador(),
                     novoComponente.getTipoComponente(), novoComponente.getFkTelevisao());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (conSQLServer != null|| con != null) {
+            if (conSQLServer != null) {
                 try {
                     conSQLServer.getDataSource().getConnection().close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+//            if (con != null){
+//                try {
+//                    con.getDataSource().getConnection().close();
+//                } catch (SQLException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+        }
+    }
+
+    public void registarComponente(Componente novoComponente) {
+        ConexaoMySQL conexao = new ConexaoMySQL();
+        JdbcTemplate con = conexao.getconexaoMySqlLocal();
+
+//        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+//        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+
+        String sql = "INSERT INTO Componente (modelo, identificador, tipoComponente, fkTelevisao) " +
+                "VALUES (?, ?, ?, ?)";
+
+//        String sqlServer = "INSERT INTO Componente (modelo, identificador, tipoComponente, fkTelevisao) " +
+//                "VALUES (?, ?, ?, ?)";
+
+        try {
+            con.update(sql, novoComponente.getModelo(), novoComponente.getIdentificador(),
+                    novoComponente.getTipoComponente(), novoComponente.getFkTelevisao());
+
+//            conSQLServer.update(sqlServer, novoComponente.getModelo(), novoComponente.getIdentificador(),
+//                    novoComponente.getTipoComponente(), novoComponente.getFkTelevisao());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+//            if (conSQLServer != null) {
+//                try {
+//                    conSQLServer.getDataSource().getConnection().close();
+//                } catch (SQLException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+            if (con != null){
+                try {
                     con.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -47,13 +92,16 @@ public class ComponenteDAO {
 
 
     public List<Componente> buscarComponentesPorIdTv (Integer idTelevisao) {
-        ConexaoMySQL conexao = new ConexaoMySQL();
-        JdbcTemplate con = conexao.getconexaoMySqlLocal();
+//        ConexaoMySQL conexao = new ConexaoMySQL();
+//        JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
-        String sql = "SELECT * FROM Componente WHERE fkTelevisao = ?";
+        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+
+        String sqlServer = "SELECT * FROM Componente WHERE fkTelevisao = ?";
 
         try {
-            List<Componente> componentesLocal = con.query(sql, new BeanPropertyRowMapper<>(Componente.class), idTelevisao);
+            List<Componente> componentesLocal = conSQLServer.query(sqlServer, new BeanPropertyRowMapper<>(Componente.class), idTelevisao);
             return componentesLocal;
         } catch (Exception e) {
             e.printStackTrace();

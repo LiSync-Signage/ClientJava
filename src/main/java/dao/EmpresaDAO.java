@@ -10,20 +10,23 @@ import java.sql.SQLException;
 public class EmpresaDAO {
 
     public Empresa buscarEmpresa(Integer idEmpresa) {
-        ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
-        JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
+//        ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
+//        JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
 
-        String sql = "SELECT * FROM Empresa WHERE idEmpresa = ?";
+        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+
+        String sqlServer = "SELECT * FROM Empresa WHERE idEmpresa = ?";
 
         try {
-            return con.queryForObject(sql, new BeanPropertyRowMapper<>(Empresa.class), idEmpresa);
+            return conSQLServer.queryForObject(sqlServer, new BeanPropertyRowMapper<>(Empresa.class), idEmpresa);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         } finally {
-            if (con != null) {
+            if (conSQLServer != null) {
                 try {
-                    con.getDataSource().getConnection().close();
+                    conSQLServer.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -32,15 +35,15 @@ public class EmpresaDAO {
         }
     }
 
-    public void atualizarEmpresaLocal (Empresa empresa) {
-        ConexaoMySQL conexao = new ConexaoMySQL();
-        JdbcTemplate con = conexao.getconexaoMySqlLocal();
+    public void atualizarEmpresaLocalSQLServer (Empresa empresa) {
+//        ConexaoMySQL conexao = new ConexaoMySQL();
+//        JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
-        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
+        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
         JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
 
-        String sql = "INSERT INTO Empresa (idEmpresa, nomeFantasia, plano) " +
-                "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE nomeFantasia = ?, plano = ?";
+//        String sql = "INSERT INTO Empresa (idEmpresa, nomeFantasia, plano) " +
+//                "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE nomeFantasia = ?, plano = ?";
 
         String sqlServer = "MERGE INTO Empresa AS target\n" +
                 "USING (VALUES (?, ?, ?, ?, ?)) AS source (idEmpresa, nomeFantasia, plano, novoNomeFantasia, novoPlano)\n" +
@@ -49,22 +52,75 @@ public class EmpresaDAO {
                 "    UPDATE SET target.nomeFantasia = source.novoNomeFantasia,\n" +
                 "               target.plano = source.novoPlano\n" +
                 "WHEN NOT MATCHED THEN\n" +
-                "    INSERT (idEmpresa, nomeFantasia, plano)\n" +
-                "    VALUES (source.idEmpresa, source.nomeFantasia, source.plano);";
+                "    INSERT (nomeFantasia, plano)\n" +
+                "    VALUES (source.nomeFantasia, source.plano);";
 
         try {
-            con.update(sql, empresa.getIdEmpresa(), empresa.getNomeFantasia(), empresa.getPlano(),
-                    empresa.getNomeFantasia(), empresa.getPlano());
+//            con.update(sql, empresa.getIdEmpresa(), empresa.getNomeFantasia(), empresa.getPlano().getTitulo(),
+//                    empresa.getNomeFantasia(), empresa.getPlano().getTitulo());
 
-            conSQLServer.update(sqlServer, empresa.getIdEmpresa(), empresa.getNomeFantasia(), empresa.getPlano(),
-                    empresa.getNomeFantasia(), empresa.getPlano());
+            conSQLServer.update(sqlServer, empresa.getIdEmpresa(), empresa.getNomeFantasia(), empresa.getPlano().getTitulo(),
+                    empresa.getNomeFantasia(), empresa.getPlano().getTitulo());
 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (conSQLServer != null|| con != null) {
+            if (conSQLServer != null) {
                 try {
                     conSQLServer.getDataSource().getConnection().close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+//            if (con != null){
+//                try {
+//                    con.getDataSource().getConnection().close();
+//                } catch (SQLException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+        }
+    }
+
+    public void atualizarEmpresaLocal (Empresa empresa) {
+        ConexaoMySQL conexao = new ConexaoMySQL();
+        JdbcTemplate con = conexao.getconexaoMySqlLocal();
+
+//        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+//        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+
+        String sql = "INSERT INTO Empresa (idEmpresa, nomeFantasia, plano) " +
+                "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE nomeFantasia = ?, plano = ?";
+
+//        String sqlServer = "MERGE INTO Empresa AS target\n" +
+//                "USING (VALUES (?, ?, ?, ?, ?)) AS source (idEmpresa, nomeFantasia, plano, novoNomeFantasia, novoPlano)\n" +
+//                "    ON target.idEmpresa = source.idEmpresa\n" +
+//                "WHEN MATCHED THEN\n" +
+//                "    UPDATE SET target.nomeFantasia = source.novoNomeFantasia,\n" +
+//                "               target.plano = source.novoPlano\n" +
+//                "WHEN NOT MATCHED THEN\n" +
+//                "    INSERT (nomeFantasia, plano)\n" +
+//                "    VALUES (source.nomeFantasia, source.plano);";
+
+        try {
+            con.update(sql, empresa.getIdEmpresa(), empresa.getNomeFantasia(), empresa.getPlano().getTitulo(),
+                    empresa.getNomeFantasia(), empresa.getPlano().getTitulo());
+
+//            conSQLServer.update(sqlServer, empresa.getIdEmpresa(), empresa.getNomeFantasia(), empresa.getPlano().getTitulo(),
+//                    empresa.getNomeFantasia(), empresa.getPlano().getTitulo());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+//            if (conSQLServer != null) {
+//                try {
+//                    conSQLServer.getDataSource().getConnection().close();
+//                } catch (SQLException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+            if (con != null){
+                try {
                     con.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -72,4 +128,59 @@ public class EmpresaDAO {
             }
         }
     }
+
+    public Integer contarPorEmpresa(Integer fkEmpresa) {
+//       ConexaoMySQL conexao = new ConexaoMySQL();
+//       JdbcTemplate con = conexao.getconexaoMySqlLocal();
+
+        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+
+        String sqlServer = "SELECT count(*) FROM Empresa  join ambiente on empresa.idEmpresa = ambiente.fkEmpresa join televisao on ambiente.idAmbiente = televisao.fkAmbiente where fkEmpresa = ?;";
+
+        try {
+            Integer contagemTv = conSQLServer.queryForObject(sqlServer, Integer.class, fkEmpresa);
+            return contagemTv;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+
+        } finally {
+            if (conSQLServer != null) {
+                try {
+                    conSQLServer.getDataSource().getConnection().close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public Empresa buscarPorPlano(Integer idEmpresa) {
+//        ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
+//        JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
+        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+
+        String sqlServer = "SELECT plano FROM Empresa WHERE idEmpresa = ?";
+
+        try {
+            return conSQLServer.queryForObject(sqlServer, new BeanPropertyRowMapper<>(Empresa.class), idEmpresa);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (conSQLServer != null) {
+                try {
+                    conSQLServer.getDataSource().getConnection().close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    }
+
+
 }

@@ -7,6 +7,7 @@ import com.github.britooo.looca.api.group.janelas.Janela;
 import com.github.britooo.looca.api.util.Conversor;
 import dao.*;
 import models.*;
+import plano.Plano;
 
 
 import java.io.IOException;
@@ -23,22 +24,59 @@ public class ServicosLisync {
     JanelaDAO janelaDAO = new JanelaDAO();
 
     LogComponenteDAO logComponenteDAO = new LogComponenteDAO();
-
-
+//
     public Boolean televisaoNova(String hostname) {
         Integer televisaoExiste = televisaoDAO.contarPorEndereco(hostname);
         return televisaoExiste == 0;
     }
-
+//
+    public Integer qtdTelevisoesDisponiveis(Integer fkEmpresa){
+        Plano plano = empresaDAO.buscarPorPlano(fkEmpresa).getPlano();
+        return plano.getQtdTvs();
+    }
+//
+    public Integer contarTvsPorFkEmpresa(Integer fkEmpresa) {
+        Integer qtdTvs = empresaDAO.contarPorEmpresa(fkEmpresa);
+        return qtdTvs;
+    }
+//
     public void atualizarEmpresaDoUsuario(Integer fkEmpresa) {
         Empresa empresaUsuario = empresaDAO.buscarEmpresa(fkEmpresa);
-        empresaDAO.atualizarEmpresaLocal(empresaUsuario);
+        try {
+            empresaDAO.atualizarEmpresaLocalSQLServer(empresaUsuario);
+            empresaDAO.atualizarEmpresaLocal(empresaUsuario);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("erro na Atualização de usuário");
+        }
     }
-
+//
     public void atualizarUsuario(Usuario usuarioLogado) {
-        usuarioDAO.atualizarUsuarioLocal(usuarioLogado);
-    }
+        try {
+            usuarioDAO.atualizarUsuarioLocalSQLServer(usuarioLogado);
+            usuarioDAO.atualizarUsuarioLocal(usuarioLogado);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("erro na Atualização de usuário");
+        }
 
+
+    }
+//
+    public void cadastrarAmbiente(String setor, String andar, Integer fkEmpresa) {
+        models.Ambiente ambiente= new models.Ambiente(setor, andar, fkEmpresa);
+        registrarAmbiente(ambiente);
+    }
+    public void registrarAmbiente (Ambiente ambiente) {
+        try {
+            AmbienteDAO.insertAmbienteSQLServer(ambiente);
+            AmbienteDAO.insertAmbiente(ambiente);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("erro ao cadastrar Ambiente");
+        }
+    }
+//
     public void cadastrarNovaTelevisao( String nome, Integer fkAmbiente, Integer taxaAtualizacao
                             ) {
 
@@ -50,45 +88,73 @@ public class ServicosLisync {
         );
 
         System.out.println(televisao.getFkAmbiente());
-        televisaoDAO.registrar(televisao);
+
+        try {
+            televisaoDAO.registrarSQLServer(televisao);
+            televisaoDAO.registrar(televisao);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("erro ao cadastrar televisão");
+        }
+
         System.out.println("Nova televisão adicionada! \n");
     }
-
+//
     public void cadastrarComponentes(Televisao televisao) {
         televisao.setComponentes(new ArrayList<>());
+
         Componente cpu = new Componente(looca.getProcessador().getNome(),
                 looca.getProcessador().getId(), "CPU", televisao.getIdTelevisao());
         televisao.registarComponenteTv(cpu);
-        componenteDAO.registarComponente(cpu);
+
+        try {
+            componenteDAO.registarComponenteSQLServer(cpu);
+            componenteDAO.registarComponente(cpu);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("erro ao cadastrar CPU");
+        }
+
 
         Disco instanciaDisco = looca.getGrupoDeDiscos().getDiscos().get(0);
         Componente disco = new Componente(instanciaDisco.getModelo(), instanciaDisco.getSerial(),
                 "Disco", televisao.getIdTelevisao());
         televisao.registarComponenteTv(disco);
-        componenteDAO.registarComponente(disco);
+
+        try {
+            componenteDAO.registarComponenteSQLServer(disco);
+            componenteDAO.registarComponente(disco);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("erro ao cadastrar Disco");
+        }
 
         Long memoriaTotal = looca.getMemoria().getTotal();
         Componente memoriaRam = new Componente(String.format("Memória RAM %s", Conversor.formatarBytes(memoriaTotal)),
                 "Não existe", "RAM", televisao.getIdTelevisao());
         televisao.registarComponenteTv(memoriaRam);
-        componenteDAO.registarComponente(memoriaRam);
+
+        try {
+            componenteDAO.registarComponenteSQLServer(memoriaRam);
+            componenteDAO.registarComponente(memoriaRam);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("erro ao cadastrar Memoria ram");
+        }
 
     }
 
-
+//
     public String monitoramentoComponentes(Componente componente, Televisao televisao) throws IOException {
         Double valor = 0.0;
 
 
         switch (componente.getTipoComponente()) {
             case "CPU":
-
-
                 valor = looca.getProcessador().getUso();
                 LogComponente logComponente = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("CPU",televisao.getIdTelevisao()).get(0).getIdComponente(),valor);
 
                 logComponenteDAO.salvarLogComponenteIndividual(logComponente);
-
 
                 if (valor > 80) {
                     return String.format("ESTADO CRÍTICO - Uso da CPU elevado na televisão "
@@ -151,53 +217,75 @@ public class ServicosLisync {
         return "Não foi possível encontar componentes";
     }
 
-
+//
     public void registrarProcessos(List<models.Processo> listaProcessos) {
         processoDAO.salvarVariosProcessos(listaProcessos);
     }
     public void registrarLogComponente(List<models.LogComponente> listaLogComponente) {
-        logComponenteDAO.salvarLogComponente(listaLogComponente);
+
+        try {
+            logComponenteDAO.salvarLogComponenteSQLServer(listaLogComponente);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Erro ao salvar LogComponente no servidor principal");
+        } finally {
+            try{
+                logComponenteDAO.salvarLogComponente(listaLogComponente);
+            }catch (Exception c) {
+                c.printStackTrace();
+                System.out.println("Erro ao salvar LogComponente no servidor local");
+            }
+        }
     }
 
 
-
+//
 
     public models.LogComponente monitoramentoLogComponente(Integer fkComponente, Double valor  ) {
         models.LogComponente logComponente = new models.LogComponente(fkComponente, valor);
         return logComponente;
     }
-
+//
     public models.Processo monitoramentoProcesso(Processo processoMonitorado, Integer idComponente, Double valor) {
         models.Processo processo = new models.Processo(processoMonitorado.getPid(),
                 processoMonitorado.getNome(), idComponente, valor);
         return processo;
     }
-
+//
     public models.Janela monitoramentoJanela(Janela janelaMonitorada, Integer idTelevisao) {
         Integer visivel = (janelaMonitorada.isVisivel() ? 1 : 0);
-        String tamanhoJanela = "Altura: %dpx | Largura: %dpx".formatted(janelaMonitorada.getLocalizacaoETamanho().height,
-                janelaMonitorada.getLocalizacaoETamanho().width);
         models.Janela janela = new models.Janela(janelaMonitorada.getPid().intValue(), janelaMonitorada.getComando(),
                 janelaMonitorada.getTitulo(), visivel,
                 idTelevisao);
         return  janela;
     }
-
+//
     public void salvarJanelas(List<models.Janela> janelas) {
         janelaDAO.salvarVariasJanelas(janelas);
+
+        try {
+            janelaDAO.salvarVariasJanelasSQLServer(janelas);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Erro ao salvar janelas no servidor principal");
+        } finally {
+            try{
+                janelaDAO.salvarVariasJanelas(janelas);
+            }catch (Exception c) {
+                c.printStackTrace();
+                System.out.println("Erro ao salvar Janelas no servidor local");
+            }
+        }
+
     }
 
-    public void cadastrarAmbiente(String setor, String andar, Integer fkEmpresa) {
-        models.Ambiente ambiente= new models.Ambiente(setor, andar, fkEmpresa);
-        registrarAmbiente(ambiente);
-    }
+
 
     public void cadastrarComando(String comando, Integer fkTelevisao) {
         models.Comando comandoObj= new models.Comando(comando, fkTelevisao);
         ComandoDAO.insertComando(comandoObj);
+
     }
 
-    public void registrarAmbiente (Ambiente ambiente) {
-        AmbienteDAO.insertAmbiente(ambiente);
-    }
+
 }

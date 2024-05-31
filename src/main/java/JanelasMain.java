@@ -1,5 +1,7 @@
 import com.github.britooo.looca.api.core.Looca;
 import com.github.britooo.looca.api.group.janelas.Janela;
+import com.github.britooo.looca.api.group.processos.Processo;
+import dao.ComponenteDAO;
 import models.Televisao;
 import services.ServicosLisync;
 
@@ -10,28 +12,30 @@ import java.util.Scanner;
 public class JanelasMain {
     public static void main(String[] args){
         Looca looca = new Looca();
-        List<Janela> janelas = new ArrayList();
-        Scanner scanner = new Scanner(System.in);
+        List<models.Processo> processoModels = new ArrayList<>();
         ServicosLisync servicosLisync = new ServicosLisync();
         Televisao televisao = new Televisao();
+        ComponenteDAO componenteDAO = new ComponenteDAO();
+        List<Processo> processos = looca.getGrupoDeProcessos().getProcessos();
 
-        Integer input = scanner.nextInt();
+        List<Processo> maioresProcessosRam = new ArrayList<>();
 
-        for (Janela janela : looca.getGrupoDeJanelas().getJanelasVisiveis()){
-            if (janela.getLocalizacaoETamanho().width >= input){
-                janelas.add(janela);
-            }
+//        for (int i = 0; i < Math.min(processos.size(), 6); i++) {
+//            maioresProcessosRam.add(processos.get(i));
+//        }
+        for (int i = 0; i < processos.size(); i++) {
+            Processo processoAtual = processos.get(i);
+
+            System.out.println("""
+                    |----------- Processo %d -----------|
+                    Nome: %s
+                    Pid: %d
+                    CPU: %.2f
+                    Memória: %.2f
+                     """.formatted(i, processoAtual.getNome(), processoAtual.getPid(),
+                    processoAtual.getUsoCpu(), processoAtual.getUsoMemoria()));
+            processoModels.add(servicosLisync.monitoramentoProcesso(processoAtual, componenteDAO.buscarTipoComponentePorIdTv("RAM", televisao.getIdTelevisao()).get(0).getIdComponente(), processoAtual.getUsoMemoria()));
         }
-
-        List<models.Janela> janelasModelo = new ArrayList<>();
-
-
-        for (Janela janela : janelas) {
-            janelasModelo.add(servicosLisync.monitoramentoJanela(janela, televisao.getIdTelevisao()));
-        }
-        servicosLisync.salvarJanelas(janelasModelo);
-
-        System.out.println(janelas);
 
     }
 }

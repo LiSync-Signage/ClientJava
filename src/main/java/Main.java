@@ -181,7 +181,7 @@ public class Main {
                     Looca looca = new Looca();
 
                     String hostName = looca.getRede().getParametros().getHostName();
-                    servicosLisync.cadastrarComando(comando, televisaoDAO.buscarTvPeloEndereco(hostName).getIdTelevisao());
+//                    servicosLisync.cadastrarComando(comando, televisaoDAO.buscarTvPeloEndereco(hostName).getIdTelevisao());
 
 
                     Process processo = Runtime.getRuntime().exec(comando);
@@ -217,7 +217,7 @@ public class Main {
                     String hostName = looca.getRede().getParametros().getHostName();
 
 
-                    servicosLisync.cadastrarComando(comando, televisaoDAO.buscarTvPeloEndereco(hostName).getIdTelevisao());
+//                    servicosLisync.cadastrarComando(comando, televisaoDAO.buscarTvPeloEndereco(hostName).getIdTelevisao());
 
 
                     Process processo = Runtime.getRuntime().exec(comando);

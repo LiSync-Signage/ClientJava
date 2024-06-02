@@ -6,14 +6,13 @@ import com.github.britooo.looca.api.group.processos.Processo;
 import dao.*;
 import dao.TelevisaoDAO;
 import dao.UsuarioDAO;
-import models.Ambiente;
-import models.Componente;
-import models.Televisao;
-import models.Usuario;
+import models.*;
 import services.Autenticacao;
 import services.ServicosLisync;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class MainTeste {
@@ -90,132 +89,199 @@ public class MainTeste {
             Televisao televisaohostname = televisaoDAO.buscarTvPeloEndereco(hostName);
             servicosLisync.cadastrarComponentes(televisaohostname);
             System.out.println("Televisão cadastrada com sucesso!");
+
+            MainTeste mainTeste = new MainTeste();
+            mainTeste.monitorar();
         }else if(!servicosLisync.televisaoNova(hostName)){
-            Televisao televisao = televisaoDAO.buscarTvPeloEndereco(hostName);
+            MainTeste mainTeste = new MainTeste();
+            mainTeste.monitorar();
 
 
-            String logRegistroComponentes = "";
-            List<Componente> componentes = componenteDAO.buscarComponentesPorIdTv(televisao.getIdTelevisao());
 
-            for (Componente componenteAtual : componentes) {
-                logRegistroComponentes = """
+        }else{
+            System.out.println("Seu plano atingiu a capacidade máxima de televisões, para cadastrar mais Televisões, entre em contato com a Lisync");
+        }
+    }
+
+    public void monitorar(){
+
+
+        ServicosLisync servicosLisync = new ServicosLisync();
+        Looca looca = new Looca();
+        TelevisaoDAO televisaoDAO = new TelevisaoDAO();
+        ComponenteDAO componenteDAO = new ComponenteDAO();
+        String hostName = looca.getRede().getParametros().getHostName();
+
+
+
+        Televisao televisao = televisaoDAO.buscarTvPeloEndereco(hostName);
+
+
+        String logRegistroComponentes = "";
+        List<Componente> componentes = componenteDAO.buscarComponentesPorIdTv(televisao.getIdTelevisao());
+
+        for (Componente componenteAtual : componentes) {
+            logRegistroComponentes = """
                     |----------- Componente %d da TV -----------|
                     Tipo do componente: %s;
                     Modelo: %s;
                     Identificador: %s;
                     Id da Televisão: %d;
                     """.formatted(componenteAtual.getIdComponente(), componenteAtual.getTipoComponente(), componenteAtual.getModelo(),
-                        componenteAtual.getIdentificador(), componenteAtual.getFkTelevisao());
-                System.out.println(logRegistroComponentes);
-            }
+                    componenteAtual.getIdentificador(), componenteAtual.getFkTelevisao());
+            System.out.println(logRegistroComponentes);
+        }
+        // Processos
+        Timer timer = new Timer();
+        int inicio = 0;
+        int intervalo = televisao.getTaxaAtualizacao();
 
-            for (Componente componenteAtual : componentes) {
-                System.out.println(servicosLisync.monitoramentoComponentes(componenteAtual, televisao));
-            }
+        timer.scheduleAtFixedRate(new TimerTask() {
 
-            // Processos
+            @Override
+            public void run() {
+                List<Processo> processos = looca.getGrupoDeProcessos().getProcessos();
 
+                List<Processo> maioresProcessosRam = new ArrayList<>();
 
+                List<models.Processo> processoModels = new ArrayList<>();
 
-            Timer timer = new Timer();
-            int inicio = 0;
-            int intervalo = televisao.getTaxaAtualizacao();
+                List<models.LogComponente> logComponentesList = new ArrayList<>();
 
-            timer.scheduleAtFixedRate(new TimerTask() {
+                List<Processo> maioresProcessosCPU = new ArrayList<>();
 
-                @Override
-                public void run() {
-                    List<Processo> processos = looca.getGrupoDeProcessos().getProcessos();
+                Processador processador = new Processador();
 
-                    List<Processo> maioresProcessosRam = new ArrayList<>();
+                Memoria memoria = new Memoria();
 
-                    List<models.Processo> processoModels = new ArrayList<>();
+                Collections.sort(processos, Comparator.comparingDouble(Processo::getUsoMemoria).reversed());
 
-                    List<models.LogComponente> logComponentesList = new ArrayList<>();
-
-                    List<Processo> maioresProcessosCPU = new ArrayList<>();
-
-                    Processador processador = new Processador();
-
-                    Memoria memoria = new Memoria();
-
-                    Collections.sort(processos, Comparator.comparingDouble(Processo::getUsoMemoria).reversed());
 
 // 2. Iterar sobre os primeiros 4 elementos (os maiores) e adicioná-los à lista maioresProcessosRam
-                    for (int i = 0; i < Math.min(processos.size(), 6); i++) {
-                        maioresProcessosRam.add(processos.get(i));
-                    }
 
-                    Collections.sort(processos, Comparator.comparingDouble(Processo::getUsoCpu).reversed());
+
+                for (int i = 0; i < Math.min(processos.size(), 6); i++) {
+                    maioresProcessosRam.add(processos.get(i));
+                }
+
+
+                Collections.sort(processos, Comparator.comparingDouble(Processo::getUsoCpu).reversed());
 
 // 2. Iterar sobre os primeiros 4 elementos (os maiores) e adicioná-los à lista maioresProcessosRam
-                    for (int i = 0; i < Math.min(processos.size(), 6); i++) {
-                        maioresProcessosCPU.add(processos.get(i));
+                for (int i = 0; i < Math.min(processos.size(), 6); i++) {
+                    maioresProcessosCPU.add(processos.get(i));
+                }
+
+                System.out.println("Maiores processos em uso de memoria RAM%");
+                for (int i = 0; i < maioresProcessosRam.size(); i++) {
+                    Processo processoAtual = maioresProcessosRam.get(i);
+
+                    System.out.println("""
+                            |----------- Processo %d -----------|
+                            Nome: %s
+                            Pid: %d
+                            CPU: %.2f
+                            Memória: %.2f
+                             """.formatted(i, processoAtual.getNome(), processoAtual.getPid(),
+                            processoAtual.getUsoCpu(), processoAtual.getUsoMemoria()));
+                    processoModels.add(servicosLisync.monitoramentoProcesso(processoAtual, componenteDAO.buscarTipoComponentePorIdTv("RAM", televisao.getIdTelevisao()).get(0).getIdComponente(), processoAtual.getUsoMemoria()));
+
+
+                }
+                logComponentesList.add(servicosLisync.monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("RAM", televisao.getIdTelevisao()).get(0).getIdComponente(), (Double.valueOf(memoria.getEmUso()) * 100 / Double.valueOf(memoria.getTotal()))));
+
+                System.out.println("Maiores processos em uso de CPU%");
+                for (int i = 0; i < maioresProcessosCPU.size(); i++) {
+                    Processo processoAtual = maioresProcessosCPU.get(i);
+
+                    System.out.println("""
+                            |----------- Processo %d -----------|
+                            Nome: %s
+                            Pid: %d
+                            CPU: %.2f
+                            Memória: %.2f
+                             """.formatted(i, processoAtual.getNome(), processoAtual.getPid(),
+                            processoAtual.getUsoCpu(), processoAtual.getUsoMemoria()));
+                    processoModels.add(servicosLisync.monitoramentoProcesso(processoAtual, componenteDAO.buscarTipoComponentePorIdTv("CPU", televisao.getIdTelevisao()).get(0).getIdComponente(), processoAtual.getUsoMemoria()));
+
+
+                }
+                logComponentesList.add(servicosLisync.monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("CPU", televisao.getIdTelevisao()).get(0).getIdComponente(), processador.getUso()));
+
+                servicosLisync.registrarLogComponente(logComponentesList);
+
+                servicosLisync.registrarProcessos(processoModels);
+
+                List<Janela> janelas = looca.getGrupoDeJanelas().getJanelasVisiveis();
+                List<models.Janela> janelasModelo = new ArrayList<>();
+
+
+                for (Janela janela : janelas) {
+                    janelasModelo.add(servicosLisync.monitoramentoJanela(janela, televisao.getIdTelevisao()));
+                }
+                servicosLisync.salvarJanelas(janelasModelo);
+                System.out.println("\n |----------- Monitoramento -----------|");
+                for (Componente componente : componentes) {
+                    try {
+                        String logMonitoramento = servicosLisync.monitoramentoComponentes(componente, televisao);
+                        System.out.println(logMonitoramento);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
+                }
 
-
-                    for (int i = 0; i < maioresProcessosRam.size(); i++) {
-                        Processo processoAtual = maioresProcessosRam.get(i);
-
-                        System.out.println("""
-                    |----------- Processo %d -----------|
-                    Nome: %s
-                    Pid: %d
-                    CPU: %.2f
-                    Memória: %.2f
-                     """.formatted(i, processoAtual.getNome(), processoAtual.getPid(),
-                                processoAtual.getUsoCpu(), processoAtual.getUsoMemoria()));
-                        processoModels.add(servicosLisync.monitoramentoProcesso(processoAtual, componenteDAO.buscarTipoComponentePorIdTv("RAM", televisao.getIdTelevisao()).get(0).getIdComponente(), processoAtual.getUsoMemoria()));
-                    }
-                    logComponentesList.add(servicosLisync.monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("RAM", televisao.getIdTelevisao()).get(0).getIdComponente(), (Double.valueOf(memoria.getEmUso()) * 100 / Double.valueOf(memoria.getTotal()))));
-
-
-                    for (int i = 0; i < maioresProcessosCPU.size(); i++) {
-                        Processo processoAtual = maioresProcessosCPU.get(i);
-
-                        System.out.println("""
-                    |----------- Processo %d -----------|
-                    Nome: %s
-                    Pid: %d
-                    CPU: %.2f
-                    Memória: %.2f
-                     """.formatted(i, processoAtual.getNome(), processoAtual.getPid(),
-                                processoAtual.getUsoCpu(), processoAtual.getUsoMemoria()));
-                        processoModels.add(servicosLisync.monitoramentoProcesso(processoAtual, componenteDAO.buscarTipoComponentePorIdTv("CPU", televisao.getIdTelevisao()).get(0).getIdComponente(), processoAtual.getUsoMemoria()));
-                    }
-                    logComponentesList.add(servicosLisync.monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("CPU", televisao.getIdTelevisao()).get(0).getIdComponente(), processador.getUso()));
-
-                    servicosLisync.registrarLogComponente(logComponentesList);
-
-                    servicosLisync.registrarProcessos(processoModels);
-
-
-
-
-                    // Janelas
-
-                    List<Janela> janelas = looca.getGrupoDeJanelas().getJanelasVisiveis();
-                    List<models.Janela> janelasModelo = new ArrayList<>();
-
-
-                    for (Janela janela : janelas) {
-                        janelasModelo.add(servicosLisync.monitoramentoJanela(janela, televisao.getIdTelevisao()));
-                    }
-                    servicosLisync.salvarJanelas(janelasModelo);
-                    System.out.println("\n |----------- Monitoramento -----------|");
-                    for (Componente componente : componentes) {
+                ///Executar o comando
+                ComandoDAO comandoDAO = new ComandoDAO();
+                Comando comando = comandoDAO.selectComando(televisao.getIdTelevisao());
+                if (comando != null) {
+                    Process processo = null;
+                    String comandoExecucao = comando.getnomeComando();
+                    if (!comandoExecucao.startsWith("Resposta:")) {
                         try {
-                            String logMonitoramento = servicosLisync.monitoramentoComponentes(componente, televisao);
-                            System.out.println(logMonitoramento);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
+                            System.out.println("Executando comando: " + comandoExecucao);
+                            processo = Runtime.getRuntime().exec(comandoExecucao);
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(processo.getInputStream()));
+                            BufferedReader errorReader = new BufferedReader(new InputStreamReader(processo.getErrorStream()));
+                            String linha;
+                            StringBuilder saidaComando = new StringBuilder();
+                            StringBuilder saidaErro = new StringBuilder();
+
+                            while ((linha = reader.readLine()) != null) {
+                                saidaComando.append(linha).append("\n");
+                            }
+
+                            while ((linha = errorReader.readLine()) != null) {
+                                saidaErro.append(linha).append("\n");
+                            }
+
+                            // Verifique se há erros na saída de erro
+                            if (saidaErro.length() > 0) {
+                                System.err.println("Erro na execução do comando: " + saidaErro.toString());
+                                servicosLisync.atualizarComando(comando.getIdComando(), "Erro ao executar o comando: " + saidaErro.toString(), comando.getFkTelevisao());
+                            } else {
+                                System.out.println("Saída do comando: " + saidaComando.toString());
+                                servicosLisync.atualizarComando(comando.getIdComando(), "Resposta: " + saidaComando.toString(), comando.getFkTelevisao());
+                            }
+
+                            // Verifique o código de saída do processo
+                            int exitCode = processo.waitFor();
+                            if (exitCode != 0) {
+                                System.err.println("O comando não foi executado com sucesso. Código de saída: " + exitCode);
+                                servicosLisync.atualizarComando(comando.getIdComando(), "Erro ao executar o comando. Código de saída: " + exitCode, comando.getFkTelevisao());
+                            }
+                        } catch (IOException | InterruptedException e) {
+                            servicosLisync.atualizarComando(comando.getIdComando(), "Erro ao executar o comando: " + e.getMessage(), comando.getFkTelevisao());
+                            System.err.println("Erro ao executar o comando: " + e.getMessage());
+                            e.printStackTrace();
+                        } finally {
+                            if (processo != null) {
+                                processo.destroy();
+                            }
                         }
                     }
                 }
-            }, inicio, intervalo);
-        }else{
-            System.out.println("Seu plano atingiu a capacidade máxima de televisões, para cadastrar mais Televisões, entre em contato com a Lisync");
-        }
+            }
+        }, inicio, intervalo);
     }
 
 }

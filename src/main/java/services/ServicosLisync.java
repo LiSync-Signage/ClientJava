@@ -5,6 +5,7 @@ import com.github.britooo.looca.api.group.discos.Disco;
 import com.github.britooo.looca.api.group.processos.Processo;
 import com.github.britooo.looca.api.group.janelas.Janela;
 import com.github.britooo.looca.api.util.Conversor;
+import conexao.ConexaoSlack;
 import dao.*;
 import models.*;
 import plano.Plano;
@@ -147,25 +148,15 @@ public class ServicosLisync {
 //
     public String monitoramentoComponentes(Componente componente, Televisao televisao) throws IOException {
         Double valor = 0.0;
-
+        ConexaoSlack conexaoSlack = new ConexaoSlack();
 
         switch (componente.getTipoComponente()) {
             case "CPU":
                 valor = looca.getProcessador().getUso();
                 LogComponente logComponente = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("CPU",televisao.getIdTelevisao()).get(0).getIdComponente(),valor);
-
                 logComponenteDAO.salvarLogComponenteIndividual(logComponente);
+                conexaoSlack.alertMessageCPU(valor);
 
-                if (valor > 80) {
-                    return String.format("ESTADO CRÍTICO - Uso da CPU elevado na televisão "
-                            + televisao.getNome() + " Uso de CPU: " + valor);
-                } else if (valor > 60) {
-                    return String.format("ESTADO ATENÇÃO - Uso da CPU moderado na televisão "
-                            + televisao.getNome() + " Uso de CPU: " + valor);
-                } else {
-                    return String.format("ESTADO OK - Uso da CPU conforme as regras de aceite | Televisão: "
-                            + televisao.getNome() + " | Uso de CPU: " + valor);
-                }
 
             case "Disco":
                 List<Disco> discos = looca.getGrupoDeDiscos().getDiscos();
@@ -177,21 +168,9 @@ public class ServicosLisync {
 
                 valor = (discoPrincipal.getBytesDeEscritas().doubleValue()
                         / discoPrincipal.getTamanho().doubleValue()) * 100.;
-
                 LogComponente logComponente2 = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("Disco",televisao.getIdTelevisao()).get(0).getIdComponente(),valor);
-
                 logComponenteDAO.salvarLogComponenteIndividual(logComponente2);
-
-                if (valor > 60) {
-                    return String.format("ESTADO CRÍTICO - Uso da Disco elevado na televisão "
-                            + televisao.getNome() + " Uso de Disco: " + valor);
-                } else if (valor > 30) {
-                    return String.format("ESTADO ATENÇÃO - Uso da Disco moderado na televisão "
-                            + televisao.getNome() + " Uso de Disco: " + valor);
-                } else {
-                    return String.format("ESTADO OK - Uso da Disco conforme as regras de aceite | Televisão: "
-                            + televisao.getNome() + " | Uso de Disco: " + valor);
-                }
+                conexaoSlack.alertMessageDisco(valor);
 
             case "RAM":
                 valor = (looca.getMemoria().getEmUso().doubleValue() / (looca.getMemoria().getTotal().doubleValue())) * 100.;
@@ -199,27 +178,29 @@ public class ServicosLisync {
                 LogComponente logComponente1 = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("RAM",televisao.getIdTelevisao()).get(0).getIdComponente(),valor);
 
                 logComponenteDAO.salvarLogComponenteIndividual(logComponente1);
-
-                if (valor > 90) {
-                    return String.format("ESTADO CRÍTICO - Uso da RAM elevado na televisão "
-                            + televisao.getNome() + " Uso de RAM: " + valor);
-                } else if (valor > 75) {
-                    return String.format("ESTADO ATENÇÃO - Uso da RAM moderado na televisão "
-                            + televisao.getNome() + " Uso de RAM: " + valor);
-                } else {
-                    return String.format("ESTADO OK - Uso da RAM conforme as regras de aceite | Televisão: "
-                            + televisao.getNome() + " | Uso de RAM: " + valor);
-                }
-
-            default:
-                System.out.println("Valor inválido");
+                conexaoSlack.alertMessageRAM(valor);
         }
-        return "Não foi possível encontar componentes";
+        return "";
     }
 
 //
     public void registrarProcessos(List<models.Processo> listaProcessos) {
         processoDAO.salvarVariosProcessos(listaProcessos);
+        try {
+            processoDAO.salvarVariosProcessosSQLServer(listaProcessos);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Erro ao salvar LogComponente no servidor principal");
+        } finally {
+            try{
+                processoDAO.salvarVariosProcessos(listaProcessos);
+            }catch (Exception c) {
+                c.printStackTrace();
+                System.out.println("Erro ao salvar LogComponente no servidor local");
+            }
+        }
+
     }
     public void registrarLogComponente(List<models.LogComponente> listaLogComponente) {
 
@@ -281,11 +262,18 @@ public class ServicosLisync {
 
 
 
-    public void cadastrarComando(String comando, Integer fkTelevisao) {
-        models.Comando comandoObj= new models.Comando(comando, fkTelevisao);
-        ComandoDAO.insertComando(comandoObj);
+    public void atualizarComando(Integer idComando, String comando, Integer fkTelevisao) {
+        models.Comando comandoObj= new models.Comando(idComando ,comando, fkTelevisao);
 
+        try {
+            ComandoDAO.updateComandoSQLServer(comandoObj);
+            ComandoDAO.updateComando(comandoObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("erro ao retornar resposta do comando");
+        }
     }
+
 
 
 }

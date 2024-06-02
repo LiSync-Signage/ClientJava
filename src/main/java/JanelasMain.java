@@ -25,7 +25,6 @@ public class JanelasMain {
 //        }
         for (int i = 0; i < processos.size(); i++) {
             Processo processoAtual = processos.get(i);
-
             System.out.println("""
                     |----------- Processo %d -----------|
                     Nome: %s

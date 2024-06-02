@@ -17,6 +17,7 @@ public class ConexaoSQLServer {
             dataSource.setUsername("sa"); // Substitua pelo seu nome de usuário
             dataSource.setPassword("urubu100");   // Substitua pela sua senha
 
+
             conexaoSqlServerLocal = new JdbcTemplate(dataSource);
 
             // Testando a conexão

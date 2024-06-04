@@ -1,0 +1,4 @@
+Processo{idLog=1, pid=6364, nomeProcesso=idea64', dataHora=2024-05-29T20:45:11.792441, fkComponente=3, valor=19.74312606769296}
+Processo{idLog=2, pid=8808, nomeProcesso=chrome', dataHora=2024-05-29T20:45:11.826395, fkComponente=3, valor=7.243493814980946}
+Processo{idLog=8, pid=6364, nomeProcesso=idea64', dataHora=2024-05-29T20:45:12.071739, fkComponente=1, valor=19.74312606769296}
+Processo{idLog=11, pid=8808, nomeProcesso=chrome', dataHora=2024-05-29T20:45:12.166485, fkComponente=1, valor=7.243493814980946}

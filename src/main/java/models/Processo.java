@@ -10,6 +10,8 @@ public class Processo {
     protected Double valor;
     protected Integer fkComponente;
 
+
+
     public Processo() {}
 
     public Processo(Integer pid, String nomeProcesso, Integer fkComponente, Double valor) {
@@ -56,7 +58,7 @@ public class Processo {
         return nomeProcesso;
     }
 
-    public void setNomeProcesso(String nome) {
+    public void setNomeProcesso(String nomeProcesso) {
         this.nomeProcesso = nomeProcesso;
     }
     
@@ -73,7 +75,7 @@ public class Processo {
         return "Processo{" +
                 "idLog=" + idLog +
                 ", pid=" + pid +
-                ", nomeProcesso='" + nomeProcesso + '\'' +
+                ", nomeProcesso=" + nomeProcesso + '\'' +
                 ", dataHora=" + dataHora +
                 ", fkComponente=" + fkComponente +
                 ", valor=" + valor +

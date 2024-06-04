@@ -1,0 +1,2 @@
+Processo{idLog=1, pid=6364, nomeProcesso=idea64', dataHora=2024-05-29T20:45:11.792441, fkComponente=3, valor=19.74312606769296}
+Processo{idLog=8, pid=6364, nomeProcesso=idea64', dataHora=2024-05-29T20:45:12.071739, fkComponente=1, valor=19.74312606769296}

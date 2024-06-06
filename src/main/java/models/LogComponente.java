@@ -6,14 +6,22 @@ public class LogComponente {
     private Integer fkComponente;
     private Double valor;
     private LocalDateTime dataHora;
+    private Componente componente;
 
-    public LogComponente() {
+    public LogComponente() {}
 
-    }
     public LogComponente(Integer fkComponente, Double valor) {
         this.fkComponente = fkComponente;
         this.valor = valor;
         this.dataHora = LocalDateTime.now();
+        this.componente = componente;
+    }
+
+    public LogComponente(Integer fkComponente, Double valor, Componente componente) {
+        this.fkComponente = fkComponente;
+        this.valor = valor;
+        this.dataHora = LocalDateTime.now();
+        this.componente = componente;
     }
 
     public Integer getFkComponente() {
@@ -39,6 +47,34 @@ public class LogComponente {
     public void setDataHora(LocalDateTime dataHora) {
         this.dataHora = dataHora;
     }
-}
 
+    public Componente getComponente() {
+        return componente;
+    }
+
+    public void setComponente(Componente componente) {
+        this.componente = componente;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "LogComponente{\n" +
+                        "    dataHora=%s,\n" +
+                        "    fkComponente=%d,\n" +
+                        "    valor=%.2f,\n" +
+                        "    modelo='%s',\n" +
+                        "    tipoComponente='%s',\n" +
+                        "    fkTelevisao=%d\n" +
+                        "}",
+                dataHora,
+                fkComponente,
+                valor,
+                componente.getModelo(),
+                componente.getTipoComponente(),
+                componente.getFkTelevisao()
+        );
+    }
+
+}
 

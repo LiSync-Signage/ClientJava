@@ -33,7 +33,22 @@ public class ComponenteDAO {
         }
     }
 
+    private JdbcTemplate jdbcTemplate;
 
+    public ComponenteDAO() {
+        ConexaoMySQL conexao = new ConexaoMySQL();
+        this.jdbcTemplate = conexao.getconexaoMySqlLocal();
+    }
+
+    public Componente buscarComponentePorId(int id) {
+        String sql = "SELECT * FROM Componente WHERE idComponente = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Componente.class), id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 
     public List<Componente> buscarComponentesPorIdTv (Integer idTelevisao) {

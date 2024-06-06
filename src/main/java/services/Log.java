@@ -1,6 +1,8 @@
 package services;
 
-import models.Processo;
+import dao.ComponenteDAO;
+import models.Componente;
+import models.LogComponente;
 import conexao.ConexaoMySQL;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,17 +14,27 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class Log {
+	private JdbcTemplate jdbcTemplate;
+	private ComponenteDAO componenteDAO = new ComponenteDAO();
+
+	public Log() {
+		ConexaoMySQL conexao = new ConexaoMySQL();
+		this.jdbcTemplate = conexao.getconexaoMySqlLocal();
+	}
+
 	public static void main(String[] args) {
 		criarPasta();
 		criarArquivo();
-		List<Processo> processos = buscarProcessosIniciadosNaUltimaHora();
 
-		if (processos != null) {
-			System.out.println("Processos encontrados: " + processos.size());
+		List<LogComponente> componentes = buscarProcessosIniciadosNaUltimaHora();
+
+		if (componentes != null) {
+			System.out.println("Processos encontrados: " + componentes.size());
 		} else {
 			System.out.println("Nenhum processo encontrado");
 		}
@@ -30,13 +42,13 @@ public class Log {
 
 	private static String getDataFormatada() {
 		Date data = new Date();
-		SimpleDateFormat formatador = new SimpleDateFormat("yyyyMMdd");
+		SimpleDateFormat formatador = new SimpleDateFormat("yyyy.MM.dd");
 		return formatador.format(data);
 	}
 
 	private static String getHoraFormatada() {
 		Date data = new Date();
-		SimpleDateFormat formatador = new SimpleDateFormat("HHmm");
+		SimpleDateFormat formatador = new SimpleDateFormat("HH.mm");
 		return formatador.format(data);
 	}
 
@@ -70,34 +82,37 @@ public class Log {
 		}
 	}
 
-	public static void adicionarTextoNoArquivo(List<Processo> processos) {
+	public void adicionarTextoNoArquivo(List<LogComponente> componentes) {
 		File arquivo = new File(getNomePasta() + File.separator + getNomeArquivo());
-		try {
-			FileWriter fw = new FileWriter(arquivo, true);
-			BufferedWriter bw = new BufferedWriter(fw);
-			for (Processo processo : processos) {
-				double valor = processo.getValor();
-				if (alerta(valor) || critico(valor)) {
-					bw.write(processo.toString());
+		try (FileWriter fw = new FileWriter(arquivo, true);
+			 BufferedWriter bw = new BufferedWriter(fw)) {
+
+			for (LogComponente logComponente : componentes ) {
+				Componente componente = componenteDAO.buscarComponentePorId(logComponente.getFkComponente());
+				logComponente.setComponente(componente);
+				double valor = logComponente.getValor();
+
+				if (alerta(componente, valor)) {
+					bw.write(logComponente.toString());
 					bw.newLine();
 				}
 			}
-			bw.close();
-			fw.close();
 		} catch (IOException e) {
 			System.out.println("Erro ao adicionar texto no arquivo: " + e.getMessage());
 		}
 	}
 
-	public static List<Processo> buscarProcessosIniciadosNaUltimaHora() {
+	public static List<LogComponente> buscarProcessosIniciadosNaUltimaHora() {
 		ConexaoMySQL conexao = new ConexaoMySQL();
 		JdbcTemplate con = conexao.getconexaoMySqlLocal();
-		String sql = "SELECT idLog, pid, dataHora, nomeProcesso, valor, fkComponente FROM Log";
-		List<Processo> processos = null;
+		String sql = "SELECT idLogComponente, dataHora, valor, fkComponente \n" +
+				"FROM LogComponente\n" +
+				"WHERE dataHora >= DATE_SUB(NOW(), INTERVAL 1 HOUR);";
+		List<LogComponente> componentes = new ArrayList<>();
 
 		try {
-			processos = con.query(sql, new BeanPropertyRowMapper<>(Processo.class));
-			adicionarTextoNoArquivo(processos);
+			componentes = con.query(sql, new BeanPropertyRowMapper<>(LogComponente.class));
+			new Log().adicionarTextoNoArquivo(componentes);
 		} catch (DataAccessException e) {
 			System.out.println("Erro de acesso aos dados ao buscar processos: " + e.getMessage());
 		} catch (Exception e) {
@@ -111,22 +126,42 @@ public class Log {
 				}
 			}
 		}
-		return processos;
+		return componentes;
 	}
 
-	private static boolean alerta(double valor) {
-		return (valor >= 61 && valor <= 80) || (valor >= 75 && valor <= 90) || (valor >= 31 && valor <= 60);
+	private boolean alerta(Componente componente, double valor) {
+		String tipo = componente.getTipoComponente();
+		switch (tipo) {
+			case "CPU":
+				return valor >= 61 && valor <= 80;
+			case "DISCO":
+				return valor >= 75 && valor <= 90;
+			case "RAM":
+				return valor >= 31 && valor <= 60;
+			default:
+				return false;
+		}
 	}
 
-	private static boolean critico(double valor) {
-		return (valor > 80) || (valor > 90) || (valor > 60);
-	}
+//	private boolean critico(Componente componente, double valor) {
+//		String tipo = componente.getTipoComponente();
+//		switch (tipo) {
+//			case "CPU":
+//				return valor > 80;
+//			case "DISCO":
+//				return valor > 90;
+//			case "RAM":
+//				return valor > 60;
+//			default:
+//				return false;
+//		}
+//	}
 
 	public static String getNomePasta() {
 		return "logs";
 	}
 
 	public static String getNomeArquivo() {
-		return "log-" + getDataFormatada() + "-" + getHoraFormatada() + ".txt";
+		return "LogAlertas- " + getDataFormatada() + "-" + getHoraFormatada() + "hs" +  ".txt";
 	}
 }

@@ -6,6 +6,7 @@ public class LogComponente {
     private Integer fkComponente;
     private Double valor;
     private LocalDateTime dataHora;
+
     private Componente componente;
 
     public LogComponente() {}
@@ -59,22 +60,26 @@ public class LogComponente {
     @Override
     public String toString() {
         return String.format(
-                "LogComponente{\n" +
-                        "    dataHora=%s,\n" +
-                        "    fkComponente=%d,\n" +
-                        "    valor=%.2f,\n" +
-                        "    modelo='%s',\n" +
-                        "    tipoComponente='%s',\n" +
-                        "    fkTelevisao=%d\n" +
-                        "}",
+
+                        "------------------------------------------------------------------------------------------------------------------------------------------------------\n" +
+                                "Data e Hora: %s " +
+                                "| ID Componente: %d " +
+                                "| Valor: %.2f " +
+                                "| Modelo: '%s' " +
+                                "| Tipo Componente: '%s' " +
+                                "| Identificador: '%s' " +
+                                "| ID Televisão: %d\n"+
+                        "------------------------------------------------------------------------------------------------------------------------------------------------------",
                 dataHora,
                 fkComponente,
                 valor,
                 componente.getModelo(),
                 componente.getTipoComponente(),
+                componente.getIdentificador(),
                 componente.getFkTelevisao()
         );
     }
+
 
 }
 

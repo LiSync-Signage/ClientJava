@@ -105,9 +105,7 @@ public class Log {
 	public static List<LogComponente> buscarProcessosIniciadosNaUltimaHora() {
 		ConexaoMySQL conexao = new ConexaoMySQL();
 		JdbcTemplate con = conexao.getconexaoMySqlLocal();
-		String sql = "SELECT idLogComponente, dataHora, valor, fkComponente \n" +
-				"FROM LogComponente\n" +
-				"WHERE dataHora >= DATE_SUB(NOW(), INTERVAL 1 HOUR);";
+		String sql = "SELECT idLogComponente, dataHora, valor, fkComponente FROM LogComponente";
 		List<LogComponente> componentes = new ArrayList<>();
 
 		try {

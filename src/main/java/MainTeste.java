@@ -76,33 +76,51 @@ public class MainTeste {
             AmbienteDAO ambienteDAO = new AmbienteDAO();
             List<Ambiente> ambientes = ambienteDAO.getListaAmbientes(usuarioAutenticado.getFkEmpresa());
             if (!ambientes.isEmpty()) {
-                Integer opcao = 1;
-                System.out.println("Escolha o Ambiente desejado");
-                for (Ambiente ambienteAux : ambientes) {
-                    System.out.println("""
-                            Opção %d
-                            Setor %s
-                            Andar %s
-                            """.formatted(opcao, ambienteAux.getSetor(), ambienteAux.getAndar()));
+                Boolean selecaoCorreta = false;
+                do {
 
-                }
-                System.out.println("ou digite 0 para criar um novo ambiente");
-                Integer opcaoEscolhida = input.nextInt();
-                for (int i = 0; i < ambientes.size(); i++) {
-                    if (i + 1 == opcaoEscolhida) {
-                        ambiente = ambientes.get(i);
-                        setor = ambiente.getSetor();
-                        andar = ambiente.getAndar();
+
+                    Integer opcao = 1;
+                    System.out.println("---------Digite a opção de ambiente desejada---------");
+                    for (Ambiente ambienteAux : ambientes) {
+                        System.out.println("""
+                                                            
+                                |------Opção %d------|
+                                                            
+                                Setor: %s
+                                Andar: %s
+                                                            
+                                |--------------------|
+                                """.formatted(opcao, ambienteAux.getSetor(), ambienteAux.getAndar()));
+                        opcao++;
+
                     }
-                }
-                if(opcaoEscolhida == 0){
-                    System.out.println("|----------- Cadastro Ambiente -----------|");
-                    System.out.println("Inserir dados de localização (andar)");
-                    andar = inputNext.nextLine();
-                    System.out.println("Inserir dados de localização (setor)");
-                    setor = inputNext.nextLine();
-                    servicosLisync.cadastrarAmbiente(setor, andar, usuarioAutenticado.getFkEmpresa());
-                }
+                    System.out.println("ou digite %d para criar um novo ambiente".formatted(ambientes.size() + 1));
+                    Integer opcaoEscolhida = input.nextInt();
+                    for (int i = 0; i < ambientes.size(); i++) {
+                        if (i + 1 == opcaoEscolhida) {
+                            selecaoCorreta = true;
+                            ambiente = ambientes.get(i);
+                            setor = ambiente.getSetor();
+                            andar = ambiente.getAndar();
+                        }
+                    }
+                    if (opcaoEscolhida == ambientes.size() + 1) {
+                        System.out.println("|----------- Cadastro Ambiente -----------|");
+                        System.out.println("Inserir dados de localização (andar)");
+                        andar = inputNext.nextLine();
+                        System.out.println("Inserir dados de localização (setor)");
+                        setor = inputNext.nextLine();
+                        servicosLisync.cadastrarAmbiente(setor, andar, usuarioAutenticado.getFkEmpresa());
+                        selecaoCorreta = true;
+                    }
+                    if(!selecaoCorreta){
+                        System.out.println("Selecione um ambiente válido ou digite %d para adicionar um".formatted(ambientes.size()+1));
+                    }
+
+                }while (!selecaoCorreta);
+
+
             } else {
                 System.out.println("Não foi possível encontrar Nenhum ambiente em nossa base de dados! ");
                 System.out.println("|----------- Cadastro Ambiente -----------|");

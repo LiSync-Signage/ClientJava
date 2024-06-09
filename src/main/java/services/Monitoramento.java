@@ -38,18 +38,18 @@ public class Monitoramento {
                 tipoDoComponente = "CPU";
             }
             if(componenteAtual instanceof Disco){
-                tipoDoComponente = "CPU";
+                tipoDoComponente = "Disco";
             }
             if(componenteAtual instanceof MemoriaRam){
-                tipoDoComponente = "CPU";
+                tipoDoComponente = "Memoria";
             }
             logRegistroComponentes = """
-                    |----------- Componente %d da TV -----------|
+                    |----------- Componente -----------|
                     Tipo do componente: %s;
                     Modelo: %s;
                     Identificador: %s;
                     Id da Televisão: %d;
-                    """.formatted(componenteAtual.getIdComponente(), tipoDoComponente, componenteAtual.getModelo(),
+                    """.formatted(tipoDoComponente, componenteAtual.getModelo(),
                     componenteAtual.getIdentificador(), componenteAtual.getFkTelevisao());
             System.out.println(logRegistroComponentes);
         }

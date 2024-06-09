@@ -1,4 +1,4 @@
-package org.LiSync.conexao;
+package conexao;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;

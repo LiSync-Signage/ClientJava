@@ -185,7 +185,6 @@ public class ServicosLisync {
 
 //
     public void registrarProcessos(List<models.Processo> listaProcessos) {
-        processoDAO.salvarVariosProcessos(listaProcessos);
         try {
             processoDAO.salvarVariosProcessosSQLServer(listaProcessos);
 
@@ -262,8 +261,8 @@ public class ServicosLisync {
 
 
 
-    public void atualizarComando(Integer idComando, String comando, Integer fkTelevisao) {
-        models.Comando comandoObj= new models.Comando(idComando ,comando, fkTelevisao);
+    public void atualizarComando(Integer idComando, String comando, String resposta, Integer fkTelevisao) {
+        models.Comando comandoObj= new models.Comando(idComando ,comando,resposta , fkTelevisao);
 
         try {
             ComandoDAO.updateComandoSQLServer(comandoObj);

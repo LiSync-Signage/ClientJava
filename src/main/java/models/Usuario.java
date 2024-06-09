@@ -2,7 +2,7 @@ package models;
 
 public class Usuario {
 	private Integer idUsuario;
-	private String nome;
+	private String nomeUsuario;
 	private String email;
 	private String senha;
 	private Integer fkEmpresa;
@@ -10,8 +10,8 @@ public class Usuario {
 
 	public Usuario(){}
 
-	public Usuario(String nome, String email, String senha, Integer fkEmpresa, Integer fkGestor) {
-		this.nome = nome;
+	public Usuario(String nomeUsuario, String email, String senha, Integer fkEmpresa, Integer fkGestor) {
+		this.nomeUsuario = nomeUsuario;
 		this.email = email;
 		this.senha = senha;
 		this.fkEmpresa = fkEmpresa;
@@ -26,12 +26,12 @@ public class Usuario {
 		this.idUsuario = idUsuario;
 	}
 
-	public String getNome() {
-		return nome;
+	public String getNomeUsuario() {
+		return nomeUsuario;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setNomeUsuario(String nomeUsuario) {
+		this.nomeUsuario = nomeUsuario;
 	}
 
 	public String getEmail() {
@@ -69,12 +69,12 @@ public class Usuario {
 	@Override
 	public String toString() {
 		return """
-				ID Usuário: %d
-				Nome: %s
-				Email: %s
-				Senha: %s
-				Empresa (FK): %d
-				Gstor (FK): %d
-				""".formatted(this.idUsuario, this.nome, this.email, this.senha, this.fkEmpresa, this.fkGestor);
+                ID Usuário: %d
+                Nome: %s
+                Email: %s
+                Senha: %s
+                Empresa (FK): %d
+                Gestor (FK): %d
+                """.formatted(this.idUsuario, this.nomeUsuario, this.email, this.senha, this.fkEmpresa, this.fkGestor);
 	}
 }

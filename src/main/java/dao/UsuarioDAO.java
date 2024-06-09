@@ -1,6 +1,6 @@
 package dao;
 
-import org.LiSync.conexao.ConexaoMySQL;
+import conexao.ConexaoMySQL;
 import models.Usuario;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -67,8 +67,8 @@ public class UsuarioDAO {
 //        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
 //        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
 
-        String sql = "INSERT INTO Usuario (idUsuario, nome, fkEmpresa) " +
-                "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE nome = ?, fkEmpresa = ?";
+        String sql = "INSERT INTO Usuario (idUsuario, nomeUsuario, fkEmpresa) " +
+                "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE nomeUsuario = ?, fkEmpresa = ?";
 
 //        String sqlServer = "MERGE INTO Usuario AS target\n" +
 //                "USING (VALUES (?, ?, ?, ?, ?)) AS source (idUsuario, nome, fkEmpresa, novoNome, novaFkEmpresa)\n" +
@@ -81,8 +81,8 @@ public class UsuarioDAO {
 //                "    VALUES (source.idUsuario, source.nome, source.fkEmpresa);";
 
         try {
-            con.update(sql, usuario.getIdUsuario(), usuario.getNome(), usuario.getFkEmpresa(),
-                    usuario.getNome(), usuario.getFkEmpresa());
+            con.update(sql, usuario.getIdUsuario(), usuario.getNomeUsuario(), usuario.getFkEmpresa(),
+                    usuario.getNomeUsuario(), usuario.getFkEmpresa());
 //            conSQLServer.update(sqlServer, usuario.getIdUsuario(), usuario.getNome(), usuario.getFkEmpresa(),
 //                    usuario.getNome(), usuario.getFkEmpresa());
         } catch (Exception e)  {
@@ -116,21 +116,19 @@ public class UsuarioDAO {
 //        String sql = "INSERT INTO Usuario (idUsuario, nome, fkEmpresa) " +
 //                "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE nome = ?, fkEmpresa = ?";
 
-        String sqlServer = "MERGE INTO Usuario AS target\n" +
-                "USING (VALUES (?, ?, ?, ?, ?)) AS source (idUsuario, nomeUsuario, fkEmpresa, novoNome, novaFkEmpresa)\n" +
-                "    ON target.idUsuario = source.idUsuario\n" +
-                "WHEN MATCHED THEN\n" +
-                "    UPDATE SET target.nomeUsuario = source.novoNome,\n" +
-                "               target.fkEmpresa = source.novaFkEmpresa\n" +
-                "WHEN NOT MATCHED THEN\n" +
-                "    INSERT (nomeUsuario, fkEmpresa)\n" +
-                "    VALUES (source.nomeUsuario, source.fkEmpresa);\n";
+        String sqlServer =  "MERGE INTO Usuario AS target " +
+                "USING (VALUES (?, ?, ?)) AS source (idUsuario, nomeUsuario, fkEmpresa) " +
+                "ON target.idUsuario = source.idUsuario " +
+                "WHEN MATCHED THEN " +
+                "UPDATE SET target.nomeUsuario = source.nomeUsuario, target.fkEmpresa = source.fkEmpresa " +
+                "WHEN NOT MATCHED THEN " +
+                "INSERT (nomeUsuario, fkEmpresa) " +  // Removed idUsuario from INSERT columns
+                "VALUES (source.nomeUsuario, source.fkEmpresa);";
 
         try {
 //            con.update(sql, usuario.getIdUsuario(), usuario.getNome(), usuario.getFkEmpresa(),
 //                    usuario.getNome(), usuario.getFkEmpresa());
-            conSQLServer.update(sqlServer, usuario.getIdUsuario(), usuario.getNome(), usuario.getFkEmpresa(),
-                    usuario.getNome(), usuario.getFkEmpresa());
+            conSQLServer.update(sqlServer, usuario.getIdUsuario(), usuario.getNomeUsuario(), usuario.getFkEmpresa());
         } catch (Exception e)  {
             e.printStackTrace();
         } finally {

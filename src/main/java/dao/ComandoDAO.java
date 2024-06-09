@@ -19,11 +19,11 @@ public class ComandoDAO {
 
 //        String sql = "INSERT INTO comando(nome,fkTelevisao)VALUES (?,?);";
 
-        String sqlSever = "UPDATE comando SET nomeComando = ? WHERE idComando = ?";
+        String sqlSever = "UPDATE Comando SET resposta = ? WHERE idComando = ?";
 
         try {
 //            con.update(sql, comando.getComando(), comando.getFkTelevisao());
-          conSQLServer.update(sqlSever, comando.getnomeComando(), comando.getIdComando());
+          conSQLServer.update(sqlSever, comando.getResposta(), comando.getIdComando());
         } catch (Exception e)  {
             e.printStackTrace();
         } finally {
@@ -45,18 +45,18 @@ public class ComandoDAO {
     }
 
     public static void updateComando(Comando comando) {
-          org.LiSync.conexao.ConexaoMySQL conexaoMySQL = new org.LiSync.conexao.ConexaoMySQL();
+          conexao.ConexaoMySQL conexaoMySQL = new conexao.ConexaoMySQL();
           JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
 
 //        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
 //        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
 
-        String sql = "UPDATE comando SET nome = ? WHERE idComando = ?;";
+        String sql = "UPDATE Comando SET resposta = ? WHERE idComando = ?;";
 
 //        String sqlSever = "INSERT INTO Comando(nome,fkTelevisao)VALUES (?,?);";
 
         try {
-            con.update(sql, comando.getnomeComando(), comando.getFkTelevisao());
+            con.update(sql, comando.getResposta(), comando.getFkTelevisao());
 //            conSQLServer.update(sqlSever, comando.getComando(), comando.getFkTelevisao());
         } catch (Exception e)  {
             e.printStackTrace();
@@ -85,7 +85,7 @@ public class ComandoDAO {
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
         JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
 
-        String sqlServer = "SELECT TOP 1 Comando.idComando, Comando.nomeComando, Comando.fkTelevisao\n" +
+        String sqlServer = "SELECT TOP 1 Comando.idComando, Comando.nomeComando, Comando.fkTelevisao, Comando.resposta\n" +
                 "FROM Comando\n" +
                 "JOIN Televisao ON Comando.fkTelevisao = Televisao.idTelevisao\n" +
                 "WHERE Televisao.idTelevisao = ?\n" +

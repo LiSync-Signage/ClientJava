@@ -3,7 +3,7 @@ package plano;
 public enum Plano {
     Basico(10, "Basico"),
     Corporativo(25, "Corporativo"),
-    Interprise(50, "Interprise");
+    Enterprise(50, "Enterprise");
 
     private Integer qtdTvs;
     private String titulo;

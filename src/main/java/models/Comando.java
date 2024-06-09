@@ -3,14 +3,16 @@ package models;
 public class Comando {
     private Integer idComando;
     private String nomeComando;
+    private String resposta;
     private Integer fkTelevisao;
 
     public Comando() {
 
     }
-    public Comando(Integer idComando,String comando, Integer fkTelevisao) {
+    public Comando(Integer idComando,String comando, String resposta, Integer fkTelevisao) {
         this.idComando = idComando;
         this.nomeComando = comando;
+        this.resposta = resposta;
         this.fkTelevisao = fkTelevisao;
     }
 
@@ -25,6 +27,14 @@ public class Comando {
 
     public String getnomeComando() {
         return nomeComando;
+    }
+
+    public String getResposta() {
+        return resposta;
+    }
+
+    public void setResposta(String resposta) {
+        this.resposta = resposta;
     }
 
     public void setnomeComando(String comando) {

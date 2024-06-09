@@ -1,6 +1,6 @@
 package dao;
 
-import org.LiSync.conexao.ConexaoMySQL;
+import conexao.ConexaoMySQL;
 import models.Televisao;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,7 +16,7 @@ public class TelevisaoDAO {
 //        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
 //        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
 
-        String sql = "INSERT INTO Televisao (nome, taxaAtualizacao, hostName ,fkAmbiente) " +
+        String sql = "INSERT INTO Televisao (nomeTelevisao, taxaAtualizacao, hostname ,fkAmbiente) " +
                 "VALUES (?, ?, ?, ? )";
 
 //        String sqlServer = "INSERT INTO Televisao (nome, taxaAtualizacao, hostName ,fkAmbiente) " +
@@ -62,7 +62,7 @@ public class TelevisaoDAO {
 //        String sql = "INSERT INTO Televisao (nome, taxaAtualizacao, hostName ,fkAmbiente) " +
 //                "VALUES (?, ?, ?, ? )";
 
-        String sqlServer = "INSERT INTO Televisao (nomeTelevisao, taxaAtualizacao, hostName ,fkAmbiente) " +
+        String sqlServer = "INSERT INTO Televisao (nomeTelevisao, taxaAtualizacao, hostname ,fkAmbiente) " +
                 "VALUES (?, ?, ?, ? )";
 
         try {
@@ -125,7 +125,7 @@ public class TelevisaoDAO {
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
         JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
 
-            String sqlServer = "SELECT TOP 1 * FROM Televisao WHERE hostName = ?;\n";
+            String sqlServer = "SELECT TOP 1 * FROM Televisao WHERE hostname = ?;\n";
 
         try {
             Televisao televioesLocal = conSQLServer.queryForObject(sqlServer, new BeanPropertyRowMapper<>(Televisao.class), endereco);
@@ -154,7 +154,7 @@ public class TelevisaoDAO {
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
         JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
 
-        String sqlServer = "select count(*) from Televisao where hostName = ?;";
+        String sqlServer = "select count(*) from Televisao where hostname = ?;";
 
         try {
             Integer contagemTv = conSQLServer.queryForObject(sqlServer, Integer.class, endereco);

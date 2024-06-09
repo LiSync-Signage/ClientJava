@@ -1,0 +1,129 @@
+-- Criação da tabela Empresa
+CREATE TABLE Empresa (
+	idEmpresa INT PRIMARY KEY IDENTITY,
+	nomeFantasia VARCHAR(45),
+	plano VARCHAR(45),
+	cnpj varchar(14),
+    
+	CONSTRAINT CHK_Plano CHECK (plano IN('Basico', 'Corporativo', 'Enterprise'))
+);
+
+-- Inserção de dados na tabela Empresa
+INSERT INTO Empresa (nomeFantasia, plano, cnpj) VALUES
+	('SPTech', 'Corporativo',12345678912345),
+    ('Elera.', 'Basico',12345678912345);
+
+-- Criação da tabela Ambiente
+CREATE TABLE Ambiente (
+	idAmbiente INT PRIMARY KEY IDENTITY,
+	setor VARCHAR(45),
+	andar VARCHAR(45),
+	fkEmpresa INT,
+	
+	CONSTRAINT fkEmpresaAmbiente FOREIGN KEY (fkEmpresa) REFERENCES Empresa(idEmpresa)
+);
+
+-- INSERT INTO Ambiente (setor, andar, fkEmpresa) VALUES ('num', 'num', 1);
+
+-- Criação da tabela Usuario
+CREATE TABLE Usuario (
+	idUsuario INT PRIMARY KEY IDENTITY,
+	nomeUsuario VARCHAR(45),
+	email VARCHAR(225),
+	senha VARCHAR(45),
+	fkEmpresa INT,
+	fkGestor INT,
+    
+	CONSTRAINT fkEmpresa FOREIGN KEY (fkEmpresa) REFERENCES Empresa(idEmpresa),
+	CONSTRAINT fkGestor FOREIGN KEY (fkGestor) REFERENCES Usuario(idUsuario)
+);
+
+-- Inserção de dados na tabela Usuario
+INSERT INTO Usuario (nomeUsuario, email, senha, fkEmpresa, fkGestor) VALUES 
+	('Felipe Almeida', 'felipe.almeida@sptech.school', 'felipe123', 1, null),
+	('Carlos Manoel', 'carlos.manoel@sptech.school', 'carlos123', 1, 1),
+	('Marcela Lopez', 'marcela.lopez@elera.io', 'marcela123', 2, null),
+	('José Felipe', 'jose.felipe@elera.io', 'jose123', 2, 1),
+	('Admin Lisync', 'admin', 'admin', null, null);
+
+-- Criação da tabela Televisao
+CREATE TABLE Televisao (
+	idTelevisao INT PRIMARY KEY IDENTITY,
+	nomeTelevisao VARCHAR(45), 
+	taxaAtualizacao INT,
+	hostname VARCHAR(80),
+	fkAmbiente INT NOT NULL,
+    
+	CONSTRAINT fkAmbiente FOREIGN KEY (fkAmbiente) REFERENCES Ambiente(idAmbiente)
+);
+
+-- Criação da tabela Componente
+CREATE TABLE Componente (
+	idComponente INT PRIMARY KEY IDENTITY,
+	modelo VARCHAR(225),
+	identificador VARCHAR(225),
+	tipoComponente VARCHAR(45),
+	fkTelevisao INT NOT NULL,
+    
+	CONSTRAINT fkTv FOREIGN KEY (fkTelevisao) REFERENCES Televisao(idTelevisao)
+);
+
+-- Criação da tabela Janela
+CREATE TABLE Janela (
+	idJanela INT PRIMARY KEY IDENTITY,
+	pidJanela VARCHAR(45),
+	titulo VARCHAR(225),
+	localizacao VARCHAR(225),
+	visivel VARCHAR(45),
+	fkTelevisao INT,
+    
+	CONSTRAINT fkTelevisaoJanela FOREIGN KEY (fkTelevisao) REFERENCES Televisao(idTelevisao)
+);
+
+-- Criação da tabela LogProcesso
+CREATE TABLE LogProcesso (
+	idLog INT PRIMARY KEY IDENTITY,
+	pid INT,
+	dataHora VARCHAR(45),
+	nomeProcesso VARCHAR(80),
+	valor FLOAT,
+	fkComponente INT NOT NULL,
+    
+	CONSTRAINT fkComponenteLog FOREIGN KEY (fkComponente) REFERENCES Componente(idComponente)
+);
+
+-- Criação da tabela LogComponente
+CREATE TABLE LogComponente (
+	idLogComponente INT PRIMARY KEY IDENTITY,
+	dataHora VARCHAR(45),
+	valor FLOAT,
+	fkComponente INT NOT NULL,
+    
+	CONSTRAINT fkComponenteLogComponente FOREIGN KEY (fkComponente) REFERENCES Componente(idComponente)
+);
+
+-- Criação da tabela Comando
+CREATE TABLE Comando (
+	idComando INT PRIMARY KEY IDENTITY,
+	nomeComando TEXT,
+	resposta TEXT,
+	fkTelevisao INT,
+    
+	CONSTRAINT fkTelevisaoComando FOREIGN KEY (fkTelevisao) REFERENCES Televisao(idTelevisao)
+);
+
+-- Consultas
+SELECT * FROM Janela;
+SELECT * FROM LogProcesso;
+SELECT * FROM LogComponente;
+SELECT * FROM Componente;
+SELECT * FROM Televisao;
+SELECT * FROM Ambiente;
+SELECT * FROM Empresa;
+SELECT * FROM Usuario;
+SELECT * FROM Comando;
+
+
+
+
+

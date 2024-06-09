@@ -5,27 +5,27 @@ import java.util.List;
 
 public class Televisao {
     private Integer idTelevisao;
-    private String nome;
+    private String nomeTelevisao;
     private Integer taxaAtualizacao;
-    private String hostName;
+    private String hostname;
     private List<Componente> componentes;
 
     private Integer fkAmbiente;
 
-    public Televisao(Integer idTelevisao, String nome, Integer taxaAtualizacao, String hostName, Integer fkAmbiente) {
+    public Televisao(Integer idTelevisao, String nomeTelevisao, Integer taxaAtualizacao, String hostname, Integer fkAmbiente) {
         this.idTelevisao = idTelevisao;
-        this.nome = nome;
+        this.nomeTelevisao = nomeTelevisao;
         this.taxaAtualizacao = taxaAtualizacao;
-        this.hostName = hostName;
+        this.hostname = hostname;
         this.componentes = new ArrayList<>();
         this.fkAmbiente = fkAmbiente;
     }
 
-    public Televisao(String nome, Integer fkAmbiente, Integer taxaAtualizacao, String hostName) {
-        this.nome = nome;
+    public Televisao(String nomeTelevisao, Integer fkAmbiente, Integer taxaAtualizacao, String hostname) {
+        this.nomeTelevisao = nomeTelevisao;
         this.fkAmbiente = fkAmbiente;
         this.taxaAtualizacao = taxaAtualizacao;
-        this.hostName = hostName;
+        this.hostname = hostname;
         this.componentes = new ArrayList<>();
     }
 
@@ -54,11 +54,11 @@ public class Televisao {
     }
 
     public String getNome() {
-        return nome;
+        return nomeTelevisao;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNome(String nomeTelevisao) {
+        this.nomeTelevisao = nomeTelevisao;
     }
 
     public Integer getTaxaAtualizacao() {
@@ -70,11 +70,11 @@ public class Televisao {
     }
 
     public String getHostName() {
-        return hostName;
+        return hostname;
     }
 
-    public void setHostName(String hostName) {
-        this.hostName = hostName;
+    public void setHostName(String hostname) {
+        this.hostname = hostname;
     }
 
     public List<Componente> getComponentes() {
@@ -89,9 +89,9 @@ public class Televisao {
     public String toString() {
         return "Televisao{" +
                 "idTelevisao=" + idTelevisao +
-                ", nome='" + nome + '\'' +
+                ", nome='" + nomeTelevisao + '\'' +
                 ", taxaAtualizacao=" + taxaAtualizacao +
-                ", hostName='" + hostName + '\'' +
+                ", hostName='" + hostname + '\'' +
                 ", componentes=" + componentes +
                 ", fkAmbiente=" + fkAmbiente +
                 '}';

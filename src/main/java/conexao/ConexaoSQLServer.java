@@ -3,6 +3,9 @@ package conexao;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.concurrent.TimeUnit;
+
+
 public class ConexaoSQLServer {
 
     private JdbcTemplate conexaoSqlServerLocal;
@@ -13,9 +16,12 @@ public class ConexaoSQLServer {
 
             // Configuração da conexão com SQL Server usando autenticação do SQL Server
             dataSource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            dataSource.setUrl("jdbc:sqlserver://23.22.35.41:1433;databaseName=teste;encrypt=true;trustServerCertificate=true;");
+            dataSource.setUrl("jdbc:sqlserver://23.22.35.41:1433;databaseName=teste;encrypt=true;trustServerCertificate=true;loginTimeout=20;");
             dataSource.setUsername("sa"); // Substitua pelo seu nome de usuário
             dataSource.setPassword("urubu100");   // Substitua pela sua senha
+
+
+
 
 
             conexaoSqlServerLocal = new JdbcTemplate(dataSource);

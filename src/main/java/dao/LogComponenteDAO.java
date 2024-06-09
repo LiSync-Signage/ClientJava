@@ -7,13 +7,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.SQLException;
 import java.util.List;
+import conexao.ConexaoMySQL;
 
 public class LogComponenteDAO {
     public LogComponenteDAO() {
     }
 
     public void salvarLogComponente(List<LogComponente> logComponenteList) {
-        org.LiSync.conexao.ConexaoMySQL conexao = new org.LiSync.conexao.ConexaoMySQL();
+        conexao.ConexaoMySQL conexao = new  conexao.ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
 //        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
@@ -97,7 +98,7 @@ public class LogComponenteDAO {
 
 
     public void salvarLogComponenteIndividual(LogComponente logComponente) {
-        org.LiSync.conexao.ConexaoMySQL conexao = new org.LiSync.conexao.ConexaoMySQL();
+        conexao.ConexaoMySQL conexao = new conexao.ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
 //        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();

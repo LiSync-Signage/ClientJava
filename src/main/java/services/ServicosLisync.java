@@ -2,6 +2,7 @@ package services;
 
 import com.github.britooo.looca.api.core.Looca;
 import com.github.britooo.looca.api.group.discos.Disco;
+import com.github.britooo.looca.api.group.memoria.Memoria;
 import com.github.britooo.looca.api.group.processos.Processo;
 import com.github.britooo.looca.api.group.janelas.Janela;
 import com.github.britooo.looca.api.util.Conversor;
@@ -104,7 +105,7 @@ public class ServicosLisync {
     public void cadastrarComponentes(Televisao televisao) {
         televisao.setComponentes(new ArrayList<>());
 
-        Componente cpu = new Componente(looca.getProcessador().getNome(),
+        ComponenteTv cpu = new ComponenteTv(looca.getProcessador().getNome(),
                 looca.getProcessador().getId(), "CPU", televisao.getIdTelevisao());
         televisao.registarComponenteTv(cpu);
 
@@ -118,7 +119,7 @@ public class ServicosLisync {
 
 
         Disco instanciaDisco = looca.getGrupoDeDiscos().getDiscos().get(0);
-        Componente disco = new Componente(instanciaDisco.getModelo(), instanciaDisco.getSerial(),
+        ComponenteTv disco = new ComponenteTv(instanciaDisco.getModelo(), instanciaDisco.getSerial(),
                 "Disco", televisao.getIdTelevisao());
         televisao.registarComponenteTv(disco);
 
@@ -131,7 +132,7 @@ public class ServicosLisync {
         }
 
         Long memoriaTotal = looca.getMemoria().getTotal();
-        Componente memoriaRam = new Componente(String.format("Memória RAM %s", Conversor.formatarBytes(memoriaTotal)),
+        ComponenteTv memoriaRam = new ComponenteTv(String.format("Memória RAM %s", Conversor.formatarBytes(memoriaTotal)),
                 "Não existe", "RAM", televisao.getIdTelevisao());
         televisao.registarComponenteTv(memoriaRam);
 
@@ -150,15 +151,14 @@ public class ServicosLisync {
         Double valor = 0.0;
         ConexaoSlack conexaoSlack = new ConexaoSlack();
 
-        switch (componente.getTipoComponente()) {
-            case "CPU":
+        if (componente instanceof  Cpu) {
                 valor = looca.getProcessador().getUso();
-                LogComponente logComponente = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("CPU",televisao.getIdTelevisao()).get(0).getIdComponente(),valor);
+                LogComponente logComponente = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("CPU", televisao.getIdTelevisao()).get(0).getIdComponente(), valor);
                 logComponenteDAO.salvarLogComponenteIndividual(logComponente);
                 conexaoSlack.alertMessageCPU(valor);
 
+        }else if (componente instanceof models.Disco) {
 
-            case "Disco":
                 List<Disco> discos = looca.getGrupoDeDiscos().getDiscos();
                 Disco discoPrincipal = discos.get(0);
 
@@ -168,14 +168,14 @@ public class ServicosLisync {
 
                 valor = (discoPrincipal.getBytesDeEscritas().doubleValue()
                         / discoPrincipal.getTamanho().doubleValue()) * 100.;
-                LogComponente logComponente2 = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("Disco",televisao.getIdTelevisao()).get(0).getIdComponente(),valor);
+                LogComponente logComponente2 = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("Disco", televisao.getIdTelevisao()).get(0).getIdComponente(), valor);
                 logComponenteDAO.salvarLogComponenteIndividual(logComponente2);
                 conexaoSlack.alertMessageDisco(valor);
 
-            case "RAM":
+        }else {
                 valor = (looca.getMemoria().getEmUso().doubleValue() / (looca.getMemoria().getTotal().doubleValue())) * 100.;
 
-                LogComponente logComponente1 = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("RAM",televisao.getIdTelevisao()).get(0).getIdComponente(),valor);
+                LogComponente logComponente1 = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("RAM", televisao.getIdTelevisao()).get(0).getIdComponente(), valor);
 
                 logComponenteDAO.salvarLogComponenteIndividual(logComponente1);
                 conexaoSlack.alertMessageRAM(valor);

@@ -3,18 +3,20 @@ package models;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Componente {
+public class ComponenteTv {
     private Integer idComponente;
     private String modelo;
     private String identificador;
+    private String tipoComponente;
     private Integer fkTelevisao;
     private List<Monitoramento> monitoramentos;
 
-    public Componente() {}
+    public ComponenteTv() {}
 
-    public Componente(String modelo, String identificador, Integer fkTelevisao) {
+    public ComponenteTv(String modelo, String identificador, String tipoComponente, Integer fkTelevisao) {
         this.modelo = modelo;
         this.identificador = identificador;
+        this.tipoComponente = tipoComponente;
         this.fkTelevisao = fkTelevisao;
         this.monitoramentos = new ArrayList<>();
     }
@@ -43,7 +45,13 @@ public abstract class Componente {
         this.identificador = identificador;
     }
 
+    public String getTipoComponente() {
+        return tipoComponente;
+    }
 
+    public void setTipoComponente(String tipoComponente) {
+        this.tipoComponente = tipoComponente;
+    }
 
     public Integer getFkTelevisao() {
         return fkTelevisao;
@@ -67,6 +75,7 @@ public abstract class Componente {
                 "idComponente=" + idComponente +
                 ", modelo='" + modelo + '\'' +
                 ", identificador='" + identificador + '\'' +
+                ", tipoComponente='" + tipoComponente + '\'' +
                 ", fkTelevisao=" + fkTelevisao +
                 ", monitoramentos=" + monitoramentos +
                 '}';

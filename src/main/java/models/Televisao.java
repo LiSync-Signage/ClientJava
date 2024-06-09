@@ -8,7 +8,7 @@ public class Televisao {
     private String nomeTelevisao;
     private Integer taxaAtualizacao;
     private String hostname;
-    private List<Componente> componentes;
+    private List<ComponenteTv> componentes;
 
     private Integer fkAmbiente;
 
@@ -41,7 +41,7 @@ public class Televisao {
         this.fkAmbiente = fkAmbiente;
     }
 
-    public void registarComponenteTv(Componente componente) {
+    public void registarComponenteTv(ComponenteTv componente) {
         this.componentes.add(componente);
     }
 
@@ -77,11 +77,11 @@ public class Televisao {
         this.hostname = hostname;
     }
 
-    public List<Componente> getComponentes() {
+    public List<ComponenteTv> getComponentes() {
         return componentes;
     }
 
-    public void setComponentes(List<Componente> componentes) {
+    public void setComponentes(List<ComponenteTv> componentes) {
         this.componentes = componentes;
     }
 

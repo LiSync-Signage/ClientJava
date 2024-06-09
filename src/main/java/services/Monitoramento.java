@@ -8,9 +8,7 @@ import com.github.britooo.looca.api.group.processos.Processo;
 import dao.ComandoDAO;
 import dao.ComponenteDAO;
 import dao.TelevisaoDAO;
-import models.Comando;
-import models.Componente;
-import models.Televisao;
+import models.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,15 +31,25 @@ public class Monitoramento {
 
         String logRegistroComponentes = "";
         List<Componente> componentes = componenteDAO.buscarComponentesPorIdTv(televisao.getIdTelevisao());
-
+        String tipoDoComponente = "";
         for (Componente componenteAtual : componentes) {
+
+            if(componenteAtual instanceof Cpu){
+                tipoDoComponente = "CPU";
+            }
+            if(componenteAtual instanceof Disco){
+                tipoDoComponente = "CPU";
+            }
+            if(componenteAtual instanceof MemoriaRam){
+                tipoDoComponente = "CPU";
+            }
             logRegistroComponentes = """
                     |----------- Componente %d da TV -----------|
                     Tipo do componente: %s;
                     Modelo: %s;
                     Identificador: %s;
                     Id da Televisão: %d;
-                    """.formatted(componenteAtual.getIdComponente(), componenteAtual.getTipoComponente(), componenteAtual.getModelo(),
+                    """.formatted(componenteAtual.getIdComponente(), tipoDoComponente, componenteAtual.getModelo(),
                     componenteAtual.getIdentificador(), componenteAtual.getFkTelevisao());
             System.out.println(logRegistroComponentes);
         }
@@ -56,7 +64,7 @@ public class Monitoramento {
 
         List<models.Processo> processoModels = new ArrayList<>();
 
-        List<models.LogComponente> logComponentesList = new ArrayList<>();
+        List<LogComponente> logComponentesList = new ArrayList<>();
 
         List<Processo> maioresProcessosCPU = new ArrayList<>();
 

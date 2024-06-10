@@ -14,7 +14,7 @@ public class UsuarioDAO {
 //        JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
 
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String  sqlServer = "SELECT COUNT(*) FROM Usuario WHERE email = ? AND senha = ?";
 
@@ -39,7 +39,7 @@ public class UsuarioDAO {
 //        JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
 
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sqlServer = "SELECT * FROM Usuario WHERE email = ? AND senha = ?";
 
@@ -62,7 +62,7 @@ public class UsuarioDAO {
 
     public void atualizarUsuarioLocal (Usuario usuario) {
         ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
-        JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
+        JdbcTemplate con = conexaoMySQL.getconexaoLocal();
 
 //        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
 //        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
@@ -111,7 +111,7 @@ public class UsuarioDAO {
 //        JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
 
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
 //        String sql = "INSERT INTO Usuario (idUsuario, nome, fkEmpresa) " +
 //                "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE nome = ?, fkEmpresa = ?";

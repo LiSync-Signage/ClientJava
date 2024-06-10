@@ -9,7 +9,7 @@ import java.util.List;
 public class JanelaDAO {
     public void salvarVariasJanelas(List<Janela> janelas) {
         ConexaoMySQL conexao = new ConexaoMySQL();
-        JdbcTemplate con = conexao.getconexaoMySqlLocal();
+        JdbcTemplate con = conexao.getconexaoLocal();
 
 //        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
 //        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
@@ -55,7 +55,7 @@ public class JanelaDAO {
 //        JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
 //
 //        String sql = "INSERT INTO Janela (pidJanela, titulo, localizacao, visivel, " +

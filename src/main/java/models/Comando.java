@@ -17,6 +17,13 @@ public class Comando {
     }
 
 
+    public Comando(String comandoExecutado, String s, Integer fktelevisao) {
+        this.nomeComando = comandoExecutado;
+        this.resposta = s;
+        this.fkTelevisao = fktelevisao;
+    }
+
+
     public Integer getIdComando() {
         return idComando;
     }

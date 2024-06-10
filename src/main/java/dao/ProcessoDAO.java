@@ -45,10 +45,10 @@ public class ProcessoDAO {
 
     public void salvarVariosProcessos(List<Processo> processos) {
         ConexaoMySQL conexao = new ConexaoMySQL();
-        JdbcTemplate con = conexao.getconexaoMySqlLocal();
+        JdbcTemplate con = conexao.getconexaoLocal();
 
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sql = "INSERT INTO LogProcesso (pid, nomeProcesso, dataHora, fkComponente, valor) VALUES (?, ?, ?, ?, ?)";
 //        String sqlServer = "INSERT INTO LogProcesso (pid, nomeProcesso, dataHora, fkComponente, valor) VALUES (?, ?, ?, ?, ?)";
@@ -83,10 +83,10 @@ public class ProcessoDAO {
 
     public void salvarVariosProcessosSQLServer(List<Processo> processos) {
         ConexaoMySQL conexao = new ConexaoMySQL();
-        JdbcTemplate con = conexao.getconexaoMySqlLocal();
+        JdbcTemplate con = conexao.getconexaoLocal();
 
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
 //        String sql = "INSERT INTO Log (pid, nomeProcesso, dataHora, fkComponente, valor) VALUES (?, ?, ?, ?, ?)";
         String sqlServer = "INSERT INTO LogProcesso (pid, nomeProcesso, dataHora, fkComponente, valor) VALUES (?, ?, ?, ?, ?)";

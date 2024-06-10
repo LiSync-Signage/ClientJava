@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.concurrent.TimeUnit;
 
 
-public class ConexaoSQLServer {
+public class ConexaoSQLServer extends Conexao {
 
     private JdbcTemplate conexaoSqlServerLocal;
 
@@ -20,10 +20,6 @@ public class ConexaoSQLServer {
             dataSource.setUsername("sa"); // Substitua pelo seu nome de usuário
             dataSource.setPassword("urubu100");   // Substitua pela sua senha
 
-
-
-
-
             conexaoSqlServerLocal = new JdbcTemplate(dataSource);
 
             // Testando a conexão
@@ -35,7 +31,8 @@ public class ConexaoSQLServer {
         }
     }
 
-    public JdbcTemplate getConexaoSqlServerLocal() {
+    @Override
+    public JdbcTemplate getconexaoLocal() {
         return conexaoSqlServerLocal;
     }
 

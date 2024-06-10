@@ -31,25 +31,16 @@ public class Monitoramento {
 
         String logRegistroComponentes = "";
         List<Componente> componentes = componenteDAO.buscarComponentesPorIdTv(televisao.getIdTelevisao());
-        String tipoDoComponente = "";
+
         for (Componente componenteAtual : componentes) {
 
-            if(componenteAtual instanceof Cpu){
-                tipoDoComponente = "CPU";
-            }
-            if(componenteAtual instanceof Disco){
-                tipoDoComponente = "Disco";
-            }
-            if(componenteAtual instanceof MemoriaRam){
-                tipoDoComponente = "Memoria";
-            }
             logRegistroComponentes = """
                     |----------- Componente -----------|
                     Tipo do componente: %s;
                     Modelo: %s;
                     Identificador: %s;
                     Id da Televisão: %d;
-                    """.formatted(tipoDoComponente, componenteAtual.getModelo(),
+                    """.formatted(componenteAtual.getTipoComponente(), componenteAtual.getModelo(),
                     componenteAtual.getIdentificador(), componenteAtual.getFkTelevisao());
             System.out.println(logRegistroComponentes);
         }
@@ -71,6 +62,8 @@ public class Monitoramento {
         Processador processador = new Processador();
 
         Memoria memoria = new Memoria();
+
+        Comando comando = new Comando();
 
 
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -186,9 +179,11 @@ public class Monitoramento {
                                 if (saidaErro.length() > 0) {
                                     System.err.println("Erro na execução do comando: " + saidaErro.toString());
                                     servicosLisync.atualizarComando(comando.getIdComando(), comando.getnomeComando(), "Erro ao executar o comando: " + saidaErro.toString(), comando.getFkTelevisao());
+                                    servicosLisync.inserirComandoLocal(comando);
                                 } else {
                                     System.out.println("Saída do comando: " + saidaComando.toString());
                                     servicosLisync.atualizarComando(comando.getIdComando(), comando.getnomeComando(), "Resposta: " + saidaComando.toString(), comando.getFkTelevisao());
+                                    servicosLisync.inserirComandoLocal(comando);
                                 }
 
                                 // Verifique o código de saída do processo
@@ -196,9 +191,11 @@ public class Monitoramento {
                                 if (exitCode != 0) {
                                     System.err.println("O comando não foi executado com sucesso. Código de saída: " + exitCode);
                                     servicosLisync.atualizarComando(comando.getIdComando(), comando.getnomeComando(), "Erro ao executar o comando. Código de saída: " + exitCode, comando.getFkTelevisao());
+                                    servicosLisync.inserirComandoLocal(comando);
                                 }
                             } catch (IOException | InterruptedException e) {
                                 servicosLisync.atualizarComando(comando.getIdComando(), comando.getnomeComando(), "Erro ao executar o comando: " + e.getMessage(), comando.getFkTelevisao());
+                                servicosLisync.inserirComandoLocal(comando);
                                 System.err.println("Erro ao executar o comando ou não há comandos a serem executados no banco \n \n"+ e.getMessage());
                             } finally {
                                 if (processo != null) {

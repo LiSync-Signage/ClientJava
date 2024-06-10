@@ -1,13 +1,10 @@
 package dao;
 
-import models.Componente;
 import models.LogComponente;
-import models.Processo;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.SQLException;
 import java.util.List;
-import conexao.ConexaoMySQL;
 
 public class LogComponenteDAO {
     public LogComponenteDAO() {
@@ -15,7 +12,7 @@ public class LogComponenteDAO {
 
     public void salvarLogComponente(List<LogComponente> logComponenteList) {
         conexao.ConexaoMySQL conexao = new  conexao.ConexaoMySQL();
-        JdbcTemplate con = conexao.getconexaoMySqlLocal();
+        JdbcTemplate con = conexao.getconexaoLocal();
 
 //        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
 //        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
@@ -57,7 +54,7 @@ public class LogComponenteDAO {
 //        JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sqlServer = "INSERT INTO LogComponente ( dataHora, fkComponente, valor) VALUES ( ?, ?, ? );";
 
@@ -99,7 +96,7 @@ public class LogComponenteDAO {
 
     public void salvarLogComponenteIndividual(LogComponente logComponente) {
         conexao.ConexaoMySQL conexao = new conexao.ConexaoMySQL();
-        JdbcTemplate con = conexao.getconexaoMySqlLocal();
+        JdbcTemplate con = conexao.getconexaoLocal();
 
 //        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
 //        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
@@ -136,7 +133,7 @@ public class LogComponenteDAO {
 //        JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
 //        String sql = "INSERT INTO LogComponente ( dataHora, fkComponente, valor) VALUES ( ?, ?, ? );";
 

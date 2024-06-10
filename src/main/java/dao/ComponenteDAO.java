@@ -1,13 +1,11 @@
 package dao;
 
 import conexao.ConexaoSQLServer;
-import conexao.ConexaoSlack;
 import models.*;
 import conexao.ConexaoMySQL;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +16,7 @@ public class ComponenteDAO {
 //        JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
         ConexaoSQLServer conexaoSQLServer = new ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
 //        String sql = "INSERT INTO Componente (modelo, identificador, tipoComponente, fkTelevisao) " +
 //                "VALUES (?, ?, ?, ?)";
@@ -54,7 +52,7 @@ public class ComponenteDAO {
 
     public void registarComponente(ComponenteTv novoComponente) {
         ConexaoMySQL conexao = new ConexaoMySQL();
-        JdbcTemplate con = conexao.getconexaoMySqlLocal();
+        JdbcTemplate con = conexao.getconexaoLocal();
 
 //        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
 //        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
@@ -99,30 +97,15 @@ public class ComponenteDAO {
 //        JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
         ConexaoSQLServer conexaoSQLServer = new ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sqlServer = "SELECT * FROM Componente WHERE fkTelevisao = ?";
 
-        List<Componente> componentes = new ArrayList<>();
+
 
         try {
-            List<ComponenteTv> componentesLocal = conSQLServer.query(sqlServer, new BeanPropertyRowMapper<>(ComponenteTv.class), idTelevisao);
+            List<Componente> componentes = conSQLServer.query(sqlServer, new BeanPropertyRowMapper<>(Componente.class), idTelevisao);
 
-
-            for (ComponenteTv componenteDaVez : componentesLocal) {
-
-
-                    if(componenteDaVez.getTipoComponente().equals("CPU")) {
-                            Cpu cpu = new Cpu(componenteDaVez.getModelo(), componenteDaVez.getIdentificador(), componenteDaVez.getFkTelevisao());
-                            componentes.add(cpu);
-                    }else if(componenteDaVez.getTipoComponente().equals("Disco")) {
-                            Disco disco = new Disco(componenteDaVez.getModelo(), componenteDaVez.getIdentificador(), componenteDaVez.getFkTelevisao());
-                            componentes.add(disco);
-                    }else {
-                            MemoriaRam memoria = new MemoriaRam(componenteDaVez.getModelo(), componenteDaVez.getIdentificador(), componenteDaVez.getFkTelevisao());
-                            componentes.add(memoria);
-                    }
-            }
             return componentes;
         } catch (Exception e) {
             e.printStackTrace();
@@ -130,14 +113,14 @@ public class ComponenteDAO {
         }
     }
 
-    public List<ComponenteTv> buscarTipoComponentePorIdTv (String nome, Integer idTelevisao) {
+    public List<Componente> buscarTipoComponentePorIdTv (String nome, Integer idTelevisao) {
         ConexaoMySQL conexao = new ConexaoMySQL();
-        JdbcTemplate con = conexao.getconexaoMySqlLocal();
+        JdbcTemplate con = conexao.getconexaoLocal();
 
         String sql = "SELECT * FROM Componente WHERE tipoComponente = ? AND fkTelevisao = ?";
 
         try {
-            List<ComponenteTv> componentesLocal = con.query(sql, new BeanPropertyRowMapper<>(ComponenteTv.class),
+            List<Componente> componentesLocal = con.query(sql, new BeanPropertyRowMapper<>(Componente.class),
                     nome, idTelevisao);
             return componentesLocal;
         } catch (Exception e) {

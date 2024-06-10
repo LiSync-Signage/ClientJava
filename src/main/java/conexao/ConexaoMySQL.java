@@ -3,7 +3,7 @@ package conexao;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-public class ConexaoMySQL {
+public class ConexaoMySQL extends Conexao{
     private JdbcTemplate conexaoMySqlLocal;
 
     public ConexaoMySQL(){
@@ -22,8 +22,8 @@ public class ConexaoMySQL {
 
         conexaoMySqlLocal = new JdbcTemplate(dataSource);
     }
-
-    public JdbcTemplate getconexaoMySqlLocal(){
+    @Override
+    public JdbcTemplate getconexaoLocal(){
         return conexaoMySqlLocal;
     }
 }

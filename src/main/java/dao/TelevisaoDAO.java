@@ -6,12 +6,11 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.SQLException;
-import java.util.List;
 
 public class TelevisaoDAO {
     public void registrar(Televisao novaTelevisao) {
         ConexaoMySQL conexao = new ConexaoMySQL();
-        JdbcTemplate con = conexao.getconexaoMySqlLocal();
+        JdbcTemplate con = conexao.getconexaoLocal();
 
 //        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
 //        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
@@ -57,7 +56,7 @@ public class TelevisaoDAO {
 //        JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
 //        String sql = "INSERT INTO Televisao (nome, taxaAtualizacao, hostName ,fkAmbiente) " +
 //                "VALUES (?, ?, ?, ? )";
@@ -123,7 +122,7 @@ public class TelevisaoDAO {
 //        JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
             String sqlServer = "SELECT TOP 1 * FROM Televisao WHERE hostname = ?;\n";
 
@@ -152,7 +151,7 @@ public class TelevisaoDAO {
 //        JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sqlServer = "select count(*) from Televisao where hostname = ?;";
 

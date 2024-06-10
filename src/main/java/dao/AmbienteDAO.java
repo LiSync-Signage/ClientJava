@@ -14,7 +14,7 @@ public class AmbienteDAO {
 //        JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
 
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
 //        String sql = "INSERT INTO ambiente(setor,andar,fkEmpresa)VALUES (?,?,?);";
         String sqlServer = "INSERT INTO Ambiente(setor,andar,fkEmpresa)VALUES (?,?,?);";
@@ -46,16 +46,17 @@ public class AmbienteDAO {
 
     public static void insertAmbiente(Ambiente ambiente) {
         conexao.ConexaoMySQL conexaoMySQL = new conexao.ConexaoMySQL();
-        JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
+        JdbcTemplate con = conexaoMySQL.getconexaoLocal();
 
 //        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
 //        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
 
-        String sql = "INSERT INTO Ambiente(setor,andar,fkEmpresa)VALUES (?,?,?);";
+        String sql = "INSERT INTO Ambiente(setor,andar,fkEmpresa)VALUES (?,?,?) ON DUPLICATE KEY UPDATE setor = ?, andar = ? , fkEmpresa = ?;";
 //        String sqlServer = "INSERT INTO Ambiente(setor,andar,fkEmpresa)VALUES (?,?,?);";
 
         try {
-            con.update(sql, ambiente.getSetor(), ambiente.getAndar(), ambiente.getFkEmpresa());
+            con.update(sql, ambiente.getSetor(), ambiente.getAndar(), ambiente.getFkEmpresa(),
+                    ambiente.getSetor(), ambiente.getAndar(), ambiente.getFkEmpresa());
 //            conSQLServer.update(sqlServer, ambiente.getSetor(), ambiente.getAndar(), ambiente.getFkEmpresa());
 
         } catch (Exception e) {
@@ -81,7 +82,7 @@ public class AmbienteDAO {
 
     public Integer getIdpAndarSetor(String andar, String setor) {
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sqlServer = "SELECT idAmbiente FROM Ambiente WHERE andar = ? AND setor = ?;";
 
@@ -106,7 +107,7 @@ public class AmbienteDAO {
 
     public List<Ambiente> getListaAmbientes(Integer idEmpresa) {
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sql = "SELECT * FROM Ambiente WHERE fkEmpresa = ?";
 

@@ -14,7 +14,7 @@ public class EmpresaDAO {
 //        JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
 
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sqlServer = "SELECT * FROM Empresa WHERE idEmpresa = ?";
 
@@ -40,7 +40,7 @@ public class EmpresaDAO {
 //        JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
 //        String sql = "INSERT INTO Empresa (idEmpresa, nomeFantasia, plano) " +
 //                "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE nomeFantasia = ?, plano = ?";
@@ -84,7 +84,7 @@ public class EmpresaDAO {
 
     public void atualizarEmpresaLocal (Empresa empresa) {
         ConexaoMySQL conexao = new ConexaoMySQL();
-        JdbcTemplate con = conexao.getconexaoMySqlLocal();
+        JdbcTemplate con = conexao.getconexaoLocal();
 
 //        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
 //        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
@@ -134,7 +134,7 @@ public class EmpresaDAO {
 //       JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sqlServer = "SELECT count(*) FROM Empresa  join ambiente on empresa.idEmpresa = ambiente.fkEmpresa join televisao on ambiente.idAmbiente = televisao.fkAmbiente where fkEmpresa = ?;";
 
@@ -161,7 +161,7 @@ public class EmpresaDAO {
 //        ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
 //        JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sqlServer = "SELECT plano FROM Empresa WHERE idEmpresa = ?";
 

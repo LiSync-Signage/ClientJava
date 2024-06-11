@@ -15,17 +15,17 @@ public class TelevisaoDAO {
 //        org.LiSync.conexao.ConexaoSQLServer conexaoSQLServer = new org.LiSync.conexao.ConexaoSQLServer();
 //        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
 
-        String sql = "INSERT INTO Televisao (nomeTelevisao, taxaAtualizacao, hostname ,fkAmbiente) " +
-                "VALUES (?, ?, ?, ? )";
+        String sql = "INSERT INTO Televisao (idTelevisao, nomeTelevisao, taxaAtualizacao, hostname ,fkAmbiente) " +
+                "VALUES (?, ?, ?, ?, ? ) ON DUPLICATE KEY UPDATE hostname = ?;";
 
 //        String sqlServer = "INSERT INTO Televisao (nome, taxaAtualizacao, hostName ,fkAmbiente) " +
 //                "VALUES (?, ?, ?, ? )";
 
         try {
             System.out.println(novaTelevisao.getFkAmbiente());
-            con.update(sql,
+            con.update(sql,1,
                     novaTelevisao.getNome(), novaTelevisao.getTaxaAtualizacao(),
-                    novaTelevisao.getHostName(), novaTelevisao.getFkAmbiente());
+                    novaTelevisao.getHostName(), 1,novaTelevisao.getHostName());
 
 //            conSQLServer.update(sqlServer,
 //                    novaTelevisao.getNome(), novaTelevisao.getTaxaAtualizacao(),
@@ -144,6 +144,7 @@ public class TelevisaoDAO {
             }
         }
     }
+
 
     // Futaramente deverá ser alterado
     public Integer contarPorEndereco(String endereco) {

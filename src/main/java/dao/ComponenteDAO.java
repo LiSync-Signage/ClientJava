@@ -7,11 +7,10 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ComponenteDAO {
-    public void registarComponenteSQLServer(ComponenteTv novoComponente) {
+    public void registarComponenteSQLServer(Componente novoComponente) {
 //        ConexaoMySQL conexao = new ConexaoMySQL();
 //        JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
@@ -50,7 +49,7 @@ public class ComponenteDAO {
         }
     }
 
-    public void registarComponente(ComponenteTv novoComponente) {
+    public void registarComponente(Componente novoComponente) {
         ConexaoMySQL conexao = new ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoLocal();
 
@@ -130,6 +129,30 @@ public class ComponenteDAO {
             if (con != null) {
                 try {
                     con.getDataSource().getConnection().close();
+                } catch (SQLException e) {
+                    e.printStackTrace(); // Trate a exceção de fechamento da conexão local
+                }
+            }
+        }
+    }
+
+    public List<Componente> buscarTipoComponentePorIdTvSQLServer (String nome, Integer idTelevisao) {
+        ConexaoSQLServer conexaoSQLServer = new ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
+
+        String sqlSQLServer = "SELECT * FROM Componente WHERE tipoComponente = ? AND fkTelevisao = ?";
+
+        try {
+            List<Componente> componentesLocal = conSQLServer.query(sqlSQLServer, new BeanPropertyRowMapper<>(Componente.class),
+                    nome, idTelevisao);
+            return componentesLocal;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (conSQLServer != null) {
+                try {
+                    conSQLServer.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace(); // Trate a exceção de fechamento da conexão local
                 }

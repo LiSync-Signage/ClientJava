@@ -12,6 +12,7 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+
         Scanner input = new Scanner(System.in);
         Scanner inputNext = new Scanner(System.in);
         ServicosLisync servicosLisync = new ServicosLisync();
@@ -21,6 +22,7 @@ public class Main {
         TelevisaoDAO televisaoDAO = new TelevisaoDAO();
         ComponenteDAO componenteDAO = new ComponenteDAO();
         Monitoramento monitoramento = new Monitoramento();
+
 
         String prosseguir;
         Boolean cadastroValido = false;
@@ -90,7 +92,7 @@ public class Main {
                                                             
                                 |--------------------|
                                 """.formatted(opcao, ambienteAux.getSetor(), ambienteAux.getAndar()));
-                        ambienteDAO.insertAmbiente(ambienteAux);
+
                         opcao++;
 
                     }
@@ -102,6 +104,7 @@ public class Main {
                             ambiente = ambientes.get(i);
                             setor = ambiente.getSetor();
                             andar = ambiente.getAndar();
+                            ambienteDAO.insertAmbiente(ambientes.get(i));
                         }
                     }
                     if (opcaoEscolhida == ambientes.size() + 1) {

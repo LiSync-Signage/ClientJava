@@ -8,7 +8,7 @@ public class Televisao {
     private String nomeTelevisao;
     private Integer taxaAtualizacao;
     private String hostname;
-    private List<ComponenteTv> componentes;
+    private List<Componente> componentes;
 
     private Integer fkAmbiente;
 
@@ -41,7 +41,7 @@ public class Televisao {
         this.fkAmbiente = fkAmbiente;
     }
 
-    public void registarComponenteTv(ComponenteTv componente) {
+    public void registarComponente(Componente componente) {
         this.componentes.add(componente);
     }
 
@@ -77,23 +77,41 @@ public class Televisao {
         this.hostname = hostname;
     }
 
-    public List<ComponenteTv> getComponentes() {
+    public List<Componente> getComponentes() {
         return componentes;
     }
 
-    public void setComponentes(List<ComponenteTv> componentes) {
+    public void setComponentes(List<Componente> componentes) {
         this.componentes = componentes;
     }
+
+    public String getNomeTelevisao() {
+        return nomeTelevisao;
+    }
+
+    public void setNomeTelevisao(String nomeTelevisao) {
+        this.nomeTelevisao = nomeTelevisao;
+    }
+
+    public String getHostname() {
+        return hostname;
+    }
+
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
+
+
 
     @Override
     public String toString() {
         return "Televisao{" +
                 "idTelevisao=" + idTelevisao +
-                ", nome='" + nomeTelevisao + '\'' +
+                ", nomeTelevisao='" + nomeTelevisao + '\'' +
                 ", taxaAtualizacao=" + taxaAtualizacao +
-                ", hostName='" + hostname + '\'' +
+                ", hostname='" + hostname + '\'' +
                 ", componentes=" + componentes +
-                ", fkAmbiente=" + fkAmbiente +
+
                 '}';
     }
 }

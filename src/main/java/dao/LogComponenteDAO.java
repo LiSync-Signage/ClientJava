@@ -128,6 +128,8 @@ public class LogComponenteDAO {
         }
     }
 
+
+
     public void salvarLogComponenteIndividualSQLServer(LogComponente logComponente) {
 //        org.LiSync.conexao.ConexaoMySQL conexao = new org.LiSync.conexao.ConexaoMySQL();
 //        JdbcTemplate con = conexao.getconexaoMySqlLocal();

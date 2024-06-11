@@ -50,6 +50,7 @@ public class ServicosLisync {
         Empresa empresaUsuario = empresaDAO.buscarEmpresa(fkEmpresa);
         try {
             empresaDAO.atualizarEmpresaLocalSQLServer(empresaUsuario);
+            empresaUsuario.setIdEmpresa(1);
             empresaDAO.atualizarEmpresaLocal(empresaUsuario);
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,6 +62,9 @@ public class ServicosLisync {
     public void atualizarUsuario(Usuario usuarioLogado) {
         try {
             usuarioDAO.atualizarUsuarioLocalSQLServer(usuarioLogado);
+            Empresa EmpresaUser = empresaDAO.buscarEmpresa(usuarioLogado.getFkEmpresa());
+            empresaDAO.atualizarEmpresaLocal(EmpresaUser);
+            usuarioLogado.setFkEmpresa(EmpresaUser.getIdEmpresa());
             usuarioDAO.atualizarUsuarioLocal(usuarioLogado);
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,6 +90,7 @@ public class ServicosLisync {
         }
     }
 
+
     //
     public void cadastrarNovaTelevisao(String nome, Integer fkAmbiente, Integer taxaAtualizacao
     ) {
@@ -101,6 +106,7 @@ public class ServicosLisync {
 
         try {
             televisaoDAO.registrarSQLServer(televisao);
+            televisao.setIdTelevisao(1);
             televisaoDAO.registrar(televisao);
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,12 +120,13 @@ public class ServicosLisync {
     public void cadastrarComponentes(Televisao televisao) {
         televisao.setComponentes(new ArrayList<>());
 
-        ComponenteTv cpu = new ComponenteTv(looca.getProcessador().getNome(),
+        Componente cpu = new Componente(looca.getProcessador().getNome(),
                 looca.getProcessador().getId(), "CPU", televisao.getIdTelevisao());
-        televisao.registarComponenteTv(cpu);
+        televisao.registarComponente(cpu);
 
         try {
             componenteDAO.registarComponenteSQLServer(cpu);
+            cpu.setFkTelevisao(1);
             componenteDAO.registarComponente(cpu);
         } catch (Exception e) {
             e.printStackTrace();
@@ -128,12 +135,13 @@ public class ServicosLisync {
 
 
         Disco instanciaDisco = looca.getGrupoDeDiscos().getDiscos().get(0);
-        ComponenteTv disco = new ComponenteTv(instanciaDisco.getModelo(), instanciaDisco.getSerial(),
+        Componente disco = new Componente(instanciaDisco.getModelo(), instanciaDisco.getSerial(),
                 "Disco", televisao.getIdTelevisao());
-        televisao.registarComponenteTv(disco);
+        televisao.registarComponente(disco);
 
         try {
             componenteDAO.registarComponenteSQLServer(disco);
+            disco.setFkTelevisao(1);
             componenteDAO.registarComponente(disco);
         } catch (Exception e) {
             e.printStackTrace();
@@ -141,12 +149,13 @@ public class ServicosLisync {
         }
 
         Long memoriaTotal = looca.getMemoria().getTotal();
-        ComponenteTv memoriaRam = new ComponenteTv(String.format("Memória RAM %s", Conversor.formatarBytes(memoriaTotal)),
+        Componente memoriaRam = new Componente(String.format("Memória RAM %s", Conversor.formatarBytes(memoriaTotal)),
                 "Não existe", "RAM", televisao.getIdTelevisao());
-        televisao.registarComponenteTv(memoriaRam);
+        televisao.registarComponente(memoriaRam);
 
         try {
             componenteDAO.registarComponenteSQLServer(memoriaRam);
+            memoriaRam.setFkTelevisao(1);
             componenteDAO.registarComponente(memoriaRam);
         } catch (Exception e) {
             e.printStackTrace();
@@ -162,8 +171,12 @@ public class ServicosLisync {
 
         if (componente.getTipoComponente().equals("CPU")) {
             valor = looca.getProcessador().getUso();
-            LogComponente logComponente = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("CPU", televisao.getIdTelevisao()).get(0).getIdComponente(), valor);
+            LogComponente logComponente = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTvSQLServer("CPU", televisao.getIdTelevisao()).get(0).getIdComponente(), valor);
+
+            logComponenteDAO.salvarLogComponenteIndividualSQLServer(logComponente);
+            logComponente.setFkComponente(1);
             logComponenteDAO.salvarLogComponenteIndividual(logComponente);
+
             conexaoSlack.alertMessageCPU(valor);
 
         } else if (componente.getTipoComponente().equals("Disco")) {
@@ -177,16 +190,23 @@ public class ServicosLisync {
 
             valor = (discoPrincipal.getBytesDeEscritas().doubleValue()
                     / discoPrincipal.getTamanho().doubleValue()) * 100.;
-            LogComponente logComponente2 = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("Disco", televisao.getIdTelevisao()).get(0).getIdComponente(), valor);
+            LogComponente logComponente2 = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTvSQLServer("Disco", televisao.getIdTelevisao()).get(0).getIdComponente(), valor);
+
+            logComponenteDAO.salvarLogComponenteIndividualSQLServer(logComponente2);
+            logComponente2.setFkComponente(2);
             logComponenteDAO.salvarLogComponenteIndividual(logComponente2);
+
             conexaoSlack.alertMessageDisco(valor);
 
         } else {
             valor = (looca.getMemoria().getEmUso().doubleValue() / (looca.getMemoria().getTotal().doubleValue())) * 100.;
 
-            LogComponente logComponente1 = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("RAM", televisao.getIdTelevisao()).get(0).getIdComponente(), valor);
+            LogComponente logComponente1 = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTvSQLServer("RAM", televisao.getIdTelevisao()).get(0).getIdComponente(), valor);
 
+            logComponenteDAO.salvarLogComponenteIndividualSQLServer(logComponente1);
+            logComponente1.setFkComponente(3);
             logComponenteDAO.salvarLogComponenteIndividual(logComponente1);
+
             conexaoSlack.alertMessageRAM(valor);
         }
         return "";
@@ -194,40 +214,20 @@ public class ServicosLisync {
 
     //
     public void registrarProcessos(List<models.Processo> listaProcessos) {
-        try {
-            processoDAO.salvarVariosProcessosSQLServer(listaProcessos);
+        processoDAO.salvarVariosProcessosSQLServer(listaProcessos);
+    }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Erro ao salvar LogComponente no servidor principal");
-        } finally {
-            try {
-                processoDAO.salvarVariosProcessos(listaProcessos);
-            } catch (Exception c) {
-                c.printStackTrace();
-                System.out.println("Erro ao salvar LogComponente no servidor local");
-            }
-        }
-
+    public void registrarProcessosMySQL(List<models.Processo> listaProcessos) {
+        processoDAO.salvarVariosProcessos(listaProcessos);
     }
 
     public void registrarLogComponente(List<models.LogComponente> listaLogComponente) {
-
-        try {
-            logComponenteDAO.salvarLogComponenteSQLServer(listaLogComponente);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Erro ao salvar LogComponente no servidor principal");
-        } finally {
-            try {
-                logComponenteDAO.salvarLogComponente(listaLogComponente);
-            } catch (Exception c) {
-                c.printStackTrace();
-                System.out.println("Erro ao salvar LogComponente no servidor local");
-            }
-        }
+        logComponenteDAO.salvarLogComponenteSQLServer(listaLogComponente);
     }
 
+    public void registrarLogComponenteMySQL(List<models.LogComponente> listaLogComponente) {
+        logComponenteDAO.salvarLogComponente(listaLogComponente);
+    }
 
 //
 
@@ -254,21 +254,18 @@ public class ServicosLisync {
 
     //
     public void salvarJanelas(List<models.Janela> janelas) {
+
+
+        janelaDAO.salvarVariasJanelasSQLServer(janelas);
+
+
+    }
+
+    public void salvarJanelasMySQl(List<models.Janela> janelas) {
+
+
         janelaDAO.salvarVariasJanelas(janelas);
 
-        try {
-            janelaDAO.salvarVariasJanelasSQLServer(janelas);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Erro ao salvar janelas no servidor principal");
-        } finally {
-            try {
-                janelaDAO.salvarVariasJanelas(janelas);
-            } catch (Exception c) {
-                c.printStackTrace();
-                System.out.println("Erro ao salvar Janelas no servidor local");
-            }
-        }
 
     }
 
@@ -304,7 +301,6 @@ public class ServicosLisync {
 
     public void inserirComandoLocal(Comando comando) {
         ComandoDAO comandoDAO = new ComandoDAO();
-
 
         try {
             comandoDAO.insertComando(comando);

@@ -32,6 +32,8 @@ public class Monitoramento {
         String logRegistroComponentes = "";
         List<Componente> componentes = componenteDAO.buscarComponentesPorIdTv(televisao.getIdTelevisao());
 
+
+
         for (Componente componenteAtual : componentes) {
 
             logRegistroComponentes = """
@@ -55,15 +57,12 @@ public class Monitoramento {
 
         List<models.Processo> processoModels = new ArrayList<>();
 
-        List<LogComponente> logComponentesList = new ArrayList<>();
+        List<models.Processo> processoModelsMySQL = new ArrayList<>();
 
         List<Processo> maioresProcessosCPU = new ArrayList<>();
 
-        Processador processador = new Processador();
-
-        Memoria memoria = new Memoria();
-
-        Comando comando = new Comando();
+        Integer idComponenteCPU = componenteDAO.buscarTipoComponentePorIdTvSQLServer("CPU", televisao.getIdTelevisao()).get(0).getIdComponente();
+        Integer idComponenteRAM = componenteDAO.buscarTipoComponentePorIdTvSQLServer("RAM", televisao.getIdTelevisao()).get(0).getIdComponente();
 
 
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -98,14 +97,13 @@ public class Monitoramento {
                                  """.formatted(i, processoAtual.getNome(), processoAtual.getPid(),
                                 processoAtual.getUsoCpu(), processoAtual.getUsoMemoria()));
 
-                        if (!componenteDAO.buscarTipoComponentePorIdTv("RAM", televisao.getIdTelevisao()).isEmpty()) {
-                            processoModels.add(servicosLisync.monitoramentoProcesso(processoAtual, componenteDAO.buscarTipoComponentePorIdTv("RAM", televisao.getIdTelevisao()).get(0).getIdComponente(), processoAtual.getUsoMemoria()));
+                        if (!componenteDAO.buscarTipoComponentePorIdTvSQLServer("RAM", televisao.getIdTelevisao()).isEmpty()) {
+                            processoModels.add(servicosLisync.monitoramentoProcesso(processoAtual, idComponenteRAM, processoAtual.getUsoMemoria()));
+                            processoModelsMySQL.add(servicosLisync.monitoramentoProcesso(processoAtual, 3, processoAtual.getUsoMemoria()));
                         }
                     }
 
-                    if (!componenteDAO.buscarTipoComponentePorIdTv("RAM", televisao.getIdTelevisao()).isEmpty()) {
-                        logComponentesList.add(servicosLisync.monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("RAM", televisao.getIdTelevisao()).get(0).getIdComponente(), (Double.valueOf(memoria.getEmUso()) * 100 / Double.valueOf(memoria.getTotal()))));
-                    }
+
 
                     System.out.println("Maiores processos em uso de CPU%");
                     for (int i = 0; i < maioresProcessosCPU.size(); i++) {
@@ -120,35 +118,54 @@ public class Monitoramento {
                                  """.formatted(i, processoAtual.getNome(), processoAtual.getPid(),
                                 processoAtual.getUsoCpu(), processoAtual.getUsoMemoria()));
 
-                        if (!componenteDAO.buscarTipoComponentePorIdTv("CPU", televisao.getIdTelevisao()).isEmpty()) {
-                            processoModels.add(servicosLisync.monitoramentoProcesso(processoAtual, componenteDAO.buscarTipoComponentePorIdTv("CPU", televisao.getIdTelevisao()).get(0).getIdComponente(), processoAtual.getUsoMemoria()));
+                        if (!componenteDAO.buscarTipoComponentePorIdTvSQLServer("CPU", televisao.getIdTelevisao()).isEmpty()) {
+                            processoModels.add(servicosLisync.monitoramentoProcesso(processoAtual, idComponenteCPU, processoAtual.getUsoMemoria()));
+                            processoModelsMySQL.add(servicosLisync.monitoramentoProcesso(processoAtual, 1, processoAtual.getUsoMemoria()));
                         }
                     }
 
-                    if (!componenteDAO.buscarTipoComponentePorIdTv("CPU", televisao.getIdTelevisao()).isEmpty()) {
-                        logComponentesList.add(servicosLisync.monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTv("CPU", televisao.getIdTelevisao()).get(0).getIdComponente(), processador.getUso()));
+
+
+
+                    try {
+                        servicosLisync.registrarProcessos(processoModels);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        System.out.println("Erro ao salvar log dos Processos no banco principal");
+                    }finally {
+
+                        servicosLisync.registrarProcessosMySQL(processoModelsMySQL);
+
                     }
 
-                    servicosLisync.registrarLogComponente(logComponentesList);
-
-                    servicosLisync.registrarProcessos(processoModels);
 
                     List<Janela> janelas = looca.getGrupoDeJanelas().getJanelasVisiveis();
+
                     List<models.Janela> janelasModelo = new ArrayList<>();
+                    List<models.Janela> janelasModeloMySql = new ArrayList<>();
 
                     for (Janela janela : janelas) {
                         janelasModelo.add(servicosLisync.monitoramentoJanela(janela, televisao.getIdTelevisao()));
+                        janelasModeloMySql.add(servicosLisync.monitoramentoJanela(janela,1));
                     }
                     servicosLisync.salvarJanelas(janelasModelo);
+                    servicosLisync.salvarJanelasMySQl(janelasModeloMySql);
+
+
+
+
+
                     System.out.println("\n |----------- Monitoramento -----------|");
                     for (Componente componente : componentes) {
                         try {
                             String logMonitoramento = servicosLisync.monitoramentoComponentes(componente, televisao);
+
                             System.out.println(logMonitoramento);
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
                     }
+
 
                     // Executar o comando
                     ComandoDAO comandoDAO = new ComandoDAO();

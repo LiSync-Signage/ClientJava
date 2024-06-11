@@ -1,36 +1,33 @@
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\dao\JanelaDAO.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\dao\LogComponenteDAO.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\models\Cpu.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\models\MemoriaRam.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\services\ServicosLisync.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\models\LogComponente.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\ProcessKiller.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\plano\Plano.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\dao\ComandoDAO.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\services\Autenticacao.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\conexao\ConexaoSlack.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\Mainsla.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\services\Monitoramento.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\TESTE.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\models\Empresa.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\dao\UsuarioDAO.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\models\ComponenteTv.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\dao\AmbienteDAO.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\models\Processo.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\models\Monitoramento.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\dao\ComponenteDAO.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\models\Usuario.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\MainTeste.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\models\Disco.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\Main.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\services\RedeServices.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\conexao\ConexaoMySQL.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\dao\EmpresaDAO.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\conexao\ConexaoSQLServer.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\models\Ambiente.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\models\Janela.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\models\Componente.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\models\Comando.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\models\Televisao.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\dao\ProcessoDAO.java
-C:\Sptech\Projetos\Lisync\individual\JAR-Individual\JAR-Individual\Arthur\src\main\java\dao\TelevisaoDAO.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\plano\Plano.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\dao\AmbienteDAO.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\dao\UsuarioDAO.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\org\LiSync\MetodosCadastro.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\services\ServicosLisync.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\models\Ambiente.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\models\Processo.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\services\Autenticacao.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\dao\EmpresaDAO.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\models\Usuario.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\services\Monitoramento.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\models\Janela.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\org\LiSync\MetodosLogin.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\conexao\ConexaoSlack.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\dao\ComponenteDAO.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\dao\ComandoDAO.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\conexao\ConexaoSQLServer.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\org\LiSync\Main.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\dao\JanelaDAO.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\models\Empresa.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\models\LogComponente.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\conexao\ConexaoMySQL.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\models\ComponenteTv.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\conexao\Conexao.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\dao\TelevisaoDAO.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\dao\LogComponenteDAO.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\Main.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\models\Televisao.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\models\Monitoramento.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\services\RedeServices.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\dao\ProcessoDAO.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\models\Componente.java
+C:\Users\arthu\Downloads\Nova pasta\ClientJava\src\main\java\models\Comando.java

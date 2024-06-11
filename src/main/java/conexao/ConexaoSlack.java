@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
     public class ConexaoSlack {
 
         private static final String SLACK_API_URL = "https://slack.com/api/chat.postMessage";
-        private static final String AUTH_TOKEN = "xoxb-7190971444085-7179574682359-vP4KAoQfRLv7fVx4Sl5kbeUX";
+        private static final String AUTH_TOKEN = "xoxb-7190971444085-7179574682359-iIXjS4aCGYUGaheXiWSb6UDI";
         private static final String CHANNEL = "C075LV4CHRB";
 
         public void alertMessageCPU(Double cpuUsage) {

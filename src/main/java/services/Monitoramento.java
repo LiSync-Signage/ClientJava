@@ -64,6 +64,12 @@ public class Monitoramento {
         Integer idComponenteCPU = componenteDAO.buscarTipoComponentePorIdTvSQLServer("CPU", televisao.getIdTelevisao()).get(0).getIdComponente();
         Integer idComponenteRAM = componenteDAO.buscarTipoComponentePorIdTvSQLServer("RAM", televisao.getIdTelevisao()).get(0).getIdComponente();
 
+        Boolean existeComponenteRam = componenteDAO.buscarTipoComponentePorIdTvSQLServer("RAM", televisao.getIdTelevisao()).isEmpty();
+
+        Boolean existeComponenteCPU = componenteDAO.buscarTipoComponentePorIdTvSQLServer("CPU", televisao.getIdTelevisao()).isEmpty();
+
+
+
 
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -97,7 +103,7 @@ public class Monitoramento {
                                  """.formatted(i, processoAtual.getNome(), processoAtual.getPid(),
                                 processoAtual.getUsoCpu(), processoAtual.getUsoMemoria()));
 
-                        if (!componenteDAO.buscarTipoComponentePorIdTvSQLServer("RAM", televisao.getIdTelevisao()).isEmpty()) {
+                        if (!existeComponenteRam) {
                             processoModels.add(servicosLisync.monitoramentoProcesso(processoAtual, idComponenteRAM, processoAtual.getUsoMemoria()));
                             processoModelsMySQL.add(servicosLisync.monitoramentoProcesso(processoAtual, 3, processoAtual.getUsoMemoria()));
                         }
@@ -118,7 +124,7 @@ public class Monitoramento {
                                  """.formatted(i, processoAtual.getNome(), processoAtual.getPid(),
                                 processoAtual.getUsoCpu(), processoAtual.getUsoMemoria()));
 
-                        if (!componenteDAO.buscarTipoComponentePorIdTvSQLServer("CPU", televisao.getIdTelevisao()).isEmpty()) {
+                        if (!existeComponenteCPU) {
                             processoModels.add(servicosLisync.monitoramentoProcesso(processoAtual, idComponenteCPU, processoAtual.getUsoMemoria()));
                             processoModelsMySQL.add(servicosLisync.monitoramentoProcesso(processoAtual, 1, processoAtual.getUsoMemoria()));
                         }

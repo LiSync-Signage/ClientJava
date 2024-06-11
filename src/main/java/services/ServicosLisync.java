@@ -168,14 +168,17 @@ public class ServicosLisync {
     public String monitoramentoComponentes(Componente componente, Televisao televisao) throws IOException {
         Double valor = 0.0;
         ConexaoSlack conexaoSlack = new ConexaoSlack();
+        List<LogComponente> listaLogSQLServer = new ArrayList<>();
+        List<LogComponente> listaLogMySQL = new ArrayList<>();
 
         if (componente.getTipoComponente().equals("CPU")) {
             valor = looca.getProcessador().getUso();
-            LogComponente logComponente = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTvSQLServer("CPU", televisao.getIdTelevisao()).get(0).getIdComponente(), valor);
+            LogComponente logComponente = monitoramentoLogComponente(componente.getIdComponente(), valor);
 
-            logComponenteDAO.salvarLogComponenteIndividualSQLServer(logComponente);
+
+            listaLogSQLServer.add(logComponente);
             logComponente.setFkComponente(1);
-            logComponenteDAO.salvarLogComponenteIndividual(logComponente);
+            listaLogMySQL.add(logComponente);
 
             conexaoSlack.alertMessageCPU(valor);
 
@@ -190,25 +193,27 @@ public class ServicosLisync {
 
             valor = (discoPrincipal.getBytesDeEscritas().doubleValue()
                     / discoPrincipal.getTamanho().doubleValue()) * 100.;
-            LogComponente logComponente2 = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTvSQLServer("Disco", televisao.getIdTelevisao()).get(0).getIdComponente(), valor);
+            LogComponente logComponente2 = monitoramentoLogComponente(componente.getIdComponente(), valor);
 
-            logComponenteDAO.salvarLogComponenteIndividualSQLServer(logComponente2);
+            listaLogSQLServer.add(logComponente2);
             logComponente2.setFkComponente(2);
-            logComponenteDAO.salvarLogComponenteIndividual(logComponente2);
+            listaLogMySQL.add(logComponente2);
 
             conexaoSlack.alertMessageDisco(valor);
 
         } else {
             valor = (looca.getMemoria().getEmUso().doubleValue() / (looca.getMemoria().getTotal().doubleValue())) * 100.;
 
-            LogComponente logComponente1 = monitoramentoLogComponente(componenteDAO.buscarTipoComponentePorIdTvSQLServer("RAM", televisao.getIdTelevisao()).get(0).getIdComponente(), valor);
+            LogComponente logComponente1 = monitoramentoLogComponente(componente.getIdComponente(), valor);
 
-            logComponenteDAO.salvarLogComponenteIndividualSQLServer(logComponente1);
+            listaLogSQLServer.add(logComponente1);
             logComponente1.setFkComponente(3);
-            logComponenteDAO.salvarLogComponenteIndividual(logComponente1);
+            listaLogMySQL.add(logComponente1);
 
             conexaoSlack.alertMessageRAM(valor);
         }
+        logComponenteDAO.salvarLogComponente(listaLogMySQL);
+        logComponenteDAO.salvarLogComponenteSQLServer(listaLogSQLServer);
         return "";
     }
 

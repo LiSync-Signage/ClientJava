@@ -1,6 +1,7 @@
 package models;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class LogComponente {
     private Integer fkComponente;
@@ -10,6 +11,7 @@ public class LogComponente {
     private Componente componente;
 
     public LogComponente() {}
+
 
     public LogComponente(Integer fkComponente, Double valor) {
         this.fkComponente = fkComponente;
@@ -59,18 +61,16 @@ public class LogComponente {
 
     @Override
     public String toString() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         return String.format(
-
-                        "------------------------------------------------------------------------------------------------------------------------------------------------------\n" +
-                                "Data e Hora: %s " +
-                                "| ID Componente: %d " +
-                                "| Valor: %.2f " +
-                                "| Modelo: '%s' " +
-                                "| Tipo Componente: '%s' " +
-                                "| Identificador: '%s' " +
-                                "| ID Televisão: %d\n"+
-                        "------------------------------------------------------------------------------------------------------------------------------------------------------",
-                dataHora,
+                "{ Data e Hora: %s }" +
+                        " ID Componente: %d " +
+                        "| Valor: %.2f " +
+                        "| Modelo: '%s' " +
+                        "| Tipo Componente: '%s' " +
+                        "| Identificador: '%s' " +
+                        "| ID Televisão: %d\n",
+                dataHora.format(formatter),
                 fkComponente,
                 valor,
                 componente.getModelo(),

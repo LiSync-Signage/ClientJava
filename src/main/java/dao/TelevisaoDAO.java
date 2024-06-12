@@ -13,7 +13,7 @@ public class TelevisaoDAO {
         ConexaoMySQL conexao = new ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
-        String sql = "INSERT INTO Televisao (nome, taxaAtualizacao, hostName ,fkAmbiente) " +
+        String sql = "INSERT INTO Televisao (nomeTelevisao, taxaAtualizacao, hostName ,fkAmbiente) " +
                 "VALUES (?, ?, ?, ? )";
 
         try {

@@ -1,0 +1,10 @@
+{ Data e Hora: 2024-06-12T16:43:05.433122 } ID Componente: 16 | Valor: 9,62 | Modelo: 'Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz' | Tipo Componente: 'CPU' | Identificador: 'BFEBFBFF000806E9' | ID Televisão: 69
+
+{ Data e Hora: 2024-06-12T16:43:12.497868 } ID Componente: 16 | Valor: 8,88 | Modelo: 'Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz' | Tipo Componente: 'CPU' | Identificador: 'BFEBFBFF000806E9' | ID Televisão: 69
+
+{ Data e Hora: 2024-06-12T16:43:18.043730 } ID Componente: 16 | Valor: 9,62 | Modelo: 'Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz' | Tipo Componente: 'CPU' | Identificador: 'BFEBFBFF000806E9' | ID Televisão: 69
+
+{ Data e Hora: 2024-06-12T16:43:23.004572 } ID Componente: 16 | Valor: 31,93 | Modelo: 'Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz' | Tipo Componente: 'CPU' | Identificador: 'BFEBFBFF000806E9' | ID Televisão: 69
+
+{ Data e Hora: 2024-06-12T16:43:28.059029 } ID Componente: 16 | Valor: 38,12 | Modelo: 'Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz' | Tipo Componente: 'CPU' | Identificador: 'BFEBFBFF000806E9' | ID Televisão: 69
+

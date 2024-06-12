@@ -131,7 +131,7 @@ public class Log {
 		String tipo = componente.getTipoComponente();
 		switch (tipo) {
 			case "CPU":
-				return valor >= 61 && valor <= 80;
+				return valor >= 7 && valor <= 80;
 			case "DISCO":
 				return valor >= 75 && valor <= 90;
 			case "RAM":

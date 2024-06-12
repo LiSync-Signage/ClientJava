@@ -58,8 +58,8 @@ public class UsuarioDAO {
         ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
         JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
 
-        String sql = "INSERT INTO Usuario (idUsuario, nome, fkEmpresa) " +
-                "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE nome = ?, fkEmpresa = ?";
+        String sql = "INSERT INTO Usuario (idUsuario, nomeUsuario, fkEmpresa) " +
+                "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE nomeUsuario = ?, fkEmpresa = ?";
 
         try {
             con.update(sql, usuario.getIdUsuario(), usuario.getNome(), usuario.getFkEmpresa(),

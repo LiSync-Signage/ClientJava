@@ -89,7 +89,7 @@ public class ComandoDAO {
                 "VALUES (?, ?, ?);";
 
         try {
-            con.update(sql, comando.getnomeComando(),comando.getResposta(), comando.getFkTelevisao());
+            con.update(sql,comando.getnomeComando(),comando.getResposta(), 1);
 //            conSQLServer.update(sqlSever, comando.getResposta(), comando.getIdComando());
         } catch (Exception e)  {
             e.printStackTrace();

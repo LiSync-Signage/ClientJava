@@ -251,8 +251,8 @@ public class ServicosLisync {
     //
     public models.Janela monitoramentoJanela(Janela janelaMonitorada, Integer idTelevisao) {
         Integer visivel = (janelaMonitorada.isVisivel() ? 1 : 0);
-        models.Janela janela = new models.Janela(janelaMonitorada.getPid().intValue(), janelaMonitorada.getComando(),
-                janelaMonitorada.getTitulo(), visivel,
+        models.Janela janela = new models.Janela(janelaMonitorada.getPid().intValue(), janelaMonitorada.getTitulo(),
+                janelaMonitorada.getComando(), visivel,
                 idTelevisao);
         return janela;
     }

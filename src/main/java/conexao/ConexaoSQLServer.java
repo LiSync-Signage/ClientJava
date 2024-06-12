@@ -16,9 +16,9 @@ public class ConexaoSQLServer extends Conexao {
 
             // Configuração da conexão com SQL Server usando autenticação do SQL Server
             dataSource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-//            dataSource.setUrl("jdbc:sqlserver://52.6.118.102:1433;databaseName=teste;encrypt=true;trustServerCertificate=true;loginTimeout=20;");
+            dataSource.setUrl("jdbc:sqlserver://52.6.118.102:1433;databaseName=teste;encrypt=true;trustServerCertificate=true;loginTimeout=20;");
 
-            dataSource.setUrl("jdbc:sqlserver://23.22.35.41:1433;databaseName=teste;encrypt=true;trustServerCertificate=true;loginTimeout=20;");
+//            dataSource.setUrl("jdbc:sqlserver://23.22.35.41:1433;databaseName=teste;encrypt=true;trustServerCertificate=true;loginTimeout=20;");
             dataSource.setUsername("sa"); // Substitua pelo seu nome de usuário
             dataSource.setPassword("urubu100");   // Substitua pela sua senha
 

@@ -118,12 +118,13 @@ public class ComandoDAO {
 //        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
 //        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
 
-        String sql = "UPDATE Comando SET resposta = ? WHERE idComando = ?;";
+        String sql = "INSERT INTO Comando (nomeComando, resposta, fkTelevisao)" +
+                "                VALUES (?, ?, ?);";
 
 //        String sqlSever = "INSERT INTO Comando(nome,fkTelevisao)VALUES (?,?);";
 
         try {
-            con.update(sql, comando.getResposta(), comando.getFkTelevisao());
+            con.update(sql,comando.getnomeComando(), comando.getResposta(), comando.getFkTelevisao());
 //            conSQLServer.update(sqlSever, comando.getComando(), comando.getFkTelevisao());
         } catch (Exception e)  {
             e.printStackTrace();

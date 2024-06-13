@@ -17,6 +17,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20201115</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.britooo</groupId>
             <artifactId>looca-api</artifactId>
             <version>2.2.0</version>

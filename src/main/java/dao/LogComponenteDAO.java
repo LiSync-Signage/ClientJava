@@ -23,7 +23,7 @@ public class LogComponenteDAO {
             for (LogComponente logComponente : logComponenteList) {
                 con.update(sql, logComponente.getDataHora(), logComponente.getFkComponente(), logComponente.getValor());
 
-//                conSQLServer.update(sql, logComponente.getDataHora(), logComponente.getFkComponente(), logComponente.getValor());
+//               conSQLServer.update(sql, logComponente.getDataHora(), logComponente.getFkComponente(), logComponente.getValor());
             }
 
 

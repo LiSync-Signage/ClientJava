@@ -47,8 +47,8 @@ public class ProcessoDAO {
         ConexaoMySQL conexao = new ConexaoMySQL();
         JdbcTemplate con = conexao.getconexaoLocal();
 
-        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
+//        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+//        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sql = "INSERT INTO LogProcesso (pid, nomeProcesso, dataHora, fkComponente, valor) VALUES (?, ?, ?, ?, ?)";
 //        String sqlServer = "INSERT INTO LogProcesso (pid, nomeProcesso, dataHora, fkComponente, valor) VALUES (?, ?, ?, ?, ?)";
@@ -82,8 +82,8 @@ public class ProcessoDAO {
 
 
     public void salvarVariosProcessosSQLServer(List<Processo> processos) {
-        ConexaoMySQL conexao = new ConexaoMySQL();
-        JdbcTemplate con = conexao.getconexaoLocal();
+//        ConexaoMySQL conexao = new ConexaoMySQL();
+//        JdbcTemplate con = conexao.getconexaoLocal();
 
         conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
         JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
@@ -94,7 +94,7 @@ public class ProcessoDAO {
         try {
             for (Processo processo : processos) {
 //                con.update(sql, processo.getPid(), processo.getNome(), processo.getDataHora(), processo.getIdComponente(), processo.getValor());
-                conSQLServer.update(sqlServer, processo.getPid(), processo.getNome(), processo.getDataHora(), processo.getIdComponente(), processo.getValor());
+                  conSQLServer.update(sqlServer, processo.getPid(), processo.getNome(), processo.getDataHora(), processo.getIdComponente(), processo.getValor());
             }
 
         } catch (Exception e) {

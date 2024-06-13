@@ -16,6 +16,12 @@ public class LogComponente {
         this.dataHora = LocalDateTime.now();
     }
 
+    public LogComponente(LogComponente logComponente2) {
+        this.fkComponente = logComponente2.fkComponente;
+        this.valor =logComponente2.getValor();
+        this.dataHora = logComponente2.getDataHora();
+    }
+
     public Integer getFkComponente() {
         return fkComponente;
     }

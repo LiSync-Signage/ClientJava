@@ -1,23 +1,30 @@
 package conexao;
 
 import com.github.britooo.looca.api.core.Looca;
+import org.json.JSONObject;
 
 import javax.sound.midi.Soundbank;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+
 
 
     public class ConexaoSlack {
 
-        private static final String SLACK_API_URL = "https://slack.com/api/chat.postMessage";
-        private static final String AUTH_TOKEN = "xoxb-7190971444085-7179574682359-iIXjS4aCGYUGaheXiWSb6UDI";
-        private static final String CHANNEL = "C075LV4CHRB";
+        private static HttpClient client = HttpClient.newHttpClient();
+        private static final String URL = "https://hooks.slack.com/services/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";
 
-        public void alertMessageCPU(Double cpuUsage) {
+
+        public void alertMessageCPU(Double cpuUsage) throws IOException, InterruptedException {
             StringBuilder alertMessage = new StringBuilder();
-            if (cpuUsage > 80) {
+            if (cpuUsage > 1) {
                 alertMessage.append("Alertas de uso de recursos:\n");
                 alertMessage.append("CPU Crítico: Uso acima de 80% (").append(cpuUsage).append("%)\n");
                 System.out.println("aleta de uso crítico de CPU (acima de 80%)");
@@ -29,10 +36,10 @@ import java.nio.charset.StandardCharsets;
                 System.out.println("uso de CPU dentro dos conformes");
             }
             if (!alertMessage.isEmpty()) {
-                sendSlackMessage(CHANNEL, alertMessage.toString());
+               App.criarMensagem(alertMessage.toString());
             }
         }
-        public void alertMessageRAM(Double memoryUsage) {
+        public void alertMessageRAM(Double memoryUsage) throws IOException, InterruptedException {
             StringBuilder alertMessage = new StringBuilder();
             if (memoryUsage > 90) {
                 alertMessage.append("Alertas de uso de recursos:\n");
@@ -47,10 +54,10 @@ import java.nio.charset.StandardCharsets;
             }
 
             if (!alertMessage.isEmpty()) {
-                sendSlackMessage(CHANNEL, alertMessage.toString());
+                App.criarMensagem(alertMessage.toString());
             }
         }
-        public void  alertMessageDisco(Double diskUsage) {
+        public void  alertMessageDisco(Double diskUsage) throws IOException, InterruptedException {
             StringBuilder alertMessage = new StringBuilder();
 
             if (diskUsage > 60) {
@@ -65,36 +72,24 @@ import java.nio.charset.StandardCharsets;
                 System.out.println("uso de Disco dentro dos conformes");
             }
             if (!alertMessage.isEmpty()) {
-                sendSlackMessage(CHANNEL, alertMessage.toString());
+                App.criarMensagem(alertMessage.toString());
             }
         }
 
-        public static void sendSlackMessage(String channel, String text) {
-            try {
-                URL url = new URL(SLACK_API_URL);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("POST");
-                connection.setDoOutput(true);
-                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                connection.setRequestProperty("Authorization", "Bearer " + AUTH_TOKEN);
+        public static void sendMessage(JSONObject content) throws IOException, InterruptedException {
+            HttpRequest request = HttpRequest.newBuilder(URI.create(URL)).header("accept", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(content.toString())).build();
 
-                String postData = "channel=" + channel + "&text=" + text;
-                byte[] postDataBytes = postData.getBytes(StandardCharsets.UTF_8);
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-                try (OutputStream os = connection.getOutputStream()) {
-                    os.write(postDataBytes);
-                    os.flush();
-                }
-
-                int responseCode = connection.getResponseCode();
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    System.out.println("Mensagem enviada com sucesso ao Slack.");
-                } else {
-                    System.out.println("Erro ao enviar mensagem ao Slack. Código de resposta: " + responseCode);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            System.out.println(String.format("Status: %s", response.statusCode()));
+            System.out.println(String.format("Status: %s", response.body()));
         }
+
+
+
+
+
+
     }
 

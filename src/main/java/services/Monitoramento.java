@@ -7,6 +7,7 @@ import com.github.britooo.looca.api.group.processador.Processador;
 import com.github.britooo.looca.api.group.processos.Processo;
 import dao.ComandoDAO;
 import dao.ComponenteDAO;
+import dao.ProcessoDAO;
 import dao.TelevisaoDAO;
 import models.*;
 
@@ -64,8 +65,9 @@ public class Monitoramento {
         Integer idComponenteCPU = componenteDAO.buscarTipoComponentePorIdTvSQLServer("CPU", televisao.getIdTelevisao()).get(0).getIdComponente();
         Integer idComponenteRAM = componenteDAO.buscarTipoComponentePorIdTvSQLServer("RAM", televisao.getIdTelevisao()).get(0).getIdComponente();
 
-        Boolean existeComponenteRam = componenteDAO.buscarTipoComponentePorIdTvSQLServer("RAM", televisao.getIdTelevisao()).isEmpty();
+        System.out.println(idComponenteCPU + "ID COMPONENTE ");
 
+        Boolean existeComponenteRam = componenteDAO.buscarTipoComponentePorIdTvSQLServer("RAM", televisao.getIdTelevisao()).isEmpty();
         Boolean existeComponenteCPU = componenteDAO.buscarTipoComponentePorIdTvSQLServer("CPU", televisao.getIdTelevisao()).isEmpty();
 
 
@@ -122,7 +124,8 @@ public class Monitoramento {
                                 CPU: %.2f
                                 Memória: %.2f
                                  """.formatted(i, processoAtual.getNome(), processoAtual.getPid(),
-                                processoAtual.getUsoCpu(), processoAtual.getUsoMemoria()));
+                                processoAtual.getUsoCpu(), processoAtual.getUsoMemoria())
+                        );
 
                         if (!existeComponenteCPU) {
                             processoModels.add(servicosLisync.monitoramentoProcesso(processoAtual, idComponenteCPU, processoAtual.getUsoMemoria()));
@@ -130,19 +133,18 @@ public class Monitoramento {
                         }
                     }
 
-
-
-
+                    ProcessoDAO processoDAO = new ProcessoDAO();
                     try {
-                        servicosLisync.registrarProcessos(processoModels);
+                        processoDAO.salvarVariosProcessosSQLServer(processoModels);
+
                     }catch (Exception e){
                         e.printStackTrace();
                         System.out.println("Erro ao salvar log dos Processos no banco principal");
-                    }finally {
-
-                        servicosLisync.registrarProcessosMySQL(processoModelsMySQL);
-
                     }
+
+                    servicosLisync.registrarProcessosMySQL(processoModelsMySQL);
+
+
 
 
                     List<Janela> janelas = looca.getGrupoDeJanelas().getJanelasVisiveis();
@@ -176,10 +178,10 @@ public class Monitoramento {
                     // Executar o comando
                     ComandoDAO comandoDAO = new ComandoDAO();
                     Comando comando = comandoDAO.selectComando(televisao.getIdTelevisao());
+
                     if (comando != null) {
                         Process processo = null;
                         String comandoExecucao = comando.getnomeComando();
-                        String respostaComando = comando.getResposta();
                         if (comando.getResposta() == null) {
                             try {
                                 System.out.println("Executando comando: " + comandoExecucao);
@@ -202,11 +204,11 @@ public class Monitoramento {
                                 if (saidaErro.length() > 0) {
                                     System.err.println("Erro na execução do comando: " + saidaErro.toString());
                                     servicosLisync.atualizarComando(comando.getIdComando(), comando.getnomeComando(), "Erro ao executar o comando: " + saidaErro.toString(), comando.getFkTelevisao());
-                                    servicosLisync.inserirComandoLocal(comando);
+
                                 } else {
                                     System.out.println("Saída do comando: " + saidaComando.toString());
                                     servicosLisync.atualizarComando(comando.getIdComando(), comando.getnomeComando(), "Resposta: " + saidaComando.toString(), comando.getFkTelevisao());
-                                    servicosLisync.inserirComandoLocal(comando);
+
                                 }
 
                                 // Verifique o código de saída do processo
@@ -214,11 +216,11 @@ public class Monitoramento {
                                 if (exitCode != 0) {
                                     System.err.println("O comando não foi executado com sucesso. Código de saída: " + exitCode);
                                     servicosLisync.atualizarComando(comando.getIdComando(), comando.getnomeComando(), "Erro ao executar o comando. Código de saída: " + exitCode, comando.getFkTelevisao());
-                                    servicosLisync.inserirComandoLocal(comando);
+
                                 }
                             } catch (IOException | InterruptedException e) {
                                 servicosLisync.atualizarComando(comando.getIdComando(), comando.getnomeComando(), "Erro ao executar o comando: " + e.getMessage(), comando.getFkTelevisao());
-                                servicosLisync.inserirComandoLocal(comando);
+
                                 System.err.println("Erro ao executar o comando ou não há comandos a serem executados no banco \n \n"+ e.getMessage());
                             } finally {
                                 if (processo != null) {

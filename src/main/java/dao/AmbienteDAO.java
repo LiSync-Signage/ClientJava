@@ -1,6 +1,5 @@
 package dao;
 
-import conexao.ConexaoMySQL;
 import models.Ambiente;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -11,26 +10,26 @@ import java.util.List;
 
 public class AmbienteDAO {
     public static void insertAmbienteSQLServer(Ambiente ambiente) {
-        ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
-        JdbcTemplate con = conexaoMySQL.getconexaoLocal();
+//        org.LiSync.conexao.ConexaoMySQL conexaoMySQL = new org.LiSync.conexao.ConexaoMySQL();
+//        JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
 
-//        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-//        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
+        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
 //        String sql = "INSERT INTO ambiente(setor,andar,fkEmpresa)VALUES (?,?,?);";
         String sqlServer = "INSERT INTO Ambiente(setor,andar,fkEmpresa)VALUES (?,?,?);";
 
         try {
 //            con.update(sql, ambiente.getSetor(), ambiente.getAndar(), ambiente.getFkEmpresa());
-            con.update(sqlServer, ambiente.getSetor(), ambiente.getAndar(), ambiente.getFkEmpresa());
+            conSQLServer.update(sqlServer, ambiente.getSetor(), ambiente.getAndar(), ambiente.getFkEmpresa());
 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
 
-            if (con != null) {
+            if (conSQLServer != null) {
                 try {
-                    con.getDataSource().getConnection().close();
+                    conSQLServer.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -46,7 +45,7 @@ public class AmbienteDAO {
     }
 
     public static void insertAmbiente(Ambiente ambiente) {
-        ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
+        conexao.ConexaoMySQL conexaoMySQL = new conexao.ConexaoMySQL();
         JdbcTemplate con = conexaoMySQL.getconexaoLocal();
 
 //        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
@@ -82,16 +81,13 @@ public class AmbienteDAO {
     }
 
     public Integer getIdpAndarSetor(String andar, String setor) {
-//        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-//        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
-
-        ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
-        JdbcTemplate con = conexaoMySQL.getconexaoLocal();
+        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sqlServer = "SELECT idAmbiente FROM Ambiente WHERE andar = ? AND setor = ?;";
 
         try {
-            Integer countLocal = con.queryForObject(sqlServer, Integer.class, andar, setor);
+            Integer countLocal = conSQLServer.queryForObject(sqlServer, Integer.class, andar, setor);
             return countLocal;
 
         } catch (Exception e) {
@@ -99,9 +95,9 @@ public class AmbienteDAO {
             return null;
 
         } finally {
-            if (con != null) {
+            if (conSQLServer != null) {
                 try {
-                    con.getDataSource().getConnection().close();
+                    conSQLServer.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -110,24 +106,21 @@ public class AmbienteDAO {
     }
 
     public List<Ambiente> getListaAmbientes(Integer idEmpresa) {
-//        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-//        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
-
-        ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
-        JdbcTemplate con = conexaoMySQL.getconexaoLocal();
+        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sql = "SELECT * FROM Ambiente WHERE fkEmpresa = ?";
 
         try {
-            List<Ambiente> ambientes = con.query(sql, new BeanPropertyRowMapper<>(Ambiente.class), idEmpresa);
+            List<Ambiente> ambientes = conSQLServer.query(sql, new BeanPropertyRowMapper<>(Ambiente.class), idEmpresa);
             return ambientes;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         } finally {
-            if (con != null) {
+            if (conSQLServer != null) {
                 try {
-                    con.getDataSource().getConnection().close();
+                    conSQLServer.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

@@ -1,11 +1,12 @@
 package dao;
 
-import conexao.ConexaoMySQL;
-import models.Processo;
-import org.springframework.jdbc.core.JdbcTemplate;
-
 import java.sql.SQLException;
 import java.util.List;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import conexao.ConexaoMySQL;
+import models.Processo;
 
 public class ProcessoDAO {
 //    public void salvarProcesso(Processo processo) {
@@ -82,11 +83,11 @@ public class ProcessoDAO {
 
 
     public void salvarVariosProcessosSQLServer(List<Processo> processos) {
-        ConexaoMySQL conexao = new ConexaoMySQL();
-        JdbcTemplate con = conexao.getconexaoLocal();
+//        ConexaoMySQL conexao = new ConexaoMySQL();
+//        JdbcTemplate con = conexao.getconexaoLocal();
 
-//        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-//        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
+        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
 //        String sql = "INSERT INTO Log (pid, nomeProcesso, dataHora, fkComponente, valor) VALUES (?, ?, ?, ?, ?)";
         String sqlServer = "INSERT INTO LogProcesso (pid, nomeProcesso, dataHora, fkComponente, valor) VALUES (?, ?, ?, ?, ?)";
@@ -94,16 +95,16 @@ public class ProcessoDAO {
         try {
             for (Processo processo : processos) {
 //                con.update(sql, processo.getPid(), processo.getNome(), processo.getDataHora(), processo.getIdComponente(), processo.getValor());
-                con.update(sqlServer, processo.getPid(), processo.getNome(), processo.getDataHora(), processo.getIdComponente(), processo.getValor());
+                  conSQLServer.update(sqlServer, processo.getPid(), processo.getNome(), processo.getDataHora(), processo.getIdComponente(), processo.getValor());
             }
 
         } catch (Exception e) {
             e.printStackTrace();
 
         } finally {
-            if (con != null) {
+            if (conSQLServer != null) {
                 try {
-                    con.getDataSource().getConnection().close();
+                    conSQLServer.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

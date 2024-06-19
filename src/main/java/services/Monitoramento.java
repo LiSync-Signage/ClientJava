@@ -1,21 +1,28 @@
 package services;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javax.mail.MessagingException;
+
 import com.github.britooo.looca.api.core.Looca;
 import com.github.britooo.looca.api.group.janelas.Janela;
-import com.github.britooo.looca.api.group.memoria.Memoria;
-import com.github.britooo.looca.api.group.processador.Processador;
 import com.github.britooo.looca.api.group.processos.Processo;
+
 import dao.ComandoDAO;
 import dao.ComponenteDAO;
 import dao.ProcessoDAO;
 import dao.TelevisaoDAO;
-import models.*;
-
-import javax.mail.MessagingException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.*;
+import models.Comando;
+import models.Componente;
+import models.Televisao;
 
 public class Monitoramento {
     public void monitorarTelevisao() {
@@ -69,19 +76,14 @@ public class Monitoramento {
 
         List<Processo> maioresProcessosCPU = new ArrayList<>();
 
-//        Integer idComponenteCPU = componenteDAO.buscarTipoComponentePorIdTvSQLServer("CPU", televisao.getIdTelevisao()).get(0).getIdComponente();
-//        Integer idComponenteRAM = componenteDAO.buscarTipoComponentePorIdTvSQLServer("RAM", televisao.getIdTelevisao()).get(0).getIdComponente();
+        Integer idComponenteCPU = componenteDAO.buscarTipoComponentePorIdTvSQLServer("CPU", televisao.getIdTelevisao()).get(0).getIdComponente();
+        Integer idComponenteRAM = componenteDAO.buscarTipoComponentePorIdTvSQLServer("RAM", televisao.getIdTelevisao()).get(0).getIdComponente();
 
-        Integer idComponenteCPU = componenteDAO.buscarComponentesPorIdTv(televisao.getIdTelevisao()).get(0).getIdComponente();
-        Integer idComponenteRAM = componenteDAO.buscarComponentesPorIdTv(televisao.getIdTelevisao()).get(0).getIdComponente();
 
         System.out.println(idComponenteCPU + "ID COMPONENTE ");
 
-//        Boolean existeComponenteRam = componenteDAO.buscarTipoComponentePorIdTvSQLServer("RAM", televisao.getIdTelevisao()).isEmpty();
-//        Boolean existeComponenteCPU = componenteDAO.buscarTipoComponentePorIdTvSQLServer("CPU", televisao.getIdTelevisao()).isEmpty();
-
-        Boolean existeComponenteRam = componenteDAO.buscarComponentesPorIdTv(televisao.getIdTelevisao()).isEmpty();
-        Boolean existeComponenteCPU = componenteDAO.buscarComponentesPorIdTv(televisao.getIdTelevisao()).isEmpty();
+        Boolean existeComponenteRam = componenteDAO.buscarTipoComponentePorIdTvSQLServer("RAM", televisao.getIdTelevisao()).isEmpty();
+        Boolean existeComponenteCPU = componenteDAO.buscarTipoComponentePorIdTvSQLServer("CPU", televisao.getIdTelevisao()).isEmpty();
 
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override

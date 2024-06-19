@@ -1,32 +1,33 @@
 package dao;
 
-import conexao.ConexaoMySQL;
-import models.Empresa;
+import java.sql.SQLException;
+
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.sql.SQLException;
+import conexao.ConexaoMySQL;
+import models.Empresa;
 
 public class EmpresaDAO {
 
     public Empresa buscarEmpresa(Integer idEmpresa) {
-        ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
-        JdbcTemplate con = conexaoMySQL.getconexaoLocal();
+//        ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
+//        JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
 
-//        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-//        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
+        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sqlServer = "SELECT * FROM Empresa WHERE idEmpresa = ?";
 
         try {
-            return con.queryForObject(sqlServer, new BeanPropertyRowMapper<>(Empresa.class), idEmpresa);
+            return conSQLServer.queryForObject(sqlServer, new BeanPropertyRowMapper<>(Empresa.class), idEmpresa);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         } finally {
-            if (con != null) {
+            if (conSQLServer != null) {
                 try {
-                    con.getDataSource().getConnection().close();
+                    conSQLServer.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -130,16 +131,16 @@ public class EmpresaDAO {
     }
 
     public Integer contarPorEmpresa(Integer fkEmpresa) {
-       ConexaoMySQL conexao = new ConexaoMySQL();
-       JdbcTemplate con = conexao.getconexaoLocal();
+//       ConexaoMySQL conexao = new ConexaoMySQL();
+//       JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
-//        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-//        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
+        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sqlServer = "SELECT count(*) FROM Empresa  join ambiente on empresa.idEmpresa = ambiente.fkEmpresa join televisao on ambiente.idAmbiente = televisao.fkAmbiente where fkEmpresa = ?;";
 
         try {
-            Integer contagemTv = con.queryForObject(sqlServer, Integer.class, fkEmpresa);
+            Integer contagemTv = conSQLServer.queryForObject(sqlServer, Integer.class, fkEmpresa);
             return contagemTv;
 
         } catch (Exception e) {
@@ -147,9 +148,9 @@ public class EmpresaDAO {
             return 0;
 
         } finally {
-            if (con != null) {
+            if (conSQLServer != null) {
                 try {
-                    con.getDataSource().getConnection().close();
+                    conSQLServer.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -158,22 +159,22 @@ public class EmpresaDAO {
     }
 
     public Empresa buscarPorPlano(Integer idEmpresa) {
-        ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
-        JdbcTemplate con = conexaoMySQL.getconexaoLocal();
-//        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-//        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
+//        ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
+//        JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
+        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sqlServer = "SELECT plano FROM Empresa WHERE idEmpresa = ?";
 
         try {
-            return con.queryForObject(sqlServer, new BeanPropertyRowMapper<>(Empresa.class), idEmpresa);
+            return conSQLServer.queryForObject(sqlServer, new BeanPropertyRowMapper<>(Empresa.class), idEmpresa);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         } finally {
-            if (con != null) {
+            if (conSQLServer != null) {
                 try {
-                    con.getDataSource().getConnection().close();
+                    conSQLServer.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

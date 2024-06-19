@@ -1,20 +1,33 @@
 package services;
 
-import com.github.britooo.looca.api.core.Looca;
-import com.github.britooo.looca.api.group.discos.Disco;
-import com.github.britooo.looca.api.group.memoria.Memoria;
-import com.github.britooo.looca.api.group.processos.Processo;
-import com.github.britooo.looca.api.group.janelas.Janela;
-import com.github.britooo.looca.api.util.Conversor;
-import conexao.ConexaoSlack;
-import dao.*;
-import models.*;
-import plano.Plano;
-
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.github.britooo.looca.api.core.Looca;
+import com.github.britooo.looca.api.group.discos.Disco;
+import com.github.britooo.looca.api.group.janelas.Janela;
+import com.github.britooo.looca.api.group.processos.Processo;
+import com.github.britooo.looca.api.util.Conversor;
+
+import conexao.ConexaoSlack;
+import dao.AmbienteDAO;
+import dao.ComandoDAO;
+import dao.ComponenteDAO;
+import dao.EmpresaDAO;
+import dao.JanelaDAO;
+import dao.LogComponenteDAO;
+import dao.ProcessoDAO;
+import dao.TelevisaoDAO;
+import dao.UsuarioDAO;
+import models.Ambiente;
+import models.Comando;
+import models.Componente;
+import models.Empresa;
+import models.LogComponente;
+import models.Televisao;
+import models.Usuario;
+import plano.Plano;
 
 public class ServicosLisync {
     Looca looca = new Looca();
@@ -62,12 +75,9 @@ public class ServicosLisync {
     //
     public void atualizarUsuario(Usuario usuarioLogado) {
         try {
-            //usuarioDAO.atualizarUsuarioLocalSQLServer(usuarioLogado);
-            usuarioDAO.atualizarUsuarioLocal(usuarioLogado);
-
+            usuarioDAO.atualizarUsuarioLocalSQLServer(usuarioLogado);
             Empresa EmpresaUser = empresaDAO.buscarEmpresa(usuarioLogado.getFkEmpresa());
             empresaDAO.atualizarEmpresaLocal(EmpresaUser);
-
             usuarioLogado.setFkEmpresa(EmpresaUser.getIdEmpresa());
             usuarioDAO.atualizarUsuarioLocal(usuarioLogado);
         } catch (Exception e) {
@@ -110,14 +120,14 @@ public class ServicosLisync {
         System.out.println(televisao.getFkAmbiente());
 
         try {
-            televisaoDAO.registrar(televisao);
-//            televisaoDAO.registrarSQLServer(televisao);
+            televisaoDAO.registrarSQLServer(televisao);
+
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("erro ao cadastrar televisão");
         }
         televisao.setIdTelevisao(1);
-
+        televisaoDAO.registrar(televisao);
 
         System.out.println("Nova televisão adicionada! \n");
     }
@@ -131,15 +141,14 @@ public class ServicosLisync {
         televisao.registarComponente(cpu);
 
         try {
-//            componenteDAO.registarComponenteSQLServer(cpu);
-            componenteDAO.registarComponente(cpu);
+            componenteDAO.registarComponenteSQLServer(cpu);
 
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("erro ao cadastrar CPU");
         }
         cpu.setFkTelevisao(1);
-
+        componenteDAO.registarComponente(cpu);
 
 
         Disco instanciaDisco = looca.getGrupoDeDiscos().getDiscos().get(0);
@@ -148,14 +157,14 @@ public class ServicosLisync {
         televisao.registarComponente(disco);
 
         try {
-            // componenteDAO.registarComponenteSQLServer(disco);
-            componenteDAO.registarComponente(disco);
+            componenteDAO.registarComponenteSQLServer(disco);
+
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("erro ao cadastrar Disco");
         }
         disco.setFkTelevisao(1);
-
+        componenteDAO.registarComponente(disco);
 
         Long memoriaTotal = looca.getMemoria().getTotal();
         Componente memoriaRam = new Componente(String.format("Memória RAM %s", Conversor.formatarBytes(memoriaTotal)),
@@ -163,7 +172,7 @@ public class ServicosLisync {
         televisao.registarComponente(memoriaRam);
 
         try {
-//            componenteDAO.registarComponenteSQLServer(memoriaRam);
+            componenteDAO.registarComponenteSQLServer(memoriaRam);
             memoriaRam.setFkTelevisao(1);
             componenteDAO.registarComponente(memoriaRam);
 
@@ -238,7 +247,7 @@ public class ServicosLisync {
 
             conexaoSlack.alertMessageRAM(valor);
         }
-//        logComponenteDAO.salvarLogComponenteSQLServer(listaLogSQLServer);
+        logComponenteDAO.salvarLogComponenteSQLServer(listaLogSQLServer);
         logComponenteDAO.salvarLogComponente(listaLogMySQL);
         return "";
     }

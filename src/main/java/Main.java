@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -14,7 +15,7 @@ import services.Monitoramento;
 import services.ServicosLisync;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException  {
 
         Scanner input = new Scanner(System.in);
         Scanner inputNext = new Scanner(System.in);
@@ -105,6 +106,7 @@ public class Main {
                             ambiente = ambientes.get(i);
                             setor = ambiente.getSetor();
                             andar = ambiente.getAndar();
+                            ambienteDAO.insertAmbiente(ambientes.get(i));
                         }
                     }
                     if (opcaoEscolhida == ambientes.size() + 1) {

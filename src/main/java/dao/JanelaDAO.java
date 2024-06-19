@@ -51,11 +51,11 @@ public class JanelaDAO {
     }
 
     public void salvarVariasJanelasSQLServer(List<Janela> janelas) {
-        ConexaoMySQL conexao = new ConexaoMySQL();
-        JdbcTemplate con = conexao.getconexaoLocal();
+//        ConexaoMySQL conexao = new ConexaoMySQL();
+//        JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
-//        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-//        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
+        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
 //
 //        String sql = "INSERT INTO Janela (pidJanela, titulo, localizacao, visivel, " +
@@ -69,16 +69,16 @@ public class JanelaDAO {
 //                con.update(sql, janela.getPidJanela(), janela.getTitulo(),
 //                        janela.getLocalizacao(), janela.getVisivel(), janela.getFkTelevisao());
 
-                con.update(sqlServer, janela.getPidJanela(), janela.getTitulo(),
+                conSQLServer.update(sqlServer, janela.getPidJanela(), janela.getTitulo(),
                         janela.getLocalizacao(), janela.getVisivel(), janela.getFkTelevisao());
             }
         } catch (Exception e) {
             e.printStackTrace();
 
         } finally {
-            if (con != null) {
+            if (conSQLServer != null) {
                 try {
-                    con.getDataSource().getConnection().close();
+                    conSQLServer.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -93,5 +93,4 @@ public class JanelaDAO {
         }
     }
 }
-
 

@@ -83,9 +83,6 @@ public class Monitoramento {
         Boolean existeComponenteRam = componenteDAO.buscarComponentesPorIdTv(televisao.getIdTelevisao()).isEmpty();
         Boolean existeComponenteCPU = componenteDAO.buscarComponentesPorIdTv(televisao.getIdTelevisao()).isEmpty();
 
-
-
-
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -261,6 +258,26 @@ public class Monitoramento {
                 }
             }
         }, inicio, intervalo);
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                try {
+                    notificacaoEmail.enviarEmail("matheus.shoji@sptech.school", "Comando de encerramento",
+                            "Monitoramento encerrado na televisão: " + televisao.getNome());
+                    System.out.println("E-mail enviado ao encerrar o aplicativo.");
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                    System.out.println("Falha ao enviar o e-mail ao encerrar o aplicativo.");
+                }
+            }
+        });
+
+        try {
+            Thread.sleep(Long.MAX_VALUE); // Manter o aplicativo em execução
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 }

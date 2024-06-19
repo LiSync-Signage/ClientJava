@@ -1,16 +1,17 @@
+import java.util.List;
+import java.util.Scanner;
+
 import com.github.britooo.looca.api.core.Looca;
-import dao.*;
+
+import dao.AmbienteDAO;
 import dao.TelevisaoDAO;
 import dao.UsuarioDAO;
-import models.*;
+import models.Ambiente;
+import models.Televisao;
+import models.Usuario;
 import services.Autenticacao;
 import services.Monitoramento;
-import services.NotificacaoEmail;
 import services.ServicosLisync;
-
-import javax.mail.MessagingException;
-import java.io.IOException;
-import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -22,9 +23,7 @@ public class Main {
         Autenticacao autenticacao = new Autenticacao();
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         TelevisaoDAO televisaoDAO = new TelevisaoDAO();
-        ComponenteDAO componenteDAO = new ComponenteDAO();
         Monitoramento monitoramento = new Monitoramento();
-
 
         String prosseguir;
         Boolean cadastroValido = false;
@@ -140,10 +139,7 @@ public class Main {
             servicosLisync.cadastrarComponentes(televisaohostname);
             System.out.println("Televisão cadastrada com sucesso!");
 
-
-
             monitoramento.monitorarTelevisao();
-
 
 
         } else if (!servicosLisync.televisaoNova(hostName)) {
@@ -154,34 +150,6 @@ public class Main {
             System.out.println("Seu plano atingiu a capacidade máxima de televisões, para cadastrar mais Televisões, entre em contato com a Lisync");
         }
 
-        String host = "smtp-mail.outlook.com";
-        String port = "587";
-        String emailUsuario = "matheusshoji@outlook.com";
-        String senhaUsuario = "Gemeos2015";
-
-        NotificacaoEmail notificacaoEmail = new NotificacaoEmail(host, port, emailUsuario, senhaUsuario);
-
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            public void run() {
-                try {
-
-                    notificacaoEmail.enviarEmail("matheus.shoji@sptech.school", "Comando de encerramento",
-                            "Monitoramento encerrado");
-                    System.out.println("E-mail enviado ao encerrar o aplicativo.");
-                } catch (MessagingException e) {
-                    e.printStackTrace();
-                    System.out.println("Falha ao enviar o e-mail ao encerrar o aplicativo.");
-                }
-            }
-        });
-
-        // Código do aplicativo aqui
-        System.out.println("Aplicativo em execução. Pressione Ctrl+C para encerrar.");
-        try {
-            Thread.sleep(Long.MAX_VALUE); // Manter o aplicativo em execução
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }
 

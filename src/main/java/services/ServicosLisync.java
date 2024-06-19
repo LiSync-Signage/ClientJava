@@ -62,9 +62,12 @@ public class ServicosLisync {
     //
     public void atualizarUsuario(Usuario usuarioLogado) {
         try {
-            usuarioDAO.atualizarUsuarioLocalSQLServer(usuarioLogado);
+            //usuarioDAO.atualizarUsuarioLocalSQLServer(usuarioLogado);
+            usuarioDAO.atualizarUsuarioLocal(usuarioLogado);
+
             Empresa EmpresaUser = empresaDAO.buscarEmpresa(usuarioLogado.getFkEmpresa());
             empresaDAO.atualizarEmpresaLocal(EmpresaUser);
+
             usuarioLogado.setFkEmpresa(EmpresaUser.getIdEmpresa());
             usuarioDAO.atualizarUsuarioLocal(usuarioLogado);
         } catch (Exception e) {
@@ -107,14 +110,14 @@ public class ServicosLisync {
         System.out.println(televisao.getFkAmbiente());
 
         try {
-            televisaoDAO.registrarSQLServer(televisao);
-
+            televisaoDAO.registrar(televisao);
+//            televisaoDAO.registrarSQLServer(televisao);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("erro ao cadastrar televisão");
         }
         televisao.setIdTelevisao(1);
-        televisaoDAO.registrar(televisao);
+
 
         System.out.println("Nova televisão adicionada! \n");
     }
@@ -128,14 +131,15 @@ public class ServicosLisync {
         televisao.registarComponente(cpu);
 
         try {
-            componenteDAO.registarComponenteSQLServer(cpu);
+//            componenteDAO.registarComponenteSQLServer(cpu);
+            componenteDAO.registarComponente(cpu);
 
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("erro ao cadastrar CPU");
         }
         cpu.setFkTelevisao(1);
-        componenteDAO.registarComponente(cpu);
+
 
 
         Disco instanciaDisco = looca.getGrupoDeDiscos().getDiscos().get(0);
@@ -144,14 +148,14 @@ public class ServicosLisync {
         televisao.registarComponente(disco);
 
         try {
-            componenteDAO.registarComponenteSQLServer(disco);
-
+            // componenteDAO.registarComponenteSQLServer(disco);
+            componenteDAO.registarComponente(disco);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("erro ao cadastrar Disco");
         }
         disco.setFkTelevisao(1);
-        componenteDAO.registarComponente(disco);
+
 
         Long memoriaTotal = looca.getMemoria().getTotal();
         Componente memoriaRam = new Componente(String.format("Memória RAM %s", Conversor.formatarBytes(memoriaTotal)),
@@ -159,7 +163,7 @@ public class ServicosLisync {
         televisao.registarComponente(memoriaRam);
 
         try {
-            componenteDAO.registarComponenteSQLServer(memoriaRam);
+//            componenteDAO.registarComponenteSQLServer(memoriaRam);
             memoriaRam.setFkTelevisao(1);
             componenteDAO.registarComponente(memoriaRam);
 
@@ -234,7 +238,7 @@ public class ServicosLisync {
 
             conexaoSlack.alertMessageRAM(valor);
         }
-        logComponenteDAO.salvarLogComponenteSQLServer(listaLogSQLServer);
+//        logComponenteDAO.salvarLogComponenteSQLServer(listaLogSQLServer);
         logComponenteDAO.salvarLogComponente(listaLogMySQL);
         return "";
     }

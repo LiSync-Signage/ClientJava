@@ -92,47 +92,23 @@ public class ComponenteDAO {
 
 
     public List<Componente> buscarComponentesPorIdTv (Integer idTelevisao) {
-//        ConexaoMySQL conexao = new ConexaoMySQL();
-//        JdbcTemplate con = conexao.getconexaoMySqlLocal();
+        ConexaoMySQL conexao = new ConexaoMySQL();
+        JdbcTemplate con = conexao.getconexaoLocal();
 
-        ConexaoSQLServer conexaoSQLServer = new ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
+//        ConexaoSQLServer conexaoSQLServer = new ConexaoSQLServer();
+//        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sqlServer = "SELECT * FROM Componente WHERE fkTelevisao = ?";
 
 
 
         try {
-            List<Componente> componentes = conSQLServer.query(sqlServer, new BeanPropertyRowMapper<>(Componente.class), idTelevisao);
+            List<Componente> componentes = con.query(sqlServer, new BeanPropertyRowMapper<>(Componente.class), idTelevisao);
 
             return componentes;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
-        }
-    }
-
-    public List<Componente> buscarTipoComponentePorIdTv (String nome, Integer idTelevisao) {
-        ConexaoMySQL conexao = new ConexaoMySQL();
-        JdbcTemplate con = conexao.getconexaoLocal();
-
-        String sql = "SELECT * FROM Componente WHERE tipoComponente = ? AND fkTelevisao = ?";
-
-        try {
-            List<Componente> componentesLocal = con.query(sql, new BeanPropertyRowMapper<>(Componente.class),
-                    nome, idTelevisao);
-            return componentesLocal;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            if (con != null) {
-                try {
-                    con.getDataSource().getConnection().close();
-                } catch (SQLException e) {
-                    e.printStackTrace(); // Trate a exceção de fechamento da conexão local
-                }
-            }
         }
     }
 

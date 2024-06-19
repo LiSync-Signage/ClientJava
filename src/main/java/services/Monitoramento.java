@@ -11,6 +11,7 @@ import dao.ProcessoDAO;
 import dao.TelevisaoDAO;
 import models.*;
 
+import javax.mail.MessagingException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,6 +27,12 @@ public class Monitoramento {
         ComponenteDAO componenteDAO = new ComponenteDAO();
         String hostName = looca.getRede().getParametros().getHostName();
 
+        String host = "smtp-mail.outlook.com";
+        String port = "587";
+        String emailUsuario = "matheusshoji@outlook.com";
+        String senhaUsuario = "Gemeos2015";
+
+        NotificacaoEmail notificacaoEmail = new NotificacaoEmail(host, port, emailUsuario, senhaUsuario);
 
         Televisao televisao = televisaoDAO.buscarTvPeloEndereco(hostName);
 
@@ -62,13 +69,19 @@ public class Monitoramento {
 
         List<Processo> maioresProcessosCPU = new ArrayList<>();
 
-        Integer idComponenteCPU = componenteDAO.buscarTipoComponentePorIdTvSQLServer("CPU", televisao.getIdTelevisao()).get(0).getIdComponente();
-        Integer idComponenteRAM = componenteDAO.buscarTipoComponentePorIdTvSQLServer("RAM", televisao.getIdTelevisao()).get(0).getIdComponente();
+//        Integer idComponenteCPU = componenteDAO.buscarTipoComponentePorIdTvSQLServer("CPU", televisao.getIdTelevisao()).get(0).getIdComponente();
+//        Integer idComponenteRAM = componenteDAO.buscarTipoComponentePorIdTvSQLServer("RAM", televisao.getIdTelevisao()).get(0).getIdComponente();
+
+        Integer idComponenteCPU = componenteDAO.buscarComponentesPorIdTv(televisao.getIdTelevisao()).get(0).getIdComponente();
+        Integer idComponenteRAM = componenteDAO.buscarComponentesPorIdTv(televisao.getIdTelevisao()).get(0).getIdComponente();
 
         System.out.println(idComponenteCPU + "ID COMPONENTE ");
 
-        Boolean existeComponenteRam = componenteDAO.buscarTipoComponentePorIdTvSQLServer("RAM", televisao.getIdTelevisao()).isEmpty();
-        Boolean existeComponenteCPU = componenteDAO.buscarTipoComponentePorIdTvSQLServer("CPU", televisao.getIdTelevisao()).isEmpty();
+//        Boolean existeComponenteRam = componenteDAO.buscarTipoComponentePorIdTvSQLServer("RAM", televisao.getIdTelevisao()).isEmpty();
+//        Boolean existeComponenteCPU = componenteDAO.buscarTipoComponentePorIdTvSQLServer("CPU", televisao.getIdTelevisao()).isEmpty();
+
+        Boolean existeComponenteRam = componenteDAO.buscarComponentesPorIdTv(televisao.getIdTelevisao()).isEmpty();
+        Boolean existeComponenteCPU = componenteDAO.buscarComponentesPorIdTv(televisao.getIdTelevisao()).isEmpty();
 
 
 
@@ -231,6 +244,18 @@ public class Monitoramento {
                     }
                 } catch (Exception e) {
                     System.err.println("Erro crítico: " + e.getMessage());
+                    String mensagemErro = """
+                                    Atenção !!!
+                                    Monitoramento da máquina %s foi encerrado
+                                    """.formatted(televisao.getNomeTelevisao());
+
+                    try {
+                        notificacaoEmail.enviarEmail("matheus.shoji@sptech.school",
+                                "Alerta monitoramento", mensagemErro);
+                    } catch (MessagingException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
                     e.printStackTrace();
                     timer.cancel(); // Parar o timer se ocorrer uma falha no MySQL
                 }

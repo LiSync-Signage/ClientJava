@@ -118,16 +118,16 @@ public class TelevisaoDAO {
 //    }
 
     public Televisao buscarTvPeloEndereco(String endereco) {
-//        ConexaoMySQL conexao = new ConexaoMySQL();
-//        JdbcTemplate con = conexao.getconexaoMySqlLocal();
+        ConexaoMySQL conexao = new ConexaoMySQL();
+        JdbcTemplate con = conexao.getconexaoLocal();
 
-        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
+//        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+//        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
-            String sqlServer = "SELECT TOP 1 * FROM Televisao WHERE hostname = ?;\n";
+        String sqlServer = "SELECT * FROM Televisao WHERE hostname = ?;\n";
 
         try {
-            Televisao televioesLocal = conSQLServer.queryForObject(sqlServer, new BeanPropertyRowMapper<>(Televisao.class), endereco);
+            Televisao televioesLocal = con.queryForObject(sqlServer, new BeanPropertyRowMapper<>(Televisao.class), endereco);
             return televioesLocal;
 
         } catch (Exception e) {
@@ -135,9 +135,9 @@ public class TelevisaoDAO {
             return null;
 
         } finally {
-            if (conSQLServer != null) {
+            if (con != null) {
                 try {
-                    conSQLServer.getDataSource().getConnection().close();
+                    con.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -146,18 +146,17 @@ public class TelevisaoDAO {
     }
 
 
-    // Futaramente deverá ser alterado
     public Integer contarPorEndereco(String endereco) {
-//        ConexaoMySQL conexao = new ConexaoMySQL();
-//        JdbcTemplate con = conexao.getconexaoMySqlLocal();
+        ConexaoMySQL conexao = new ConexaoMySQL();
+        JdbcTemplate con = conexao.getconexaoLocal();
 
-        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
+//        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+//        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sqlServer = "select count(*) from Televisao where hostname = ?;";
 
         try {
-            Integer contagemTv = conSQLServer.queryForObject(sqlServer, Integer.class, endereco);
+            Integer contagemTv = con.queryForObject(sqlServer, Integer.class, endereco);
             return contagemTv;
 
         } catch (Exception e) {
@@ -165,9 +164,9 @@ public class TelevisaoDAO {
             return 0;
 
         } finally {
-            if (conSQLServer != null) {
+            if (con != null) {
                 try {
-                    conSQLServer.getDataSource().getConnection().close();
+                    con.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

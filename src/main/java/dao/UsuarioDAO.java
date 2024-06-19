@@ -10,24 +10,24 @@ import java.sql.SQLException;
 public class UsuarioDAO {
 
     public Integer contarUsuariosExistentes(String email, String senha) {
-//        ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
-//        JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
+        ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
+        JdbcTemplate con = conexaoMySQL.getconexaoLocal();
 
-        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
+//        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+//        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String  sqlServer = "SELECT COUNT(*) FROM Usuario WHERE email = ? AND senha = ?";
 
         try {
-            Integer countLocal = conSQLServer.queryForObject(sqlServer, Integer.class, email, senha);
+            Integer countLocal = con.queryForObject(sqlServer, Integer.class, email, senha);
             return countLocal;
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
         } finally {
-            if (conSQLServer != null) {
+            if (con != null) {
                 try {
-                    conSQLServer.getDataSource().getConnection().close();
+                    con.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -35,24 +35,25 @@ public class UsuarioDAO {
         }
     }
     public Usuario buscarCreedenciasUsuario(String email, String senha) {
-//        ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
-//        JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
+        ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
+        JdbcTemplate con = conexaoMySQL.getconexaoLocal();
 
-        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
+//        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+//        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sqlServer = "SELECT * FROM Usuario WHERE email = ? AND senha = ?";
 
         try {
-            Usuario usuarioLocal = conSQLServer.queryForObject(sqlServer, new BeanPropertyRowMapper<>(Usuario.class), email, senha);
+//            Usuario usuarioLocal = conSQLServer.queryForObject(sqlServer, new BeanPropertyRowMapper<>(Usuario.class), email, senha);
+            Usuario usuarioLocal = con.queryForObject(sqlServer, new BeanPropertyRowMapper<>(Usuario.class), email, senha);
             return usuarioLocal;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         } finally {
-            if (conSQLServer != null) {
+            if (con != null) {
                 try {
-                    conSQLServer.getDataSource().getConnection().close();
+                    con.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace(); // Trate a exceção de fechamento da conexão local
                 }

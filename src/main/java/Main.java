@@ -5,13 +5,15 @@ import dao.UsuarioDAO;
 import models.*;
 import services.Autenticacao;
 import services.Monitoramento;
+import services.NotificacaoEmail;
 import services.ServicosLisync;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         Scanner input = new Scanner(System.in);
         Scanner inputNext = new Scanner(System.in);
@@ -104,7 +106,6 @@ public class Main {
                             ambiente = ambientes.get(i);
                             setor = ambiente.getSetor();
                             andar = ambiente.getAndar();
-                            ambienteDAO.insertAmbiente(ambientes.get(i));
                         }
                     }
                     if (opcaoEscolhida == ambientes.size() + 1) {
@@ -151,6 +152,35 @@ public class Main {
 
         } else {
             System.out.println("Seu plano atingiu a capacidade máxima de televisões, para cadastrar mais Televisões, entre em contato com a Lisync");
+        }
+
+        String host = "smtp-mail.outlook.com";
+        String port = "587";
+        String emailUsuario = "matheusshoji@outlook.com";
+        String senhaUsuario = "Gemeos2015";
+
+        NotificacaoEmail notificacaoEmail = new NotificacaoEmail(host, port, emailUsuario, senhaUsuario);
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                try {
+
+                    notificacaoEmail.enviarEmail("matheus.shoji@sptech.school", "Comando de encerramento",
+                            "Monitoramento encerrado");
+                    System.out.println("E-mail enviado ao encerrar o aplicativo.");
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                    System.out.println("Falha ao enviar o e-mail ao encerrar o aplicativo.");
+                }
+            }
+        });
+
+        // Código do aplicativo aqui
+        System.out.println("Aplicativo em execução. Pressione Ctrl+C para encerrar.");
+        try {
+            Thread.sleep(Long.MAX_VALUE); // Manter o aplicativo em execução
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }

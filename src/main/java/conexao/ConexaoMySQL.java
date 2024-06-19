@@ -17,8 +17,8 @@ public class ConexaoMySQL extends Conexao{
 
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3306/lisyncDB");
-        dataSource.setUsername("Ubuntu");
-        dataSource.setPassword("urubu100");
+        dataSource.setUsername("root");
+        dataSource.setPassword("root");
 
         conexaoMySqlLocal = new JdbcTemplate(dataSource);
     }
@@ -26,4 +26,6 @@ public class ConexaoMySQL extends Conexao{
     public JdbcTemplate getconexaoLocal(){
         return conexaoMySqlLocal;
     }
+
+
 }

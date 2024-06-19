@@ -1,5 +1,7 @@
 package dao;
 
+import conexao.ConexaoMySQL;
+import conexao.ConexaoSQLServer;
 import models.Comando;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,11 +11,11 @@ import java.sql.SQLException;
 public class ComandoDAO {
 
     public static void updateComandoSQLServer(Comando comando) {
-//          org.LiSync.conexao.ConexaoMySQL conexaoMySQL = new org.LiSync.conexao.ConexaoMySQL();
-//          JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
+        ConexaoMySQL conexao = new ConexaoMySQL();
+        JdbcTemplate con = conexao.getconexaoLocal();
 
-        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
+//        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+//        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
 //        String sql = "INSERT INTO comando(nome,fkTelevisao)VALUES (?,?);";
 
@@ -21,13 +23,13 @@ public class ComandoDAO {
 
         try {
 //            con.update(sql, comando.getComando(), comando.getFkTelevisao());
-          conSQLServer.update(sqlSever, comando.getResposta(), comando.getIdComando());
+            con.update(sqlSever, comando.getResposta(), comando.getIdComando());
         } catch (Exception e)  {
             e.printStackTrace();
         } finally {
-            if (conSQLServer != null) {
+            if (con != null) {
                 try {
-                    conSQLServer.getDataSource().getConnection().close();
+                    con.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -43,11 +45,11 @@ public class ComandoDAO {
     }
 
     public static void insertComandoSQLServer(Comando comando) {
-//          org.LiSync.conexao.ConexaoMySQL conexaoMySQL = new org.LiSync.conexao.ConexaoMySQL();
-//          JdbcTemplate con = conexaoMySQL.getconexaoMySqlLocal();
+        ConexaoMySQL conexao = new ConexaoMySQL();
+        JdbcTemplate con = conexao.getconexaoLocal();
 
-        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
+//        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+//        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
 //        String sql = "INSERT INTO comando(nome,fkTelevisao)VALUES (?,?);";
 
@@ -56,13 +58,13 @@ public class ComandoDAO {
 
         try {
 //            con.update(sql, comando.getComando(), comando.getFkTelevisao());
-            conSQLServer.update(sqlSever, comando.getResposta(), comando.getResposta(), comando.getFkTelevisao());
+            con.update(sqlSever, comando.getResposta(), comando.getResposta(), comando.getFkTelevisao());
         } catch (Exception e)  {
             e.printStackTrace();
         } finally {
-            if (conSQLServer != null) {
+            if (con != null) {
                 try {
-                    conSQLServer.getDataSource().getConnection().close();
+                    con.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -78,8 +80,8 @@ public class ComandoDAO {
     }
 
     public static void insertComando(Comando comando) {
-          conexao.ConexaoMySQL conexaoMySQL = new conexao.ConexaoMySQL();
-          JdbcTemplate con = conexaoMySQL.getconexaoLocal();
+        ConexaoMySQL conexao = new ConexaoMySQL();
+        JdbcTemplate con = conexao.getconexaoLocal();
 
 //        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
 //        JdbcTemplate conSQLServer = conexaoSQLServer.getConexaoSqlServerLocal();
@@ -150,8 +152,11 @@ public class ComandoDAO {
 //        ConexaoMySQL conexao = new ConexaoMySQL();
 //        JdbcTemplate con = conexao.getconexaoMySqlLocal();
 
-        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
-        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
+        ConexaoMySQL conexao = new ConexaoMySQL();
+        JdbcTemplate con = conexao.getconexaoLocal();
+
+//        conexao.ConexaoSQLServer conexaoSQLServer = new conexao.ConexaoSQLServer();
+//        JdbcTemplate conSQLServer = conexaoSQLServer.getconexaoLocal();
 
         String sqlServer = "SELECT TOP 1 Comando.idComando, Comando.nomeComando, Comando.fkTelevisao, Comando.resposta\n" +
                 "FROM Comando\n" +
@@ -160,7 +165,7 @@ public class ComandoDAO {
                 "ORDER BY Comando.idComando DESC;";
 
         try {
-            Comando comando = conSQLServer.queryForObject(sqlServer, new BeanPropertyRowMapper<>(Comando.class), idTelevisao);
+            Comando comando = con.queryForObject(sqlServer, new BeanPropertyRowMapper<>(Comando.class), idTelevisao);
             return comando;
 
         } catch (Exception e) {
@@ -169,9 +174,9 @@ public class ComandoDAO {
             return null;
 
         } finally {
-            if (conSQLServer != null) {
+            if (con != null) {
                 try {
-                    conSQLServer.getDataSource().getConnection().close();
+                    con.getDataSource().getConnection().close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
